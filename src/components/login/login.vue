@@ -6,6 +6,7 @@
             </div>
         </div>
         <div class="login-content">
+          <div class="content-box">
             <div class="content-mid">
               <img src="./images/login_content.png" alt="">
               <div class="content-right">
@@ -59,6 +60,7 @@
                 </div>
               </div>
             </div>
+          </div>
         </div>
     </div>
 </template>
@@ -126,11 +128,16 @@
     background-size: 100% 100%;
     height: 765px;
   }
+  .content-box{
+    width:1200px;
+    height:100%;
+    margin:0 auto;
+  }
   .content-mid{
     width: 876px;
     height: 480px;
-    padding-top: 121px;
-    padding-left: 306px;
+    margin: 0 auto;
+    padding-top: 120px;
   }
   .content-mid img{
     width: 370px;
