@@ -84,6 +84,7 @@
     margin: 0 auto;
     width 100%
     min-width 1212px
+    background-color #f3f3f3
   }
   .footer-wrap {
     width 100%
