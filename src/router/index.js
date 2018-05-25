@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import myHome from '@/components/home/home'
 import myLogin from '@/components/login/login'
 import myForgetPassword from '@/components/forgetPassword/forgetPassword'
+import myRegister from '@/components/register/register'
 
 Vue.use(Router)
 
@@ -26,6 +27,11 @@ export default new Router({
       path: '/forgetPassword',
       name: 'forgetPassword',
       component: myForgetPassword
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: myRegister
     },
   ]
 })
