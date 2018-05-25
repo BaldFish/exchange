@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div class="top">top</div>
+    <my-topSearch></my-topSearch>
     <div class="banner"></div>
     <div class="list">
       <div class="case clearfix">
@@ -224,23 +224,20 @@
 </template>
 
 <script>
+  import myTopSearch from "../topSearch/topSearch"
   export default {
     name: "home",
     data() {
       return {}
     },
+    components:{
+      myTopSearch
+    }
   }
 </script>
 
 <style scoped lang="stylus">
   .home {
-    .top {
-      box-sizing border-box
-      width 1212px
-      height 130px
-      margin 0 auto
-      border 1px solid red
-    }
     .banner {
       box-sizing border-box
       height 600px
