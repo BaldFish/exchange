@@ -53,8 +53,8 @@
                   </section>
 
                   <router-link to="/forgetPassword" class="to_forget"><p>忘记密码？</p></router-link>
-                  <router-link to="" class="to_login"><span>登录</span></router-link>
-                  <router-link to="" class="to_register"><p>还没有账号，立即注册</p></router-link>
+                  <router-link to="/home" class="to_login"><span>登录</span></router-link>
+                  <router-link to="/register" class="to_register"><p>还没有账号，立即注册</p></router-link>
 
 
                 </div>
