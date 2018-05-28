@@ -9,6 +9,7 @@ import myTrustedSource from '@/components/trustedSource/trustedSource'
 import myLogin from '@/components/login/login'
 import myForgetPassword from '@/components/forgetPassword/forgetPassword'
 import myRegister from '@/components/register/register'
+import myCollectFolder from '@/components/collectFolder/collectFolder'
 
 Vue.use(Router);
 
@@ -62,6 +63,11 @@ export default new Router({
       path: '/register',
       name: 'register',
       component: myRegister
+    },
+    {
+      path: '/collectFolder',
+      name: 'collectFolder',
+      component: myCollectFolder
     },
   ]
 })
