@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import myHome from '@/components/home/home'
+import myMoreFacility from '@/components/moreFacility/moreFacility'
 import myLogin from '@/components/login/login'
 import myForgetPassword from '@/components/forgetPassword/forgetPassword'
 import myRegister from '@/components/register/register'
@@ -18,6 +19,11 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: myHome
+    },
+    {
+      path: '/moreFacility',
+      name: 'moreFacility',
+      component: myMoreFacility
     },
     {
       path: '/login',
