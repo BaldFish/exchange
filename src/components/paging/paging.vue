@@ -1,6 +1,6 @@
 <template>
   <el-pagination class="my_paging"
-    background=true
+    :background=true
     layout="prev, pager, next"
     :total="1000">
   </el-pagination>
