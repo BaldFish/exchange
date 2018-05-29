@@ -6,6 +6,8 @@ import myLogin from '@/components/login/login'
 import myForgetPassword from '@/components/forgetPassword/forgetPassword'
 import myRegister from '@/components/register/register'
 import myCollectFolder from '@/components/collectFolder/collectFolder'
+import myPersonalAssets from '@/components/personalAssets/personalAssets'
+import myNoAssets from '@/components/personalAssets/noAssets'
 
 Vue.use(Router)
 
@@ -44,6 +46,16 @@ export default new Router({
       path: '/collectFolder',
       name: 'collectFolder',
       component: myCollectFolder
+    },
+    {
+      path: '/personalAssets',
+      name: 'personalAssets',
+      component: myPersonalAssets
+    },
+    {
+      path: '/noAssets',
+      name: 'noAssets',
+      component: myNoAssets
     },
   ]
 })
