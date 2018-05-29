@@ -11,17 +11,17 @@
     </div>
     <div class="facility_list">
       <div class="fl facility_info">
-        <a href="javascript:void(0)"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
+        <a href="#/facilityDetails"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
         <div class="putaway">
-          <a class="time" href="javascript:void(0)"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="javascript:void(0)"><span>权益：</span>所有权</a>
+          <a class="time" href="#/facilityDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
+          <a class="equity" href="#/facilityDetails"><span>权益：</span>所有权</a>
         </div>
         <div class="fl price_box">
-          <a href="javascript:void(0)"><p class="price">139.00</p></a>
-          <a href="javascript:void(0)"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilityDetails"><p class="price">139.00</p></a>
+          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
-          <a href="javascript:void(0)"><img src="./images/05.png" alt=""></a>
+          <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
         </div>
         <div class="attestation clearfix">
           <span class="merchant">认证商家</span>
@@ -29,17 +29,17 @@
         </div>
       </div>
       <div class="fl facility_info">
-        <a href="javascript:void(0)"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
+        <a href="#/facilityDetails"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
         <div class="putaway">
-          <a class="time" href="javascript:void(0)"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="javascript:void(0)"><span>权益：</span>所有权</a>
+          <a class="time" href="#/facilityDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
+          <a class="equity" href="#/facilityDetails"><span>权益：</span>所有权</a>
         </div>
         <div class="fl price_box">
-          <a href="javascript:void(0)"><p class="price">139.00</p></a>
-          <a href="javascript:void(0)"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilityDetails"><p class="price">139.00</p></a>
+          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
-          <a href="javascript:void(0)"><img src="./images/05.png" alt=""></a>
+          <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
         </div>
         <div class="attestation clearfix">
           <span class="merchant">认证商家</span>
@@ -47,17 +47,17 @@
         </div>
       </div>
       <div class="fl facility_info">
-        <a href="javascript:void(0)"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
+        <a href="#/facilityDetails"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
         <div class="putaway">
-          <a class="time" href="javascript:void(0)"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="javascript:void(0)"><span>权益：</span>所有权</a>
+          <a class="time" href="#/facilityDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
+          <a class="equity" href="#/facilityDetails"><span>权益：</span>所有权</a>
         </div>
         <div class="fl price_box">
-          <a href="javascript:void(0)"><p class="price">139.00</p></a>
-          <a href="javascript:void(0)"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilityDetails"><p class="price">139.00</p></a>
+          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
-          <a href="javascript:void(0)"><img src="./images/05.png" alt=""></a>
+          <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
         </div>
         <div class="attestation clearfix">
           <span class="merchant">认证商家</span>
@@ -65,17 +65,17 @@
         </div>
       </div>
       <div class="fl facility_info">
-        <a href="javascript:void(0)"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
+        <a href="#/facilityDetails"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
         <div class="putaway">
-          <a class="time" href="javascript:void(0)"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="javascript:void(0)"><span>权益：</span>所有权</a>
+          <a class="time" href="#/facilityDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
+          <a class="equity" href="#/facilityDetails"><span>权益：</span>所有权</a>
         </div>
         <div class="fl price_box">
-          <a href="javascript:void(0)"><p class="price">139.00</p></a>
-          <a href="javascript:void(0)"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilityDetails"><p class="price">139.00</p></a>
+          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
-          <a href="javascript:void(0)"><img src="./images/05.png" alt=""></a>
+          <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
         </div>
         <div class="attestation clearfix">
           <span class="merchant">认证商家</span>
@@ -83,17 +83,17 @@
         </div>
       </div>
       <div class="fl facility_info">
-        <a href="javascript:void(0)"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
+        <a href="#/facilityDetails"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
         <div class="putaway">
-          <a class="time" href="javascript:void(0)"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="javascript:void(0)"><span>权益：</span>所有权</a>
+          <a class="time" href="#/facilityDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
+          <a class="equity" href="#/facilityDetails"><span>权益：</span>所有权</a>
         </div>
         <div class="fl price_box">
-          <a href="javascript:void(0)"><p class="price">139.00</p></a>
-          <a href="javascript:void(0)"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilityDetails"><p class="price">139.00</p></a>
+          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
-          <a href="javascript:void(0)"><img src="./images/05.png" alt=""></a>
+          <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
         </div>
         <div class="attestation clearfix">
           <span class="merchant">认证商家</span>
@@ -101,17 +101,17 @@
         </div>
       </div>
       <div class="fl facility_info">
-        <a href="javascript:void(0)"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
+        <a href="#/facilityDetails"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
         <div class="putaway">
-          <a class="time" href="javascript:void(0)"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="javascript:void(0)"><span>权益：</span>所有权</a>
+          <a class="time" href="#/facilityDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
+          <a class="equity" href="#/facilityDetails"><span>权益：</span>所有权</a>
         </div>
         <div class="fl price_box">
-          <a href="javascript:void(0)"><p class="price">139.00</p></a>
-          <a href="javascript:void(0)"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilityDetails"><p class="price">139.00</p></a>
+          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
-          <a href="javascript:void(0)"><img src="./images/05.png" alt=""></a>
+          <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
         </div>
         <div class="attestation clearfix">
           <span class="merchant">认证商家</span>
@@ -119,17 +119,17 @@
         </div>
       </div>
       <div class="fl facility_info">
-        <a href="javascript:void(0)"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
+        <a href="#/facilityDetails"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
         <div class="putaway">
-          <a class="time" href="javascript:void(0)"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="javascript:void(0)"><span>权益：</span>所有权</a>
+          <a class="time" href="#/facilityDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
+          <a class="equity" href="#/facilityDetails"><span>权益：</span>所有权</a>
         </div>
         <div class="fl price_box">
-          <a href="javascript:void(0)"><p class="price">139.00</p></a>
-          <a href="javascript:void(0)"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilityDetails"><p class="price">139.00</p></a>
+          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
-          <a href="javascript:void(0)"><img src="./images/05.png" alt=""></a>
+          <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
         </div>
         <div class="attestation clearfix">
           <span class="merchant">认证商家</span>
@@ -137,17 +137,17 @@
         </div>
       </div>
       <div class="fl facility_info">
-        <a href="javascript:void(0)"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
+        <a href="#/facilityDetails"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
         <div class="putaway">
-          <a class="time" href="javascript:void(0)"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="javascript:void(0)"><span>权益：</span>所有权</a>
+          <a class="time" href="#/facilityDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
+          <a class="equity" href="#/facilityDetails"><span>权益：</span>所有权</a>
         </div>
         <div class="fl price_box">
-          <a href="javascript:void(0)"><p class="price">139.00</p></a>
-          <a href="javascript:void(0)"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilityDetails"><p class="price">139.00</p></a>
+          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
-          <a href="javascript:void(0)"><img src="./images/05.png" alt=""></a>
+          <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
         </div>
         <div class="attestation clearfix">
           <span class="merchant">认证商家</span>
@@ -186,10 +186,11 @@
       line-height 40px
       margin 0 auto
       ul{
-        margin-left 8px
+        padding-left 8px
         font-size 0
         color #ffffff
         li{
+          vertical-align top
           display inline-block
           font-size 20px
         }
@@ -317,7 +318,6 @@
     width 1212px
     margin 0 auto
     text-align center
-    
   }
 }
 </style>

@@ -118,6 +118,7 @@
       }
     }
     .favorite{
+      cursor pointer
       box-sizing border-box
       width 202px
       height 34px

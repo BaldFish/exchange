@@ -2,9 +2,9 @@
   <div id="app">
     <div class="head-wrap">
       <div class="head">
-        <a href="javascript:void(0)">欢迎来到 可信链 ！</a>
-        <a href="javascript:void(0)">请登录</a>
-        <a href="javascript:void(0)">免费注册</a>
+        <a href="/">欢迎来到 可信链 ！</a>
+        <a href="#/login">请登录</a>
+        <a href="#/register">免费注册</a>
       </div>
     </div>
     <div class="main_wrap">
