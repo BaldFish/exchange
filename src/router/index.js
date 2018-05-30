@@ -12,6 +12,9 @@ import myRegister from '@/components/register/register'
 import myCollectFolder from '@/components/collectFolder/collectFolder'
 import myPersonalAssets from '@/components/personalAssets/personalAssets'
 import myNoAssets from '@/components/personalAssets/noAssets'
+import myCheckOrder from '@/components/orderHistory/checkOrder'
+import myOrderHistory from '@/components/orderHistory/orderHistory'
+import mySecurityCenter from '@/components/securityCenter/securityCenter'
 
 Vue.use(Router);
 
@@ -80,6 +83,21 @@ export default new Router({
       path: '/noAssets',
       name: 'noAssets',
       component: myNoAssets
+    },
+    {
+      path: '/checkOrder',
+      name: 'checkOrder',
+      component: myCheckOrder
+    },
+    {
+      path: '/orderHistory',
+      name: 'orderHistory',
+      component: myOrderHistory
+    },
+    {
+      path: '/securityCenter',
+      name: 'securityCenter',
+      component: mySecurityCenter
     },
   ]
 })

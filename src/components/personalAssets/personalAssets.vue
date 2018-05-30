@@ -18,13 +18,13 @@
               </router-link>
             </li>
             <li>
-              <router-link to="">
+              <router-link to="/orderHistory">
                 <span></span>
                 <p>历史订单</p>
               </router-link>
             </li>
             <li>
-              <router-link to="">
+              <router-link to="/securityCenter">
                 <span></span>
                 <p>安全中心</p>
               </router-link>

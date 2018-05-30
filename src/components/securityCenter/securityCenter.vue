@@ -33,44 +33,44 @@
         </nav>
         <div class="nav_content">
           <div class="nav_content_title">
-            <span>收藏夹</span>
+            <span>安全中心</span>
           </div>
 
           <div class="nav_content_table">
             <table>
               <thead>
-                <tr class="no_img_thead">
-                  <th>名称</th>
-                  <th>权益</th>
-                  <th>数量</th>
-                  <th>小计</th>
-                  <th>操作</th>
-                </tr>
-                <tr class="th_classify">
-                  <th colspan="5">维修案例</th>
-                </tr>
+              <tr class="no_img_thead">
+                <th>名称</th>
+                <th>权益</th>
+                <th>数量</th>
+                <th>小计</th>
+                <th>操作</th>
+              </tr>
+              <tr class="th_classify">
+                <th colspan="5">维修案例</th>
+              </tr>
               </thead>
               <tbody>
-                <tr class="no_img_tbody">
-                  <td>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功率德国车载吸尘你充电强力大功率</td>
-                  <td>所有权</td>
-                  <td>9</td>
-                  <td>23456</td>
-                  <td class="quick_buy_td">
-                    <button>一键购买</button>
-                    <span>删除</span>
-                  </td>
-                </tr>
-                <tr class="no_img_tbody">
-                  <td>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功型家用手持式迷你充电强力大功率</td>
-                  <td>所有权</td>
-                  <td>9</td>
-                  <td>23456</td>
-                  <td class="quick_buy_td">
-                    <button>一键购买</button>
-                    <span>删除</span>
-                  </td>
-                </tr>
+              <tr class="no_img_tbody">
+                <td>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功率德国车载吸尘你充电强力大功率</td>
+                <td>所有权</td>
+                <td>9</td>
+                <td>23456</td>
+                <td class="quick_buy_td">
+                  <button>一键购买</button>
+                  <span>删除</span>
+                </td>
+              </tr>
+              <tr class="no_img_tbody">
+                <td>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功型家用手持式迷你充电强力大功率</td>
+                <td>所有权</td>
+                <td>9</td>
+                <td>23456</td>
+                <td class="quick_buy_td">
+                  <button>一键购买</button>
+                  <span>删除</span>
+                </td>
+              </tr>
               </tbody>
             </table>
           </div>
@@ -130,16 +130,16 @@
 <script>
   import myTopSearch from "../topSearch/topSearch"
   import myPaging from "../paging/paging"
-    export default{
-        data(){
-            return {
-                msg: 'hello vue'
-            }
-        },
-        components: {
-          myPaging,myTopSearch
-        }
+  export default{
+    data(){
+      return {
+        msg: 'hello vue'
+      }
+    },
+    components: {
+      myPaging,myTopSearch
     }
+  }
 </script>
 <style scoped>
   .paging{
