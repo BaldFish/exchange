@@ -35,7 +35,6 @@
           <div class="nav_content_title">
             <span>收藏夹</span>
           </div>
-
           <div class="nav_content_table">
             <table>
               <thead>
@@ -74,7 +73,6 @@
               </tbody>
             </table>
           </div>
-
           <div class="nav_content_table">
             <table>
               <thead>
@@ -116,7 +114,6 @@
               </tbody>
             </table>
           </div>
-
           <div class="clearfix paging">
             <my-paging></my-paging>
           </div>
