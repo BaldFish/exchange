@@ -32,45 +32,49 @@
           </ul>
         </nav>
         <div class="nav_content">
+          <div class="assets_summary">
+            <p>186***4168</p>
+            <p>钱包地址：0X93f478321.....5498268554</p>
+            <p>可信币：234567.00</p>
+          </div>
+
           <div class="nav_content_title">
-            <span>收藏夹</span>
+            <span>已购资产</span>
           </div>
 
           <div class="nav_content_table">
             <table>
               <thead>
-                <tr class="no_img_thead">
-                  <th>名称</th>
-                  <th>权益</th>
-                  <th>数量</th>
-                  <th>小计</th>
-                  <th>操作</th>
-                </tr>
-                <tr class="th_classify">
-                  <th colspan="5">维修案例</th>
-                </tr>
+              <tr class="no_img_thead">
+                <th>名称</th>
+                <th>权益</th>
+                <th>数量</th>
+                <th>小计</th>
+                <th>操作</th>
+              </tr>
+              <tr class="th_classify">
+                <th colspan="5">维修案例</th>
+              </tr>
               </thead>
               <tbody>
-                <tr class="no_img_tbody">
-                  <td>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功率德国车载吸尘你充电强力大功率</td>
-                  <td>所有权</td>
-                  <td>9</td>
-                  <td>23456</td>
-                  <td class="quick_buy_td">
-                    <button>一键购买</button>
-                    <span>删除</span>
-                  </td>
-                </tr>
-                <tr class="no_img_tbody">
-                  <td>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功型家用手持式迷你充电强力大功率</td>
-                  <td>所有权</td>
-                  <td>9</td>
-                  <td>23456</td>
-                  <td class="quick_buy_td">
-                    <button>一键购买</button>
-                    <span>删除</span>
-                  </td>
-                </tr>
+              <tr class="no_img_tbody">
+                <td>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功率德国车载吸尘你充电强力大功率</td>
+                <td>所有权</td>
+                <td>9</td>
+                <td>23456</td>
+                <td class="quick_buy_td">
+                  <button>查阅</button>
+                </td>
+              </tr>
+              <tr class="no_img_tbody">
+                <td>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功型家用手持式迷你充电强力大功率</td>
+                <td>所有权</td>
+                <td>9</td>
+                <td>23456</td>
+                <td class="quick_buy_td">
+                  <button>查阅</button>
+                </td>
+              </tr>
               </tbody>
             </table>
           </div>
@@ -98,8 +102,7 @@
                 <td>9</td>
                 <td>23456</td>
                 <td class="quick_buy_td">
-                  <button>一键购买</button>
-                  <span>删除</span>
+                  <button>查阅</button>
                 </td>
               </tr>
               <tr class="img_tbody">
@@ -109,8 +112,7 @@
                 <td>9</td>
                 <td>23456</td>
                 <td class="quick_buy_td">
-                  <button>一键购买</button>
-                  <span>删除</span>
+                  <button>查阅</button>
                 </td>
               </tr>
               </tbody>
@@ -130,16 +132,16 @@
 <script>
   import myTopSearch from "../topSearch/topSearch"
   import myPaging from "../paging/paging"
-    export default{
-        data(){
-            return {
-                msg: 'hello vue'
-            }
-        },
-        components: {
-          myPaging,myTopSearch
-        }
+  export default{
+    data(){
+      return {
+        msg: 'hello vue'
+      }
+    },
+    components: {
+      myPaging,myTopSearch
     }
+  }
 </script>
 <style scoped>
   .paging{
@@ -185,6 +187,27 @@
     line-height: 50px;
     font-size: 18px;
     color: #222222;
+  }
+  .assets_summary{
+    width: 1080px;
+    height: 100px;
+    background-color: #ffffff;
+    font-size: 14px;
+    color: #666666;
+    margin-bottom: 24px;
+  }
+  .assets_summary p{
+    font-size: 14px;
+    color: #666666;
+    margin-left: 20px;
+  }
+  .assets_summary p:first-child{
+    font-size: 18px;
+    color: #222222;
+    padding: 16px 0;
+  }
+  .assets_summary p:nth-child(2){
+    margin-bottom: 10px;
   }
   .nav_content_title span{
     padding-left: 20px;
@@ -240,7 +263,7 @@
     line-height: 20px;
   }
   .quick_buy_td button{
-    width: 80px;
+    width: 64px;
     height: 28px;
     border-radius: 4px;
     border: solid 1px #c6351e;
@@ -250,12 +273,6 @@
     font-size: 14px;
     color: #c6351e;
     margin: 0 30px;
-  }
-  .quick_buy_td span{
-    font-size: 13px;
-    color: #666666;
-    margin-top: 10px;
-    display: inline-block;
   }
   .img_thead{
     height: 50px;
