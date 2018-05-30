@@ -5,6 +5,7 @@
       <div class="site">
         <ul>
           <li>当前位置 ：</li>
+          <li>首页></li>
           <li>维修案例</li>
         </ul>
       </div>
@@ -31,7 +32,7 @@
         <div class="like">收藏</div>
         <div class="price_box">
           <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
           <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
         </div>
       </div>
@@ -56,7 +57,7 @@
         <div class="like">收藏</div>
         <div class="price_box">
           <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
           <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
         </div>
       </div>
@@ -81,7 +82,7 @@
         <div class="like">收藏</div>
         <div class="price_box">
           <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
           <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
         </div>
       </div>
@@ -106,7 +107,7 @@
         <div class="like">收藏</div>
         <div class="price_box">
           <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
           <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
         </div>
       </div>
@@ -131,7 +132,7 @@
         <div class="like">收藏</div>
         <div class="price_box">
           <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
           <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
         </div>
       </div>
@@ -156,7 +157,7 @@
         <div class="like">收藏</div>
         <div class="price_box">
           <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
           <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
         </div>
       </div>
@@ -181,7 +182,7 @@
         <div class="like">收藏</div>
         <div class="price_box">
           <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
           <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
         </div>
       </div>
@@ -206,7 +207,7 @@
         <div class="like">收藏</div>
         <div class="price_box">
           <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
           <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
         </div>
       </div>
@@ -231,7 +232,7 @@
         <div class="like">收藏</div>
         <div class="price_box">
           <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
           <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
         </div>
       </div>
@@ -256,7 +257,7 @@
         <div class="like">收藏</div>
         <div class="price_box">
           <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
           <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
         </div>
       </div>

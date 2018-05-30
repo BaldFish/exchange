@@ -5,6 +5,7 @@
       <div class="site">
         <ul>
           <li>当前位置 ：</li>
+          <li>首页></li>
           <li>共享维修设备</li>
         </ul>
       </div>
@@ -18,7 +19,7 @@
         </div>
         <div class="fl price_box">
           <a href="#/facilityDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
           <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
@@ -36,7 +37,7 @@
         </div>
         <div class="fl price_box">
           <a href="#/facilityDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
           <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
@@ -54,7 +55,7 @@
         </div>
         <div class="fl price_box">
           <a href="#/facilityDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
           <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
@@ -72,7 +73,7 @@
         </div>
         <div class="fl price_box">
           <a href="#/facilityDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
           <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
@@ -90,7 +91,7 @@
         </div>
         <div class="fl price_box">
           <a href="#/facilityDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
           <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
@@ -108,7 +109,7 @@
         </div>
         <div class="fl price_box">
           <a href="#/facilityDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
           <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
@@ -126,7 +127,7 @@
         </div>
         <div class="fl price_box">
           <a href="#/facilityDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
           <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
@@ -144,7 +145,7 @@
         </div>
         <div class="fl price_box">
           <a href="#/facilityDetails"><p class="price">139.00</p></a>
-          <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
           <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>

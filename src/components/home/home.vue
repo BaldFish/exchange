@@ -27,11 +27,11 @@
           </div>
           <div class="price_box">
             <a href="#/caseDetails"><p class="price">139.00</p></a>
-            <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+            <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
           </div>
         </div>
         <div class="fr fr_case">
-          <h4><a href="#/caseDetailscaseDetails">奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</a></h4>
+          <h4><a href="#/caseDetails">奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</a></h4>
           <div class="attestation">
             <span class="merchant">认证商家</span>
             <span class="trust">高可信</span>
@@ -49,7 +49,7 @@
           </div>
           <div class="price_box">
             <a href="#/caseDetails"><p class="price">139.00</p></a>
-            <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+            <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
           </div>
         </div>
         <div class="fr fr_case">
@@ -71,7 +71,7 @@
           </div>
           <div class="price_box">
             <a href="#/caseDetailscaseDetails"><p class="price">139.00</p></a>
-            <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+            <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
           </div>
         </div>
       </div>
@@ -89,7 +89,7 @@
             </div>
             <div class="fl price_box">
               <a href="#/facilityDetails"><p class="price">139.00</p></a>
-              <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+              <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
             </div>
             <div class="fr facility_img">
               <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
@@ -107,7 +107,7 @@
             </div>
             <div class="fl price_box">
               <a href="#/facilityDetails"><p class="price">139.00</p></a>
-              <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+              <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
             </div>
             <div class="fr facility_img">
               <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
@@ -125,7 +125,7 @@
             </div>
             <div class="fl price_box">
               <a href="#/facilityDetails"><p class="price">139.00</p></a>
-              <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+              <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
             </div>
             <div class="fr facility_img">
               <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
@@ -143,7 +143,7 @@
             </div>
             <div class="fl price_box">
               <a href="#/facilityDetails"><p class="price">139.00</p></a>
-              <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+              <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
             </div>
             <div class="fr facility_img">
               <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
@@ -161,7 +161,7 @@
             </div>
             <div class="fl price_box">
               <a href="#/facilityDetails"><p class="price">139.00</p></a>
-              <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+              <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
             </div>
             <div class="fr facility_img">
               <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
@@ -179,7 +179,7 @@
             </div>
             <div class="fl price_box">
               <a href="#/facilityDetails"><p class="price">139.00</p></a>
-              <a href="#/trustedSource"><p class="tracing">可信溯源</p></a>
+              <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
             </div>
             <div class="fr facility_img">
               <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
@@ -532,7 +532,6 @@
             top: 50%;
             transform: translateY(-50%);
           }
-          
         }
         .partner_img:nth-child(3n) {
           margin-right 0
