@@ -28,9 +28,9 @@
         </ul>
       </div>
     </div>
-    <div class="favorite">
-      <span class="s_text">收藏夹</span>
-      <span class="s_num">99</span>
+    <div class="favorite" @click="turnFavorite">
+        <span class="s_text">收藏夹</span>
+        <span class="s_num">99</span>
     </div>
   </div>
 </template>
@@ -51,6 +51,18 @@
         input: '',
       }
     },
+    created() {
+    },
+    mounted() {
+    },
+    methods: {
+      turnFavorite(){
+        window.location.href="#/collectFolder"
+      }
+    },
+    watch: {},
+    computed: {},
+    components: {},
   }
 </script>
 
