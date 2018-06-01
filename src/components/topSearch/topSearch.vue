@@ -57,7 +57,7 @@
     },
     methods: {
       turnFavorite(){
-        window.location.href="#/collectFolder"
+        window.location.href="#/favorite"
       }
     },
     watch: {},

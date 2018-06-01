@@ -1,24 +1,18 @@
 <template>
   <div class="nav_content">
-    <div class="assets_summary">
-      <p>186***4168</p>
-      <p>钱包地址：0X93f478321.....5498268554</p>
-      <p>可信币：234567.00</p>
-    </div>
     
     <div class="nav_content_title">
-      <span>已购资产</span>
+      <span>核对订单信息</span>
     </div>
     
     <div class="nav_content_table">
       <table>
         <thead>
         <tr class="no_img_thead">
-          <th>名称</th>
+          <th>订单详情</th>
           <th>权益</th>
           <th>数量</th>
           <th>小计</th>
-          <th>操作</th>
         </tr>
         <tr class="th_classify">
           <th colspan="5">维修案例</th>
@@ -30,18 +24,6 @@
           <td>所有权</td>
           <td>9</td>
           <td>23456</td>
-          <td class="quick_buy_td">
-            <button>查阅</button>
-          </td>
-        </tr>
-        <tr class="no_img_tbody">
-          <td>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功型家用手持式迷你充电强力大功率</td>
-          <td>所有权</td>
-          <td>9</td>
-          <td>23456</td>
-          <td class="quick_buy_td">
-            <button>查阅</button>
-          </td>
         </tr>
         </tbody>
       </table>
@@ -51,12 +33,11 @@
       <table>
         <thead>
         <tr class="img_thead">
-          <th>图片</th>
-          <th>名称</th>
+          <th>订单详情</th>
+          <th></th>
           <th>权益</th>
           <th>数量</th>
           <th>小计</th>
-          <th>操作</th>
         </tr>
         <tr class="th_classify">
           <th colspan="6">维修设备</th>
@@ -69,49 +50,78 @@
           <td>所有权</td>
           <td>9</td>
           <td>23456</td>
-          <td class="quick_buy_td">
-            <button>查阅</button>
-          </td>
-        </tr>
-        <tr class="img_tbody">
-          <td><img src="" alt=""></td>
-          <td>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功型家用手持式迷你充电强力大功率</td>
-          <td>所有权</td>
-          <td>9</td>
-          <td>23456</td>
-          <td class="quick_buy_td">
-            <button>查阅</button>
-          </td>
         </tr>
         </tbody>
       </table>
     </div>
     
-    <div class="clearfix paging">
-      <my-paging></my-paging>
+    <p class="order_amount">订单金额：<span>180.00</span></p>
+    
+    <div class="check_container">
+      <div class="check_info">
+        <h2>使用可信币抵用</h2>
+        <div class="check_title_info">
+          <p>钱包地址：0X93f478321.....5498268554</p>
+          <p>可信币：129400.00</p>
+        </div>
+      </div>
+      <div class="check_code">
+        <p>可使用元积分币，进行等价交易。</p><br>
+        <p>提示：可用其它钱包地址支付</p>
+        <img class="check_code_img" src="" alt="">
+      </div>
+    </div>
+    
+    <div class="check_container">
+      <div class="check_info">
+        <h2>使用可信币抵用</h2>
+        <div class="check_title_info">
+          <p>钱包地址：0X93f478321.....5498268554</p>
+          <p>可信币：129400.00</p>
+        </div>
+      </div>
+      <div class="check_code">
+        <p>可使用元积分币，进行等价交易。</p><br>
+        <p>提示：可用其它钱包地址支付</p>
+        <div class="check_success">
+          <img src="./images/payment.png" alt="">
+          <p>支付成功！</p>
+          <router-link to="/home" class="to_home">返回首页</router-link>
+        </div>
+      </div>
+    </div>
+    
+    <div class="check_container">
+      <div class="check_info">
+        <h2>使用可信币抵用</h2>
+      </div>
+      <div class="check_code check_confirm">
+        <p>可使用元积分币，进行等价交易。
+          <router-link to="" class="to_bind">去绑定 ></router-link>
+        </p><br>
+        <p>提示：可用其它钱包地址支付</p>
+        <button>确认支付</button>
+      </div>
     </div>
   
   </div>
 </template>
 
 <script>
-  import myPaging from "../paging/paging"
+  import myTopSearch from "../topSearch/topSearch"
   export default{
-    name: "personalAssets",
+    name: "checkOrder",
     data(){
-      return {}
+      return {
+        msg: 'hello vue'
+      }
     },
     components: {
-      myPaging
+      myTopSearch
     }
   }
 </script>
 <style scoped>
-  .paging{
-    width:1080px;
-    margin: 0 auto;
-    text-align: center
-  }
   .nav_content{
     width: 1078px;
     float: right;
@@ -124,27 +134,6 @@
     line-height: 50px;
     font-size: 18px;
     color: #222222;
-  }
-  .assets_summary{
-    width: 1080px;
-    height: 100px;
-    background-color: #ffffff;
-    font-size: 14px;
-    color: #666666;
-    margin-bottom: 24px;
-  }
-  .assets_summary p{
-    font-size: 14px;
-    color: #666666;
-    margin-left: 20px;
-  }
-  .assets_summary p:first-child{
-    font-size: 18px;
-    color: #222222;
-    padding: 16px 0;
-  }
-  .assets_summary p:nth-child(2){
-    margin-bottom: 10px;
   }
   .nav_content_title span{
     padding-left: 20px;
@@ -236,5 +225,89 @@
     height: 54px;
     border: solid 1px #bfbfbf;
     display: inline-block;
+  }
+  .order_amount{
+    text-align: right;
+    font-size: 18px;
+    color: #222222;
+    margin-top: 20px;
+    margin-bottom: 60px;
+  }
+  .order_amount span{
+    color: #c6351e;
+  }
+  .check_container{
+    width: 1080px;
+    height: 330px;
+    background-color: #ffffff;
+    border-top: 6px solid #c6351e;
+    margin-bottom: 130px;
+  }
+  .check_info h2{
+    font-size: 18px;
+    color: #222222;
+    margin: 18px;
+    margin-bottom: 14px;
+  }
+  .check_title_info{
+    font-size: 14px;
+    color: #666666;
+    margin-left: 22px;
+    line-height: 24px;
+  }
+  .check_code{
+    font-size: 16px;
+    color: #222222;
+    width: 240px;
+    height: 180px;
+    margin:0 auto;
+    margin-top: 30px;
+  }
+  .check_code_img{
+    width: 100px;
+    height: 100px;
+    border:1px solid #cccccc;
+    display: inline-block;
+    margin-top: 18px;
+    margin-left: 58px;
+  }
+  .check_success{
+    text-align: center;
+    font-size: 16px;
+    color: #c6351e;
+    margin-top: 18px;
+  }
+  .check_success p{
+    margin-top: 6px;
+  }
+  .to_home{
+    width: 100px;
+    height: 30px;
+    display: inline-block;
+    background-color: #c6351e;
+    color: #ffffff;
+    line-height: 30px;
+    margin-top: 18px;
+    margin-right: 14px;
+  }
+  .check_confirm{
+    width: 310px;
+    margin-top: 92px;
+  }
+  .check_confirm button{
+    width: 100px;
+    height: 30px;
+    color: #ffffff;
+    line-height: 30px;
+    background-color: #c6351e;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    margin-top: 24px;
+    margin-left: 94px;
+  }
+  .to_bind{
+    font-size: 14px;
+    color: #c6351e;
   }
 </style>

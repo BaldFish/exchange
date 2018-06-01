@@ -43,7 +43,7 @@
             <span>：2005.03.04</span>
           </li>
         </ul>
-        <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
+        <a href="#/checkOrder"><p class="buy">一键购买</p></a>
       </div>
       <div class="intro_text">
         <span>设备简介</span>

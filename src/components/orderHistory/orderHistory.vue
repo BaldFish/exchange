@@ -1,143 +1,108 @@
 <template>
-  <div>
-    <my-topSearch></my-topSearch>
-    <div class="nav_body">
-      <div class="nav_mid">
-        <nav class="nav_tab">
-          <ul>
-            <li>
-              <router-link to="/personalAssets">
-                <span></span>
-                <p>个人资产</p>
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/collectFolder">
-                <span></span>
-                <p>收藏夹</p>
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/orderHistory">
-                <span></span>
-                <p>历史订单</p>
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/securityCenter">
-                <span></span>
-                <p>安全中心</p>
-              </router-link>
-            </li>
-          </ul>
-        </nav>
-        <div class="nav_content">
-
-          <div class="nav_content_title">
-            <span>订单商品信息</span>
-          </div>
-
-          <table class="order_nav">
-            <tr>
-              <td>
-                <el-select class="my_select" v-model="value" placeholder="请选择" >
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-                <span>订单详情</span>
-              </td>
-              <td>权益</td>
-              <td>数量</td>
-              <td>小计</td>
-              <td>全部状态</td>
-            </tr>
-          </table>
-
-          <div class="nav_content_table">
-            <table>
-              <thead>
-              <tr class="no_img_thead">
-                <th>支付钱包地址：0X32480328*****47483279fa</th>
-                <th colspan="4" class="order_amount">
-                  订单金额：
-                  <span>￥309.00</span>
-                </th>
-              </tr>
-              <tr class="th_classify">
-                <th>维修案例
-                  <span>订单号： 752642823580</span>
-                </th>
-                <th colspan="4">下单日期：2018-04-01 12:12:56</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr class="no_img_tbody">
-                <td>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功率德国车载吸尘你充电强力大功率</td>
-                <td>所有权</td>
-                <td>9</td>
-                <td>23456</td>
-                <td class="no_img_lastTd">
-                  <p>未完成</p>
-                  <router-link to="">去支付 ></router-link>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="nav_content_table">
-            <table>
-              <thead>
-              <tr class="img_thead">
-                <th>支付钱包地址：0X32480328*****47483279fa</th>
-                <th colspan="5" class="order_amount">
-                  订单金额：
-                  <span>￥309.00</span>
-                </th>
-              </tr>
-              <tr class="th_classify">
-                <th>维修设备
-                  <span>订单号： 752642823580</span>
-                </th>
-                <th colspan="5">下单日期：2018-04-01 12:12:56</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr class="img_tbody">
-                <td>
-                  <img src="" alt="">
-                  <p>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功率德国车载吸尘你充电强力大功率</p>
-                </td>
-                <td>所有权</td>
-                <td>9</td>
-                <td>23456</td>
-                <td class="img_lastTd">
-                  <p>已完成</p>
-                  <p>查阅</p>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="clearfix paging">
-            <my-paging></my-paging>
-          </div>
-
-        </div>
-      </div>
+  <div class="nav_content">
+    
+    <div class="nav_content_title">
+      <span>订单商品信息</span>
     </div>
+    
+    <table class="order_nav">
+      <tr>
+        <td>
+          <el-select class="my_select" v-model="value" placeholder="请选择" >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <span>订单详情</span>
+        </td>
+        <td>权益</td>
+        <td>数量</td>
+        <td>小计</td>
+        <td>全部状态</td>
+      </tr>
+    </table>
+    
+    <div class="nav_content_table">
+      <table>
+        <thead>
+        <tr class="no_img_thead">
+          <th>支付钱包地址：0X32480328*****47483279fa</th>
+          <th colspan="4" class="order_amount">
+            订单金额：
+            <span>￥309.00</span>
+          </th>
+        </tr>
+        <tr class="th_classify">
+          <th>维修案例
+            <span>订单号： 752642823580</span>
+          </th>
+          <th colspan="4">下单日期：2018-04-01 12:12:56</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="no_img_tbody">
+          <td>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功率德国车载吸尘你充电强力大功率</td>
+          <td>所有权</td>
+          <td>9</td>
+          <td>23456</td>
+          <td class="no_img_lastTd">
+            <p>未完成</p>
+            <router-link to="">去支付 ></router-link>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="nav_content_table">
+      <table>
+        <thead>
+        <tr class="img_thead">
+          <th>支付钱包地址：0X32480328*****47483279fa</th>
+          <th colspan="5" class="order_amount">
+            订单金额：
+            <span>￥309.00</span>
+          </th>
+        </tr>
+        <tr class="th_classify">
+          <th>维修设备
+            <span>订单号： 752642823580</span>
+          </th>
+          <th colspan="5">下单日期：2018-04-01 12:12:56</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="img_tbody">
+          <td>
+            <img src="" alt="">
+            <p>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功率德国车载吸尘你充电强力大功率</p>
+          </td>
+          <td>所有权</td>
+          <td>9</td>
+          <td>23456</td>
+          <td class="img_lastTd">
+            <p>已完成</p>
+            <p>查阅</p>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="clearfix paging">
+      <my-paging></my-paging>
+    </div>
+  
   </div>
 </template>
 
 <script>
-  import myTopSearch from "../topSearch/topSearch"
   import myPaging from "../paging/paging"
   export default{
+    name: "orderHistory",
     data(){
       return {
         options: [{
@@ -155,7 +120,7 @@
       }
     },
     components: {
-      myPaging,myTopSearch
+      myPaging
     }
   }
 </script>
@@ -164,32 +129,6 @@
     width:1080px;
     margin: 0 auto;
     text-align: center
-  }
-  .nav_body{
-    background-color: #f3f3f3;
-  }
-  .nav_mid{
-    width: 1212px;
-    margin:0 auto;
-  }
-  .nav_tab{
-    font-size: 18px;
-    width: 100px;
-    height: 128px;
-    float: left;
-  }
-  .nav_tab p{
-    color: #222222;
-    line-height: 34px;
-  }
-  .nav_tab span{
-    width: 14px;
-    height: 14px;
-    background-color: #7d7d7d;
-    display: inline-block;
-    float: left;
-    margin-top: 10px;
-    margin-right: 10px;
   }
   .nav_content{
     width: 1078px;
