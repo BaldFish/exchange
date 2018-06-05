@@ -6,6 +6,7 @@ import myCaseDetails from '@/components/caseDetails/caseDetails'
 import myCaseSource from '@/components/caseSource/caseSource'
 import myMoreFacility from '@/components/moreFacility/moreFacility'
 import myFacilityDetails from '@/components/facilityDetails/facilityDetails'
+import myFacilityProfit from '@/components/facilityProfit/facilityProfit'
 import myFacilitySource from '@/components/facilitySource/facilitySource'
 import myLogin from '@/components/login/login'
 import myForgetPassword from '@/components/forgetPassword/forgetPassword'
@@ -55,6 +56,11 @@ export default new Router({
       path: '/facilityDetails',
       name: 'facilityDetails',
       component: myFacilityDetails
+    },
+    {
+      path: '/facilityProfit',
+      name: 'facilityProfit',
+      component: myFacilityProfit
     },
     {
       path: '/facilitySource',
