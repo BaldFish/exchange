@@ -221,12 +221,23 @@
 </template>
 
 <script>
+  import axios from "axios";
+  import _ from "lodash";
+  import {baseURL} from '@/common/js/public.js';
   import myTopSearch from "../topSearch/topSearch"
   export default {
     name: "home",
     data() {
       return {}
     },
+    created() {
+    },
+    mounted() {
+    
+    },
+    methods: {},
+    watch: {},
+    computed: {},
     components:{
       myTopSearch
     }
