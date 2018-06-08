@@ -7,70 +7,93 @@
           <li>当前位置 ：</li>
           <li>首页></li>
           <li>维修案例></li>
-          <li>共享设备名称具体什么我也不清楚应该不会太长 540严重发动机严重动严严重发动可</li>
+          <li>{{facilityDetails.Assetname}}</li>
         </ul>
       </div>
     </div>
     <div class="details">
       <div class="clearfix details_top">
         <div class="fl facility_img">
-          <img src="./images/01.png" alt="">
+          <img :src="facilityDetails.Asseturl" alt="">
         </div>
         <div class="fr facility_intro">
-          <h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4>
+          <h4>{{facilityDetails.Assetname}}</h4>
           <div class="attestation">
-            <span class="person">认证个人</span>
-            <span class="trust">高可信</span>
+            <span class="merchant" v-if="facilityDetails.AuthType==='认证商家'">{{facilityDetails.AuthType}}</span>
+            <span class="person" v-if="facilityDetails.AuthType==='认证个人'">{{facilityDetails.AuthType}}</span>
+            <span class="trust" v-if="facilityDetails.CreditLevel!=='未认证'">{{facilityDetails.CreditLevel}}</span>
           </div>
           <div class="like">收藏</div>
-          <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
+          <a href="#/facilitySource" @click="getFacilitySource(facilityDetails)"><p class="tracing">可信溯源</p></a>
           <div class="intro_list">
             <ul>
               <li>
                 <span>资产所属人</span>
-                <span class="holder">：0X32345674323456829342....12342345675432567890</span>
+                <span class="holder">：{{facilityDetails.Assetowner}}</span>
               </li>
               <li>
                 <span>权益</span>
-                <span>：所有权</span>
+                <span>：{{facilityDetails.SellType}}</span>
               </li>
               <li>
                 <span>价格</span>
-                <span>：139.00</span>
+                <span>：{{facilityDetails.Price}}</span>
               </li>
               <li>
                 <span>案例ID</span>
-                <span>：String123456</span>
+                <span>：{{facilityDetails.Id}}</span>
               </li>
               <li>
                 <span>上架时间</span>
-                <span>：2005.03.04</span>
+                <span>：{{facilityDetails.SellAt}}</span>
               </li>
             </ul>
-            <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
+            <a href="#/checkOrder"><p class="buy">一键购买</p></a>
           </div>
         </div>
       </div>
       <div class="intro_text">
         <span>设备简介</span>
-        <p>容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内</p>
+        <p>{{facilityDetails.AssetContent}}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import axios from "axios";
   import myTopSearch from "../topSearch/topSearch"
+  import {baseURL,cardURL} from '@/common/js/public.js';
   export default {
     name: "facilityDetails",
     data() {
-      return {}
-    },
-    created() {
+      return {
+        facilityDetails:{},
+        apiKey:"",
+        assetId:""
+      }
     },
     mounted() {
+      this.facilityDetails=JSON.parse(sessionStorage.getItem("facilityDetails"))
+      this.apiKey=this.facilityDetails.Apikey;
+      this.assetId=this.facilityDetails.Assetid;
+      axios({
+        method: "GET",
+        url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }).then((res) => {
+        this.facilityDetails=res.data
+      }).catch((err) => {
+        console.log(err);
+      })
     },
-    methods: {},
+    methods: {
+      getFacilitySource(val) {
+        this.$store.commit("changeFacilitySource",val);
+      },
+    },
     watch: {},
     computed: {},
     components: {
@@ -139,6 +162,8 @@
             font-size: 20px;
           }
           .attestation {
+            width 850px
+            height 78px
             font-size 0px
             span {
               text-align center

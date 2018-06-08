@@ -7,70 +7,34 @@
           <li>当前位置 ：</li>
           <li>首页></li>
           <li>维修案例></li>
-          <li>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</li>
+          <li>{{caseSourceTitle}}</li>
         </ul>
       </div>
     </div>
     <div class="details">
-      <h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4>
+      <h4>{{caseSourceTitle}}</h4>
       <div class="like">收藏</div>
       <div class="transfer_record">
         <span>资产转让记录</span>
-        <ul>
+        <ul v-for="(item,index) of caseSource" :key="item.id">
           <li>
-            <span>"交易发起方"</span>
-            <span>："0xefc7dfef4456ab87392dcd8bb6e51418df70e340"</span>
+            <span>交易发起方</span>
+            <span>：{{item.from}}</span>
           </li>
           <li>
-            <span>"交易接收方"</span>
-            <span>："0xedbff07577761936121e2ab82de3a2f3b7658b43"</span>
+            <span>交易接收方</span>
+            <span>：{{item.to}}</span>
           </li>
           <li>
-            <span>"交易数量"</span>
-            <span>：10</span>
+            <span>交易价格</span>
+            <span>：{{item.price}}</span>
           </li>
           <li>
-            <span>"交易时间"</span>
-            <span>："2018-05-23 08:32:48"</span>
-          </li>
-        </ul>
-        <ul>
-          <li>
-            <span>"交易发起方"</span>
-            <span>："0xefc7dfef4456ab87392dcd8bb6e51418df70e340"</span>
-          </li>
-          <li>
-            <span>"交易接收方"</span>
-            <span>："0xedbff07577761936121e2ab82de3a2f3b7658b43"</span>
-          </li>
-          <li>
-            <span>"交易数量"</span>
-            <span>：10</span>
-          </li>
-          <li>
-            <span>"交易时间"</span>
-            <span>："2018-05-23 08:32:48"</span>
+            <span>交易时间</span>
+            <span>：{{item.updated_at}}</span>
           </li>
         </ul>
-        <ul>
-          <li>
-            <span>"交易发起方"</span>
-            <span>："0xefc7dfef4456ab87392dcd8bb6e51418df70e340"</span>
-          </li>
-          <li>
-            <span>"交易接收方"</span>
-            <span>："0xedbff07577761936121e2ab82de3a2f3b7658b43"</span>
-          </li>
-          <li>
-            <span>"交易数量"</span>
-            <span>：10</span>
-          </li>
-          <li>
-            <span>"交易时间"</span>
-            <span>："2018-05-23 08:32:48"</span>
-          </li>
-        </ul>
-        <a href="#/caseDetails"><p class="asset_details">案例详情</p></a>
+        <a href="#/caseDetails" @click=""><p class="asset_details">案例详情</p></a>
         <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
       </div>
     </div>
@@ -79,14 +43,38 @@
 
 <script>
   import myTopSearch from "../topSearch/topSearch"
+  import {baseURL, cardURL} from '@/common/js/public.js';
+  import axios from "axios";
+  
   export default {
     name: "trustedSource",
     data() {
-      return {}
-    },
-    created() {
+      return {
+        caseSourceTitle: "",
+        caseSource: [],
+        assetId: "",
+        apiKey: "",
+      }
     },
     mounted() {
+      this.caseSourceTitle = JSON.parse(sessionStorage.getItem("caseSource")).Assetname
+      this.assetId = JSON.parse(sessionStorage.getItem("caseSource")).Assetid;
+      this.apiKey = JSON.parse(sessionStorage.getItem("caseSource")).Apikey;
+      axios({
+        method: "GET",
+        url: `${cardURL}/v1/transed-asset/${this.assetId}/apikey/${this.apiKey}?page=0&limit=1000000`,
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }).then((res) => {
+        if (res.data.data != null) {
+          this.caseSource = res.data.data
+        }else{
+          this.caseSource =[]
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
     },
     methods: {},
     watch: {},
@@ -98,7 +86,7 @@
 </script>
 
 <style scoped lang="stylus">
-  .trustedSource{
+  .trustedSource {
     .site_box {
       width 100%
       background-color #7d7d7d;
@@ -116,7 +104,7 @@
             display inline-block
             font-size 20px
           }
-          li:last-child{
+          li:last-child {
             width 500px
             overflow: hidden;
             text-overflow: ellipsis;
@@ -151,7 +139,7 @@
         background-repeat: no-repeat;
         background-position: top left;
       }
-      .transfer_record{
+      .transfer_record {
         box-sizing border-box
         min-height 218px
         padding 20px 30px
@@ -160,7 +148,7 @@
         margin-top 30px
         margin-bottom 70px
         position relative
-        span{
+        span {
           display inline-block
           font-size 18px
           height 18px
@@ -168,25 +156,25 @@
           color #000000
           margin-bottom 10px
         }
-        ul{
+        ul {
           padding 8px 0
-          li{
+          li {
             line-height 20px
             font-size 0
-            span{
+            span {
               display inline-block
               font-size 16px
               vertical-align top
               color: #666666;
               margin-bottom 0px
             }
-            span:first-child{
+            span:first-child {
               width 96px
               color: #333333;
             }
           }
         }
-        .asset_details{
+        .asset_details {
           box-sizing border-box
           position absolute
           top 70px
@@ -200,7 +188,7 @@
           line-height 54px
           text-align center
         }
-        .buy{
+        .buy {
           position absolute
           top 134px
           right 60px

@@ -1,8 +1,11 @@
 <template>
   <el-pagination class="my_paging"
-    :background=true
-    layout="prev, pager, next"
-    :total="1000">
+                 layout="prev, pager, next"
+                 :background=true
+                 :total=total
+                 :page-size=pageSize
+                 :current-page.sync=currentPage
+                 @current-change="handleCurrentChange">
   </el-pagination>
 </template>
 
@@ -10,15 +13,36 @@
   export default {
     name: "paging",
     data() {
-      return {}
+      return {
+      }
     },
+    props:{
+      total:{
+        type:Number,
+        default:10
+      },
+      pageSize:{
+        type:Number,
+        default:5
+      },
+      currentPage:{
+        type:Number,
+        default:1
+      }
+    },
+    methods:{
+      handleCurrentChange(val){
+        console.log(val)
+        this.$emit("w",val)
+      },
+    }
   }
 </script>
 
 <style scoped lang="stylus">
 
 </style>
-<style>
+<style lang="stylus">
   .el-pagination.my_paging {
     white-space: nowrap;
     padding: 20px 0 30px;

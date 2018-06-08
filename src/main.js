@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vuex from 'vuex';
+import $ from 'jquery'
 Vue.use(Vuex);
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -11,9 +12,36 @@ Vue.use(ElementUI);
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
+const store = new Vuex.Store({
+  state: {
+    caseDetails: {},
+    caseSource:{},
+    facilityDetails:{},
+    facilitySource:{},
+  },
+  mutations: {
+    changeCaseDetails(state, params) {
+      state.caseDetails = params;
+      window.sessionStorage.setItem("caseDetails", JSON.stringify(state.caseDetails))
+    },
+    changeCaseSource(state, params) {
+      state.caseSource = params;
+      window.sessionStorage.setItem("caseSource", JSON.stringify(state.caseSource))
+    },
+    changeFacilityDetails(state, params) {
+      state.facilityDetails = params;
+      window.sessionStorage.setItem("facilityDetails", JSON.stringify(state.facilityDetails))
+    },
+    changeFacilitySource(state, params) {
+      state.facilitySource = params;
+      window.sessionStorage.setItem("facilitySource", JSON.stringify(state.facilitySource))
+    },
+  }
+});
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

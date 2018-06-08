@@ -7,126 +7,62 @@
           <li>当前位置 ：</li>
           <li>首页></li>
           <li>维修案例></li>
-          <li>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</li>
+          <li>{{facilitySourceTitle}}</li>
         </ul>
       </div>
     </div>
     <div class="details">
-      <h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4>
+      <h4>{{facilitySourceTitle}}</h4>
       <div class="like">收藏</div>
       <div class="transfer_record">
         <span>资产转让记录</span>
-        <ul>
+        <ul v-for="(item,index) of facilitySource" :key="item.id">
           <li>
-            <span>"交易发起方"</span>
-            <span>："0xefc7dfef4456ab87392dcd8bb6e51418df70e340"</span>
+            <span>交易发起方</span>
+            <span>：{{item.from}}</span>
           </li>
           <li>
-            <span>"交易接收方"</span>
-            <span>："0xedbff07577761936121e2ab82de3a2f3b7658b43"</span>
+            <span>交易接收方</span>
+            <span>：{{item.to}}</span>
           </li>
           <li>
-            <span>"交易数量"</span>
-            <span>：10</span>
+            <span>交易价格</span>
+            <span>：{{item.price}}</span>
           </li>
           <li>
-            <span>"交易时间"</span>
-            <span>："2018-05-23 08:32:48"</span>
-          </li>
-        </ul>
-        <ul>
-          <li>
-            <span>"交易发起方"</span>
-            <span>："0xefc7dfef4456ab87392dcd8bb6e51418df70e340"</span>
-          </li>
-          <li>
-            <span>"交易接收方"</span>
-            <span>："0xedbff07577761936121e2ab82de3a2f3b7658b43"</span>
-          </li>
-          <li>
-            <span>"交易数量"</span>
-            <span>：10</span>
-          </li>
-          <li>
-            <span>"交易时间"</span>
-            <span>："2018-05-23 08:32:48"</span>
-          </li>
-        </ul>
-        <ul>
-          <li>
-            <span>"交易发起方"</span>
-            <span>："0xefc7dfef4456ab87392dcd8bb6e51418df70e340"</span>
-          </li>
-          <li>
-            <span>"交易接收方"</span>
-            <span>："0xedbff07577761936121e2ab82de3a2f3b7658b43"</span>
-          </li>
-          <li>
-            <span>"交易数量"</span>
-            <span>：10</span>
-          </li>
-          <li>
-            <span>"交易时间"</span>
-            <span>："2018-05-23 08:32:48"</span>
+            <span>交易时间</span>
+            <span>：{{item.updated_at}}</span>
           </li>
         </ul>
         <a href="#/caseDetails"><p class="asset_details">案例详情</p></a>
         <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
       </div>
       <div class="transfer_record use_record">
-        <span>资产转让记录</span>
-        <ul>
+        <span>资产使用记录</span>
+        <ul v-for="(item,index) of usageRecord" :key="item.id">
           <li>
-            <span>"交易发起方"</span>
-            <span>："0xefc7dfef4456ab87392dcd8bb6e51418df70e340"</span>
+            <span>资产ID</span>
+            <span>：{{item.asset_id}}</span>
           </li>
           <li>
-            <span>"交易接收方"</span>
-            <span>："0xedbff07577761936121e2ab82de3a2f3b7658b43"</span>
+            <span>记录名称</span>
+            <span>：{{item.name}}</span>
           </li>
           <li>
-            <span>"交易数量"</span>
-            <span>：10</span>
+            <span>记录内容</span>
+            <span>：{{item.content}}</span>
           </li>
           <li>
-            <span>"交易时间"</span>
-            <span>："2018-05-23 08:32:48"</span>
-          </li>
-        </ul>
-        <ul>
-          <li>
-            <span>"交易发起方"</span>
-            <span>："0xefc7dfef4456ab87392dcd8bb6e51418df70e340"</span>
+            <span>记录哈希</span>
+            <span>：{{item.record_hash}}</span>
           </li>
           <li>
-            <span>"交易接收方"</span>
-            <span>："0xedbff07577761936121e2ab82de3a2f3b7658b43"</span>
+            <span>交易哈希</span>
+            <span>：{{item.txn_hash}}</span>
           </li>
           <li>
-            <span>"交易数量"</span>
-            <span>：10</span>
-          </li>
-          <li>
-            <span>"交易时间"</span>
-            <span>："2018-05-23 08:32:48"</span>
-          </li>
-        </ul>
-        <ul>
-          <li>
-            <span>"交易发起方"</span>
-            <span>："0xefc7dfef4456ab87392dcd8bb6e51418df70e340"</span>
-          </li>
-          <li>
-            <span>"交易接收方"</span>
-            <span>："0xedbff07577761936121e2ab82de3a2f3b7658b43"</span>
-          </li>
-          <li>
-            <span>"交易数量"</span>
-            <span>：10</span>
-          </li>
-          <li>
-            <span>"交易时间"</span>
-            <span>："2018-05-23 08:32:48"</span>
+            <span>记录时间</span>
+            <span>：{{item.updated_at}}</span>
           </li>
         </ul>
       </div>
@@ -135,19 +71,63 @@
 </template>
 
 <script>
+  import axios from "axios";
+  import myTopSearch from "../topSearch/topSearch"
+  import {baseURL,cardURL} from '@/common/js/public.js';
   export default {
     name: "facilitySource",
     data() {
-      return {}
-    },
-    created() {
+      return {
+        facilitySourceTitle: "",
+        facilitySource: [],
+        usageRecord: [],
+        assetId: "",
+        apiKey: "",
+      }
     },
     mounted() {
+      this.facilitySourceTitle = JSON.parse(sessionStorage.getItem("facilitySource")).Assetname
+      this.assetId = JSON.parse(sessionStorage.getItem("facilitySource")).Assetid;
+      this.apiKey = JSON.parse(sessionStorage.getItem("facilitySource")).Apikey;
+      axios({
+        method: "GET",
+        url: `${cardURL}/v1/transed-asset/${this.assetId}/apikey/${this.apiKey}?page=0&limit=1000000`,
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }).then((res) => {
+        if (res.data.data != []) {
+          this.facilitySource = res.data.data
+        }else{
+          this.facilitySource =[]
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+      axios({
+        method: "GET",
+        url: `${cardURL}/v1/used-asset/${this.assetId}/apikey/${this.apiKey}?page=0&limit=1000000`,
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }).then((res) => {
+        if (res.data.data != null) {
+          this.usageRecord = res.data.data
+        }else{
+          this.usageRecord =[]
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
     },
-    methods: {},
+    methods: {
+    
+    },
     watch: {},
     computed: {},
-    components: {},
+    components: {
+      myTopSearch
+    },
   }
 </script>
 

@@ -12,60 +12,83 @@
       </div>
     </div>
     <div class="details">
-      <h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4>
+      <h4>{{caseDetails.Assetname}}</h4>
       <div class="attestation">
-        <span class="merchant">认证商家</span>
-        <span class="person">认证个人</span>
-        <span class="trust">高可信</span>
+        <span class="merchant" v-if="caseDetails.AuthType==='认证商家'">{{caseDetails.AuthType}}</span>
+        <span class="person" v-if="caseDetails.AuthType==='认证个人'">{{caseDetails.AuthType}}</span>
+        <span class="trust" v-if="caseDetails.CreditLevel!=='未认证'">{{caseDetails.CreditLevel}}</span>
       </div>
       <div class="like">收藏</div>
-      <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
+      <a href="#/caseSource" @click="getCaseSource(caseDetails)"><p class="tracing">可信溯源</p></a>
       <div class="intro_list">
         <ul>
           <li>
             <span>资产所属人</span>
-            <span class="holder">：0X32345674323456829342....12342345675432567890</span>
+            <span class="holder">：{{caseDetails.Assetowner}}</span>
           </li>
           <li>
             <span>权益</span>
-            <span>：所有权</span>
+            <span>：{{caseDetails.SellType}}</span>
           </li>
           <li>
             <span>价格</span>
-            <span>：139.00</span>
+            <span>：{{caseDetails.Price}}</span>
           </li>
           <li>
             <span>案例ID</span>
-            <span>：String123456</span>
+            <span>：{{caseDetails.Id}}</span>
           </li>
           <li>
             <span>上架时间</span>
-            <span>：2005.03.04</span>
+            <span>：{{caseDetails.SellAt}}</span>
           </li>
         </ul>
         <a href="#/checkOrder"><p class="buy">一键购买</p></a>
       </div>
       <div class="intro_text">
-        <span>设备简介</span>
-        <p>容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内</p>
+        <span>案例简介</span>
+        <p>{{caseDetails.AssetContent}}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import axios from "axios";
   import myTopSearch from "../topSearch/topSearch"
-  
+  import {baseURL,cardURL} from '@/common/js/public.js';
   export default {
     name: "caseDetails",
     data() {
-      return {}
+      return {
+        caseDetails:{},
+        apiKey:"",
+        assetId:""
+      }
     },
     created() {
     },
     mounted() {
+      this.caseDetails=JSON.parse(sessionStorage.getItem("caseDetails"))
+      this.apiKey=this.caseDetails.Apikey;
+      this.assetId=this.caseDetails.Assetid;
+      axios({
+        method: "GET",
+        url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }).then((res) => {
+        this.caseDetails=res.data
+      }).catch((err) => {
+        console.log(err);
+      })
     },
-    methods: {},
+    methods: {
+      getCaseSource(val) {
+        this.$store.commit("changeCaseSource",val);
+      },
+    },
     watch: {},
     computed: {},
     components: {
@@ -116,6 +139,8 @@
         font-size: 20px;
       }
       .attestation {
+        width 850px
+        height 74px
         font-size 0px
         span {
           text-align center

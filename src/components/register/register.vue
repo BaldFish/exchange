@@ -121,7 +121,8 @@
 </template>
 
 <script>
-
+  import axios from "axios";
+  import {baseURL} from '@/common/js/public.js';
   export default{
     data(){
       return {
@@ -134,7 +135,8 @@
       };
     },
     computed:{
-
+    },
+    mounted(){
     },
     methods: {
       getCode() {
