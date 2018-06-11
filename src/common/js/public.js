@@ -1,3 +1,3 @@
-var baseURL="192.168.3.18:50022";
+var baseURL="http://wallet-api-test.launchain.org:50000/exchange";
 
 export {baseURL}

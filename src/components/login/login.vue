@@ -19,16 +19,16 @@
                     <ul>
                       <li>
                         <i></i>
-                        <input type="text" placeholder="请输入账号">
+                        <input type="text" placeholder="请输入账号" v-model="phone">
                       </li>
                       <li>
                         <i></i>
-                        <input type="password" placeholder="请输入密码">
+                        <input type="password" placeholder="请输入密码" v-model="password">
                       </li>
                       <li>
                         <i></i>
-                        <input type="text" placeholder="请输入验证码">
-                        <img class="img_change_img" src="./images/code.png">
+                        <input type="text" placeholder="请输入验证码" v-model="captcha_number">
+                        <img class="img_change_img" @click="getCaptcha" :src="captcha">
                       </li>
                     </ul>
                   </section>
@@ -36,16 +36,16 @@
                     <ul>
                       <li>
                         <i></i>
-                        <input type="text" placeholder="请输入手机号">
+                        <input type="text" placeholder="请输入手机号" v-model="phone">
                       </li>
                       <li>
                         <i></i>
-                        <input type="text" placeholder="请输入验证码">
-                        <img class="img_change_img" src="./images/code.png">
+                        <input type="text" placeholder="请输入验证码" v-model="captcha_number">
+                        <img class="img_change_img" @click="getCaptcha" :src="captcha">
                       </li>
                       <li>
                         <i></i>
-                        <input type="text" placeholder="请输入手机验证码">
+                        <input type="text" placeholder="请输入手机验证码" v-model="code">
                         <div class="img_change_img get_code" @click="getCode" v-if="codeValue">获取验证码</div>
                         <div class="img_change_img count_down" v-else>倒计时（{{second}}）</div>
                       </li>
@@ -53,7 +53,7 @@
                   </section>
 
                   <router-link to="/forgetPassword" class="to_forget"><p>忘记密码？</p></router-link>
-                  <router-link to="/home" class="to_login"><span>登录</span></router-link>
+                  <router-link to="" class="to_login"><span @click="login">登录</span></router-link>
                   <router-link to="/register" class="to_register"><p>还没有账号，立即注册</p></router-link>
 
 
@@ -66,6 +66,9 @@
 </template>
 
 <script>
+  import axios from "axios";
+  import {baseURL} from '@/common/js/public.js';
+  const querystring = require('querystring');
 
     export default{
         data(){
@@ -73,17 +76,58 @@
             loginWay: true,
             codeValue:true,
             second:5,// 发送验证码倒计时
-
+            phone:"", //手机号
+            captcha_number:"", //图形验证码
+            captcha_id:"", //图形验证码--ID
+            captcha:"./images/code.png", //图形验证码--图片
+            code:"", //短信验证码
+            password:"", //密码
           };
         },
         computed:{
+          uuid() {
+            var s = [];
+            var hexDigits = "0123456789abcdef";
+            for (var i = 0; i < 36; i++) {
+              s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+            }
+            s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+            s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+            s[8] = s[13] = s[18] = s[23] = "-";
 
+            var uuid = s.join("");
+            return uuid;
+          }
+        },
+        mounted: function() {
+          //这个是钩子函数
+          //如果getCaptcha函数要执行，必须先执行钩子函数
+          //这个钩子函数完成了对getCaptcha函数的调用
+          //应该注意的是，使用mounted 并不能保证钩子函数中的 this.$el 在 document 中。为此还应该引入Vue.nextTick/vm.$nextTick
+          this.$nextTick( ()=> {
+            this.getCaptcha()
+          })
         },
         methods: {
           tabChange(){
             this.loginWay = !this.loginWay
           },
+          //获取图片验证码--图片
+          getCaptcha(){
+            axios({
+              method: 'post',
+              url: `${baseURL}/v1/captcha`,
+              data: querystring.stringify({})
+            }).then(res => {
+              this.captcha = `data:image/png;base64,${res.data.png}`;
+              this.captcha_id =res.data.captcha_id;
+            }).catch(error => {
+              console.log(error);
+            });
+          },
+          //获取短信验证码
           getCode() {
+            //倒计时
             let me = this;
             me.codeValue = false;
             let interval = window.setInterval(function() {
@@ -93,10 +137,67 @@
                 window.clearInterval(interval);
               }
             }, 1000);
+            //get短信验证码
+            axios({
+              method: 'post',
+              url: `${baseURL}/v1/sms/code`,
+              data: querystring.stringify({
+                phone:"+86"+this.phone, //手机号
+                type:3 //1-注册，2-修改密码, 3-登录
+              })
+            }).then(res => {
+              console.log(res)
+            }).catch(error => {
+              console.log(error);
+            })
           },
+          login(){
+            if(this.loginWay){
+              let loginFormData = {
+                phone:"+86"+this.phone, //手机号
+                password: this.password, //密码
+                device_id:this.uuid, //设备ID
+                platform:1,
+                captcha_id:this.captcha_id, //图片验证码ID
+                captcha_number:this.captcha_number //图片验证码--图片
+              };
+              axios({
+                method: 'post',
+                url: `${baseURL}/v1/sessions`,
+                data: querystring.stringify(loginFormData)
+              }).then(res => {
+                sessionStorage.setItem("loginInfo",JSON.stringify(res.data));
+                this.$router.push({ path: '/home' })
+              }).catch(error => {
+                console.log(error);
+              });
+            }else{
+              let loginFormData = {
+                phone:"+86"+this.phone, //手机号
+                password: this.password, //密码
+                device_id:this.uuid, //设备ID
+                platform:1,
+                code:this.code, //短信验证码
+                captcha_id:this.captcha_id, //图片验证码ID
+                captcha_number:this.captcha_number //图片验证码--图片
+              };
+              axios({
+                method: 'post',
+                url: `${baseURL}/v1/sessions/phone`,
+                data: querystring.stringify(loginFormData)
+              }).then(res => {
+                sessionStorage.setItem("loginInfo",JSON.stringify(res.data));
+                this.$router.push({ path: '/home' })
+              }).catch(error => {
+                console.log(error);
+              });
+            }
 
 
-        }
+
+          }
+
+        },
 
 
 
