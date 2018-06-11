@@ -34,7 +34,7 @@
             <span>：{{item.updated_at}}</span>
           </li>
         </ul>
-        <a href="#/caseDetails" @click=""><p class="asset_details">案例详情</p></a>
+        <a href="#/caseDetails" @click="getCaseDetails(caseDetails)"><p class="asset_details">案例详情</p></a>
         <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
       </div>
     </div>
@@ -52,31 +52,54 @@
       return {
         caseSourceTitle: "",
         caseSource: [],
+        caseDetails:{},
         assetId: "",
         apiKey: "",
       }
     },
     mounted() {
-      this.caseSourceTitle = JSON.parse(sessionStorage.getItem("caseSource")).Assetname
+      this.caseSourceTitle = JSON.parse(sessionStorage.getItem("caseSource")).Assetname;
       this.assetId = JSON.parse(sessionStorage.getItem("caseSource")).Assetid;
       this.apiKey = JSON.parse(sessionStorage.getItem("caseSource")).Apikey;
-      axios({
-        method: "GET",
-        url: `${cardURL}/v1/transed-asset/${this.assetId}/apikey/${this.apiKey}?page=0&limit=1000000`,
-        headers: {
-          "Content-Type": "application/json",
-        }
-      }).then((res) => {
-        if (res.data.data != null) {
-          this.caseSource = res.data.data
-        }else{
-          this.caseSource =[]
-        }
-      }).catch((err) => {
-        console.log(err);
-      })
+      this.caseDetails=JSON.parse(sessionStorage.getItem("caseSource"));
+      this.acquireCaseSource();
+      //this.acquireCaseDetails();
     },
-    methods: {},
+    methods: {
+      acquireCaseSource(){
+        axios({
+          method: "GET",
+          url: `${cardURL}/v1/transed-asset/${this.assetId}/apikey/${this.apiKey}?page=0&limit=1000000`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          if (res.data.data != null) {
+            this.caseSource = res.data.data
+          }else{
+            this.caseSource =[]
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
+      /*acquireCaseDetails(){
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((res) => {
+            this.caseDetails=res.data
+          }).catch((err) => {
+            console.log(err);
+          })
+      },*/
+      getCaseDetails(val){
+        this.$store.commit("changeCaseDetails",val);
+      }
+    },
     watch: {},
     computed: {},
     components: {

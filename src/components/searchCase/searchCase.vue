@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="case_list">
-      <div class="fr_case" v-for="(item,index) of caseList" :key="item.Id">
+      <div class="fr_case" v-for="(item,index) of searchCaseList" :key="item.Id">
         <h4><a href="#/caseDetails" @click="getCaseDetails(item.Id)">{{item.Assetname}}</a></h4>
         <div class="attestation">
           <span class="merchant" v-if="item.AuthType==='认证商家'">{{item.AuthType}}</span>
@@ -58,45 +58,46 @@
   import myTopSearch from "../topSearch/topSearch"
   
   export default {
-    name: "moreCase",
+    name: "searchCase",
     data() {
       return {
         casePage: 1,
         caseLimit: 10,
         total: 10,
-        caseList: [],
+        caseKeyword:"",
+        searchCaseList: [],
       }
     },
     mounted() {
-      this.acquireCaseList()
+      this.acquireSearchCaseList()
     },
     methods: {
-      acquireCaseList() {
-        //获取维修案例列表
+      //获取搜索案例列表
+      acquireSearchCaseList() {
         axios({
           method: "GET",
-          url: `${baseURL}/v1/asset/casus?page=${this.casePage}&limit=${this.caseLimit}`,
+          url: `${baseURL}/v1/asset/casus/search?key=${this.caseKeyword}page=${this.casePage}&limit=${this.caseLimit}`,
           headers: {
             "Content-Type": "application/json",
           }
         }).then((res) => {
           this.total=res.data.count;
-          this.caseList = res.data.data;
+          this.searchCaseList = res.data.data;
         }).catch((err) => {
           console.log(err);
         })
       },
       handleCurrentChange(val){
         this.casePage=val;
-        this.acquireCaseList()
+        this.acquireSearchCaseList()
       },
       getCaseDetails(val) {
-        this.$store.commit("changeCaseDetails",_.find(this.caseList,function (o) {
+        this.$store.commit("changeCaseDetails",_.find(this.searchCaseList,function (o) {
           return o.Id===val
         }));
       },
       getCaseSource(val) {
-        this.$store.commit("changeCaseSource",_.find(this.caseList,function (o) {
+        this.$store.commit("changeCaseSource",_.find(this.searchCaseList,function (o) {
           return o.Id===val
         }));
       },

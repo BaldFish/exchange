@@ -107,12 +107,12 @@
       }
     },
     mounted() {
-      this.getCaseList();
-      this.getFacilityList();
+      this.acquireCaseList();
+      this.acquireFacilityList();
     },
     methods: {
       //获取维修案例列表
-      getCaseList() {
+      acquireCaseList() {
         axios({
           method: "GET",
           url: `${baseURL}/v1/asset/casus?page=${this.casePage}&limit=${this.caseLimit}`,
@@ -126,7 +126,7 @@
         })
       },
       //获取维修设备列表
-      getFacilityList() {
+      acquireFacilityList() {
         axios({
           method: "GET",
           url: `${baseURL}/v1/asset/device?page=${this.facilityPage}&limit=${this.facilityLimit}`,

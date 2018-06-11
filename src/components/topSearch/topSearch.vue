@@ -42,16 +42,14 @@
       return {
         options: [{
           value: '选项1',
-          label: '共享维修设备'
+          label: '共享维修案例'
         }, {
           value: '选项2',
-          label: '共享维修案例'
+          label: '共享维修设备'
         },],
         value: '选项1',
         input: '',
       }
-    },
-    created() {
     },
     mounted() {
     },

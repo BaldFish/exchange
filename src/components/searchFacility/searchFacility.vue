@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="facility_list">
-      <div class="fl facility_info" v-for="(item,index) of facilityList" :key="item.Id">
+      <div class="fl facility_info" v-for="(item,index) of searchFacilityList" :key="item.Id">
         <a href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><h4>{{item.Assetname}}</h4></a>
         <div class="putaway">
           <a class="time" href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><span>上架时间：</span>{{item.SellAt}}</a>
@@ -52,44 +52,45 @@
   import myTopSearch from "../topSearch/topSearch"
   
   export default {
-    name: "moreFacility",
+    name: "searchFacility",
     data() {
       return {
         facilityPage: 1,
         facilityLimit: 12,
         total:12,
-        facilityList: [],
+        facilityKeyword:"",
+        searchFacilityList: [],
       }
     },
     mounted() {
-      this.acquireFacilityList();
+      this.acquireSearchFacilityList();
     },
     methods: {
-      acquireFacilityList() {
+      acquireSearchFacilityList() {
         axios({
           method: "GET",
-          url: `${baseURL}/v1/asset/device?page=${this.facilityPage}&limit=${this.facilityLimit}`,
+          url: `${baseURL}/v1/asset/device/search?key=${this.facilityKeyword}page=${this.facilityPage}&limit=${this.facilityLimit}`,
           headers: {
             "Content-Type": "application/json",
           }
         }).then((res) => {
           this.total=res.data.count;
-          this.facilityList = res.data.data
+          this.searchFacilityList = res.data.data
         }).catch((err) => {
           console.log(err)
         })
       },
       handleCurrentChange(val){
         this.facilityPage=val;
-        this.acquireFacilityList();
+        this.acquireSearchFacilityList()
       },
       getFacilityDetails(val) {
-        this.$store.commit("changeFacilityDetails",_.find(this.facilityList,function (o) {
+        this.$store.commit("changeFacilityDetails",_.find(this.searchFacilityList,function (o) {
           return o.Id===val
         }));
       },
       getFacilitySource(val) {
-        this.$store.commit("changeFacilitySource",_.find(this.facilityList,function (o) {
+        this.$store.commit("changeFacilitySource",_.find(this.searchFacilityList,function (o) {
           return o.Id===val
         }));
       },

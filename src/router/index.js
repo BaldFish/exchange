@@ -18,7 +18,8 @@ import myNoAssets from '@/components/noAssets/noAssets'
 import myCheckOrder from '@/components/checkOrder/checkOrder'
 import myOrderHistory from '@/components/orderHistory/orderHistory'
 import mySecurityCenter from '@/components/securityCenter/securityCenter'
-
+import mySearchCase from '@/components/searchCase/searchCase'
+import mySearchFacility from '@/components/searchFacility/searchFacility'
 Vue.use(Router);
 
 export default new Router({
@@ -122,6 +123,15 @@ export default new Router({
         },
       ]
     },
-    
+    {
+      path: '/searchCase',
+      name: 'searchCase',
+      component: mySearchCase
+    },
+    {
+      path: '/searchFacility',
+      name: 'searchFacility',
+      component: mySearchFacility
+    }
   ]
 })

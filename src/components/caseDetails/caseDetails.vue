@@ -66,25 +66,26 @@
         assetId:""
       }
     },
-    created() {
-    },
     mounted() {
-      this.caseDetails=JSON.parse(sessionStorage.getItem("caseDetails"))
+      this.caseDetails=JSON.parse(sessionStorage.getItem("caseDetails"));
       this.apiKey=this.caseDetails.Apikey;
       this.assetId=this.caseDetails.Assetid;
-      axios({
-        method: "GET",
-        url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
-        headers: {
-          "Content-Type": "application/json",
-        }
-      }).then((res) => {
-        this.caseDetails=res.data
-      }).catch((err) => {
-        console.log(err);
-      })
+      this.acquireCaseDetails()
     },
     methods: {
+      acquireCaseDetails(){
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          this.caseDetails=res.data
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
       getCaseSource(val) {
         this.$store.commit("changeCaseSource",val);
       },

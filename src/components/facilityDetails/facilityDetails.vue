@@ -77,19 +77,22 @@
       this.facilityDetails=JSON.parse(sessionStorage.getItem("facilityDetails"))
       this.apiKey=this.facilityDetails.Apikey;
       this.assetId=this.facilityDetails.Assetid;
-      axios({
-        method: "GET",
-        url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
-        headers: {
-          "Content-Type": "application/json",
-        }
-      }).then((res) => {
-        this.facilityDetails=res.data
-      }).catch((err) => {
-        console.log(err);
-      })
+      this.acquireFacilityDetails()
     },
     methods: {
+      acquireFacilityDetails(){
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          this.facilityDetails=res.data
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
       getFacilitySource(val) {
         this.$store.commit("changeFacilitySource",val);
       },
