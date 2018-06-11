@@ -25,29 +25,35 @@
             <span>实名认证</span>
             <span>注册成功</span>
           </div>
+
           <div class="sec_input">
             <ul>
               <li>
                 <i></i>
-                <input type="text" placeholder="请输入手机号">
+                <input type="text" placeholder="请输入手机号" v-model="phone" v-validate="'required|mobile'" name='mobile'>
+                <!--<span v-show="errors.has('mobile')" class="error" style="width: 200px">{{errors.first('mobile')}}</span>-->
               </li>
               <li>
                 <i></i>
-                <input type="text" placeholder="请输入验证码">
-                <img class="img_change_img" src="../login/images/code.png">
+                <input type="text" placeholder="请输入验证码" v-model="captcha_number" v-validate="'required'" name='captcha_number'>
+                <img class="img_change_img" @click="getCaptcha" :src="captcha">
+                <!--<span v-show="errors.has('captcha_number')" class="error">{{errors.first('captcha_number')}}</span>-->
               </li>
               <li>
                 <i></i>
-                <input type="text" placeholder="请输入手机验证码">
+                <input type="text" placeholder="请输入手机验证码" v-model="code" v-validate="'required'" name='code'>
                 <div class="img_change_img get_code" @click="getCode" v-if="codeValue">获取验证码</div>
                 <div class="img_change_img count_down" v-else>倒计时（{{second}}）</div>
+                <!--<span v-show="errors.has('code')" class="error">{{errors.first('code')}}</span>-->
               </li>
             </ul>
           </div>
           <div class="contract">
             <input type="radio">
+           <!-- <input type="radio" v-model="contract" v-validate="'required'" name='contract'>-->
             <i></i>
             <span>我已阅读并同意《服务协议》</span>
+           <!-- <span v-show="errors.has('contract')" class="error">{{errors.first('contract')}}</span>-->
           </div>
           <div class="next_btn" @click="nextStep(2)"><span>下一步</span></div>
         </section>
@@ -64,11 +70,13 @@
             <ul>
               <li>
                 <i></i>
-                <input type="password" placeholder="请输入密码">
+                <input type="password" placeholder="请输入密码" v-model="password" v-validate="'required'" name='password'>
+               <!-- <span v-show="errors.has('password')" class="error_password">{{errors.first('password')}}</span>-->
               </li>
               <li>
                 <i></i>
-                <input type="password" placeholder="请确认密码">
+                <input type="password" placeholder="请确认密码" v-model="repassword" v-validate="'required'" name='repassword'>
+                <!--<span v-show="errors.has('repassword')" class="error_password">{{errors.first('repassword')}}</span>-->
               </li>
             </ul>
           </div>
@@ -87,11 +95,11 @@
             <ul>
               <li>
                 <i></i>
-                <input type="text" placeholder="请输入姓名">
+                <input type="text" placeholder="请输入姓名" v-model="realname">
               </li>
               <li>
                 <i></i>
-                <input type="text" placeholder="请确认身份证号">
+                <input type="text" placeholder="请确认身份证号" v-model="idcard">
               </li>
             </ul>
           </div>
@@ -123,23 +131,69 @@
 <script>
   import axios from "axios";
   import {baseURL} from '@/common/js/public.js';
+  const querystring = require('querystring');
+
   export default{
     data(){
       return {
         codeValue:true,
-        second:5,// 发送验证码倒计时
+        second:5, //发送验证码倒计时
         stepOne:true,
         stepTwo:false,
         stepThree:false,
         stepFour:false,
+        phone:"", //手机号
+        captcha_number:"", //图形验证码
+        captcha_id:"", //图形验证码--ID
+        captcha:"../login/images/code.png", //图形验证码--图片
+        code:"", //短信验证码
+        password:"", //密码
+        repassword:"", //重复密码
+        realname:"", //姓名
+        idcard:"" //身份证号
       };
     },
-    computed:{
+    mounted: function() {
+      //这个是钩子函数
+      //如果getCaptcha函数要执行，必须先执行钩子函数
+      //这个钩子函数完成了对getCaptcha函数的调用
+      //应该注意的是，使用mounted 并不能保证钩子函数中的 this.$el 在 document 中。为此还应该引入Vue.nextTick/vm.$nextTick
+      this.$nextTick( ()=> {
+        this.getCaptcha()
+      })
     },
-    mounted(){
+    computed:{
+      uuid() {
+        var s = [];
+        var hexDigits = "0123456789abcdef";
+        for (var i = 0; i < 36; i++) {
+          s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+        }
+        s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+        s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+        s[8] = s[13] = s[18] = s[23] = "-";
+
+        var uuid = s.join("");
+        return uuid;
+      }
     },
     methods: {
+      //获取图片验证码--图片
+      getCaptcha(){
+        axios({
+          method: 'post',
+          url: `${baseURL}/v1/captcha`,
+          data: querystring.stringify({})
+        }).then(res => {
+          this.captcha = `data:image/png;base64,${res.data.png}`;
+          this.captcha_id =res.data.captcha_id;
+        }).catch(error => {
+          console.log(error);
+        });
+      },
+      //获取短信验证码
       getCode() {
+        //倒计时
         let me = this;
         me.codeValue = false;
         let interval = window.setInterval(function() {
@@ -149,20 +203,101 @@
             window.clearInterval(interval);
           }
         }, 1000);
+        //get短信验证码
+        axios({
+          method: 'post',
+          url: `${baseURL}/v1/sms/code`,
+          data: querystring.stringify({
+            phone:"+86"+this.phone, //手机号
+            type:1 //1-注册，2-修改密码, 3-登录
+          })
+        }).then(res => {
+          console.log(res)
+        }).catch(error => {
+          console.log(error);
+        })
       },
       nextStep(id){
         if (id == 2){
+
+        /*  this.$validator.validateAll().then((result)=>{
+            if(result){
+
+            }
+          })*/
+
+          //进入下一步
           this.stepTwo = true;
           this.stepOne = false;
+
         } else if(id == 3){
-          this.stepOne = false;
-          this.stepTwo = false;
-          this.stepThree = true;
+
+          let regFormData = {
+            phone:"+86"+this.phone, //手机号
+            captcha_number: this.captcha_number, //图形验证码
+            captcha_id: this.captcha_id, //图形验证码ID
+            code: this.code, //短信验证码
+            password: this.password, //密码
+            repassword: this.repassword, //重复密码
+            device_id:this.uuid, //设备ID
+            platform:1
+          };
+
+         /* this.$validator.validateAll().then((result)=>{
+            if(result){
+
+            }
+          })*/
+
+          axios({
+            method: 'post',
+            url: `${baseURL}/v1/users`,
+            data: querystring.stringify(regFormData)
+          }).then(res => {
+            sessionStorage.setItem("regInfo",JSON.stringify(res.data));
+            //进入下一步
+            this.stepOne = false;
+            this.stepTwo = false;
+            this.stepThree = true;
+          }).catch(error => {
+            console.log(error);
+
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+            console.log('Error', error.message);
+            console.log(error.config);
+
+          });
         }else {
-          this.stepOne = false;
-          this.stepTwo = false;
-          this.stepThree = false;
-          this.stepFour = true;
+
+          let authFormData = {
+            type:1, //1-实名认证，2-人像认证
+            realname: this.realname, //姓名
+            idcard: this.idcard, //身份证号
+          };
+
+
+          let regInfo = JSON.parse(sessionStorage.getItem("regInfo"));
+
+          console.log(regInfo.user._id)
+
+          axios({
+            method: 'post',
+            url: `${baseURL}/v1/users/${regInfo.user._id}/authentication`,
+            data: querystring.stringify(authFormData)
+          }).then(res => {
+
+            console.log(res)
+
+            //进入下一步
+            this.stepOne = false;
+            this.stepTwo = false;
+            this.stepThree = false;
+            this.stepFour = true;
+          }).catch(error => {
+            console.log(error);
+          });
         }
       },
       skipToStep(){
@@ -172,13 +307,20 @@
         this.stepFour = true;
       }
 
-    }
+    },
+  /*  mounted:{
+     /!* getPhoneCode(){
+
+      }*!/
+    }*/
+/*    created() {
+    },
+
+    watch(){
+
+    }*/
 
 
-
-    /*components: {
-     'other-component': OtherComponent, HeaderComponent
-     }*/
   }
 </script>
 <style scoped>
@@ -446,5 +588,19 @@
     position: relative;
     bottom: 138px;
     left: 174px;
+  }
+  .error{
+    position: relative;
+    bottom: 36px;
+    left: 390px;
+    color: #c6351e;
+    display: inline-block;
+  }
+  .error_password{
+    position: relative;
+    bottom: 14px;
+    left: 194px;
+    color: #c6351e;
+    display: inline-block;
   }
 </style>
