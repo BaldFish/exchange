@@ -8,70 +8,27 @@
           <h3>维修案例</h3>
           <a href="#/moreCase">查看更多</a>
         </div>
-        <div class="fr fr_case">
-          <h4><a href="#/caseDetails">奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</a></h4>
+        <div class="fr fr_case" v-for="(item,index) of caseList" :key="item.Id">
+          <h4><a href="#/caseDetails" @click="getCaseDetails(item.Id)">{{item.Assetname}}</a></h4>
           <div class="attestation">
-            <span class="person">认证个人</span>
-            <span class="trust">高可信</span>
+            <span class="merchant" v-if="item.AuthType==='认证商家'">{{item.AuthType}}</span>
+            <span class="person" v-if="item.AuthType==='认证个人'">{{item.AuthType}}</span>
+            <span class="trust" v-if="item.CreditLevel!=='未认证'">{{item.CreditLevel}}</span>
           </div>
           <div class="putaway">
-            <a class="time" href="#/caseDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-            <a class="equity" href="#/caseDetails"><span>权益：</span>所有权</a>
+            <a class="time" href="#/caseDetails" @click="getCaseDetails(item.Id)"><span>上架时间：</span>{{item.SellAt}}</a>
+            <a class="equity" href="#/caseDetails" @click="getCaseDetails(item.Id)"><span>权益：</span>{{item.SellType}}</a>
           </div>
           <div class="fault">
             <p>
-              <a href="#/caseDetails">
-                <span>故障现象：</span>客户反映，正常行驶中，等红绿灯时，发现车辆抖动并且越来越严重，随后发动机故障灯亮起，靠边停车熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮
+              <a href="#/caseDetails" @click="getCaseDetails(item.Id)">
+                <span>故障现象：</span>{{item.AssetContent}}
               </a>
             </p>
           </div>
           <div class="price_box">
-            <a href="#/caseDetails"><p class="price">139.00</p></a>
-            <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
-          </div>
-        </div>
-        <div class="fr fr_case">
-          <h4><a href="#/caseDetails">奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</a></h4>
-          <div class="attestation">
-            <span class="merchant">认证商家</span>
-            <span class="trust">高可信</span>
-          </div>
-          <div class="putaway">
-            <a class="time" href="#/caseDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-            <a class="equity" href="#/caseDetails"><span>权益：</span>所有权</a>
-          </div>
-          <div class="fault">
-            <p>
-              <a href="#/caseDetails">
-                <span>故障现象：</span>客户反映，正常行驶中，等红绿灯时，发现车辆抖动并且越来越严重，随后发动机故障灯亮起，靠边停车熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮
-              </a>
-            </p>
-          </div>
-          <div class="price_box">
-            <a href="#/caseDetails"><p class="price">139.00</p></a>
-            <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
-          </div>
-        </div>
-        <div class="fr fr_case">
-          <h4><a href="#/caseDetails">奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</a></h4>
-          <div class="attestation">
-            <span class="person">认证个人</span>
-            <span class="trust">高可信</span>
-          </div>
-          <div class="putaway">
-            <a class="time" href="#/caseDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-            <a class="equity" href="#/caseDetails"><span>权益：</span>所有权</a>
-          </div>
-          <div class="fault">
-            <p>
-              <a href="#/caseDetails">
-                <span>故障现象：</span>客户反映，正常行驶中，等红绿灯时，发现车辆抖动并且越来越严重，随后发动机故障灯亮起，靠边停车熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮
-              </a>
-            </p>
-          </div>
-          <div class="price_box">
-            <a href="#/caseDetailscaseDetails"><p class="price">139.00</p></a>
-            <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
+            <a href="#/caseDetails" @click="getCaseDetails(item.Id)"><p class="price">{{item.Price}}</p></a>
+            <a href="#/caseSource" @click="getCaseSource(item.Id)"><p class="tracing">可信溯源</p></a>
           </div>
         </div>
       </div>
@@ -81,112 +38,23 @@
           <a href="#/moreFacility">查看更多</a>
         </div>
         <div class="fr fr_facility">
-          <div class="fl facility_info">
-            <a href="#/facilityDetails"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
+          <div class="fl facility_info" v-for="(item,index) of facilityList" :key="item.Id">
+            <a href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><h4>{{item.Assetname}}</h4></a>
             <div class="putaway">
-              <a class="time" href="#/facilityDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-              <a class="equity" href="#/facilityDetails"><span>权益：</span>所有权</a>
+              <a class="time" href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><span>上架时间：</span>{{item.SellAt}}</a>
+              <a class="equity" href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><span>权益：</span>{{item.SellType}}</a>
             </div>
             <div class="fl price_box">
-              <a href="#/facilityDetails"><p class="price">139.00</p></a>
-              <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
+              <a href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><p class="price">{{item.Price}}</p></a>
+              <a href="#/facilitySource" @click="getFacilitySource(item.Id)"><p class="tracing">可信溯源</p></a>
             </div>
             <div class="fr facility_img">
-              <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
+              <a href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><img :src="item.Asseturl" alt=""></a>
             </div>
             <div class="attestation clearfix">
-              <span class="merchant">认证商家</span>
-              <span class="trust">低可信</span>
-            </div>
-          </div>
-          <div class="fl facility_info">
-            <a href="#/facilityDetails"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
-            <div class="putaway">
-              <a class="time" href="#/facilityDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-              <a class="equity" href="#/facilityDetails"><span>权益：</span>所有权</a>
-            </div>
-            <div class="fl price_box">
-              <a href="#/facilityDetails"><p class="price">139.00</p></a>
-              <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
-            </div>
-            <div class="fr facility_img">
-              <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
-            </div>
-            <div class="attestation clearfix">
-              <span class="merchant">认证商家</span>
-              <span class="trust">低可信</span>
-            </div>
-          </div>
-          <div class="fl facility_info">
-            <a href="#/facilityDetails"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
-            <div class="putaway">
-              <a class="time" href="#/facilityDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-              <a class="equity" href="#/facilityDetails"><span>权益：</span>所有权</a>
-            </div>
-            <div class="fl price_box">
-              <a href="#/facilityDetails"><p class="price">139.00</p></a>
-              <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
-            </div>
-            <div class="fr facility_img">
-              <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
-            </div>
-            <div class="attestation clearfix">
-              <span class="merchant">认证商家</span>
-              <span class="trust">低可信</span>
-            </div>
-          </div>
-          <div class="fl facility_info">
-            <a href="#/facilityDetails"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
-            <div class="putaway">
-              <a class="time" href="#/facilityDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-              <a class="equity" href="#/facilityDetails"><span>权益：</span>所有权</a>
-            </div>
-            <div class="fl price_box">
-              <a href="#/facilityDetails"><p class="price">139.00</p></a>
-              <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
-            </div>
-            <div class="fr facility_img">
-              <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
-            </div>
-            <div class="attestation clearfix">
-              <span class="merchant">认证商家</span>
-              <span class="trust">低可信</span>
-            </div>
-          </div>
-          <div class="fl facility_info">
-            <a href="#/facilityDetails"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
-            <div class="putaway">
-              <a class="time" href="#/facilityDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-              <a class="equity" href="#/facilityDetails"><span>权益：</span>所有权</a>
-            </div>
-            <div class="fl price_box">
-              <a href="#/facilityDetails"><p class="price">139.00</p></a>
-              <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
-            </div>
-            <div class="fr facility_img">
-              <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
-            </div>
-            <div class="attestation clearfix">
-              <span class="merchant">认证商家</span>
-              <span class="trust">低可信</span>
-            </div>
-          </div>
-          <div class="fl facility_info">
-            <a href="#/facilityDetails"><h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4></a>
-            <div class="putaway">
-              <a class="time" href="#/facilityDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-              <a class="equity" href="#/facilityDetails"><span>权益：</span>所有权</a>
-            </div>
-            <div class="fl price_box">
-              <a href="#/facilityDetails"><p class="price">139.00</p></a>
-              <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
-            </div>
-            <div class="fr facility_img">
-              <a href="#/facilityDetails"><img src="./images/05.png" alt=""></a>
-            </div>
-            <div class="attestation clearfix">
-              <span class="merchant">认证商家</span>
-              <span class="trust">低可信</span>
+              <span class="merchant" v-if="item.AuthType==='认证商家'">{{item.AuthType}}</span>
+              <span class="person" v-if="item.AuthType==='认证个人'">{{item.AuthType}}</span>
+              <span class="trust" v-if="item.CreditLevel!=='未认证'">{{item.CreditLevel}}</span>
             </div>
           </div>
         </div>
@@ -223,22 +91,78 @@
 <script>
   import axios from "axios";
   import _ from "lodash";
-  import {baseURL} from '@/common/js/public.js';
+  import {baseURL,cardURL} from '@/common/js/public.js';
   import myTopSearch from "../topSearch/topSearch"
+  
   export default {
     name: "home",
     data() {
-      return {}
-    },
-    created() {
+      return {
+        casePage: 1,
+        caseLimit: 3,
+        facilityPage: 1,
+        facilityLimit: 6,
+        caseList:[],
+        facilityList:[],
+      }
     },
     mounted() {
-    
+      this.getCaseList();
+      this.getFacilityList();
     },
-    methods: {},
+    methods: {
+      //获取维修案例列表
+      getCaseList() {
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/asset/casus?page=${this.casePage}&limit=${this.caseLimit}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          this.caseList=res.data.data
+        }).catch((err) => {
+          console.log(err)
+        })
+      },
+      //获取维修设备列表
+      getFacilityList() {
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/asset/device?page=${this.facilityPage}&limit=${this.facilityLimit}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          this.facilityList=res.data.data
+        }).catch((err) => {
+          console.log(err)
+        })
+      },
+      getCaseDetails(val) {
+        this.$store.commit("changeCaseDetails",_.find(this.caseList,function (o) {
+          return o.Id===val
+        }));
+      },
+      getCaseSource(val) {
+        this.$store.commit("changeCaseSource",_.find(this.caseList,function (o) {
+          return o.Id===val
+        }));
+      },
+      getFacilityDetails(val) {
+        this.$store.commit("changeFacilityDetails",_.find(this.facilityList,function (o) {
+          return o.Id===val
+        }));
+      },
+      getFacilitySource(val) {
+        this.$store.commit("changeFacilitySource",_.find(this.facilityList,function (o) {
+          return o.Id===val
+        }));
+      },
+    },
     watch: {},
     computed: {},
-    components:{
+    components: {
       myTopSearch
     }
   }
@@ -295,7 +219,7 @@
         .fl_bg {
           height 330px
           background-image: url('./images/cooperation.png');
-          background-position: top left 16px ;
+          background-position: top left 16px;
           h3 {
             margin-top 132px
           }
@@ -320,6 +244,8 @@
           }
         }
         .attestation {
+          width 850px
+          height 74px
           font-size 0px
           span {
             text-align center
@@ -390,6 +316,8 @@
           top 78px
           right 84px
           .price {
+            min-width 18px
+            height 24px
             font-size: 24px;
             color: #c6351e;
             background-image: url('./images/currency.png');
@@ -414,9 +342,9 @@
         width 854px
         .facility_info {
           margin-bottom 20px
-          margin-right 22px
+          margin-right 12px
           box-sizing border-box
-          width 270px
+          width 276px
           height 340px
           padding 22px 15px 0
           background-color #ffffff
@@ -460,6 +388,8 @@
               a {
                 display block
               }
+              min-width 18px
+              height 24px
               font-size: 24px;
               color: #c6351e;
               background-image: url('./images/currency.png');

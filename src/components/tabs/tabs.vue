@@ -40,6 +40,7 @@
 <script>
   import myTopSearch from "../topSearch/topSearch"
   import myPaging from "../paging/paging"
+  import {baseURL,cardURL} from '@/common/js/public.js';
   export default {
     name: "tabs",
     data() {

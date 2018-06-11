@@ -11,292 +11,117 @@
       </div>
     </div>
     <div class="case_list">
-      <div class="fr_case">
-        <h4><a href="#/caseDetails">奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</a></h4>
+      <div class="fr_case" v-for="(item,index) of caseList" :key="item.Id">
+        <h4><a href="#/caseDetails" @click="getCaseDetails(item.Id)">{{item.Assetname}}</a></h4>
         <div class="attestation">
-          <span class="merchant">认证商家</span>
-          <span class="person">认证个人</span>
-          <span class="trust">高可信</span>
+          <span class="merchant" v-if="item.AuthType==='认证商家'">{{item.AuthType}}</span>
+          <span class="person" v-if="item.AuthType==='认证个人'">{{item.AuthType}}</span>
+          <span class="trust" v-if="item.CreditLevel!=='未认证'">{{item.CreditLevel}}</span>
         </div>
         <div class="putaway">
-          <a class="time" href="#/caseDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="#/caseDetails"><span>权益：</span>所有权</a>
+          <a class="time" href="#/caseDetails" @click="getCaseDetails(item.Id)"><span>上架时间：</span>{{item.SellAt}}</a>
+          <a class="equity" href="#/caseDetails" @click="getCaseDetails(item.Id)"><span>权益：</span>{{item.SellType}}</a>
         </div>
         <div class="fault">
           <p>
-            <a href="#/caseDetails">
-              <span>故障现象：</span>客户反映，正常行驶中，等红绿灯时，发现车辆抖动并且越来越严重，随后发动机故障灯亮起，靠边停车熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音
+            <a href="#/caseDetails" @click="getCaseDetails(item.Id)">
+              <span>故障现象：</span>{{item.AssetContent}}
             </a>
           </p>
         </div>
         <div class="like">收藏</div>
         <div class="price_box">
-          <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
-          <a href="#/checkOrder"><p class="buy">一键购买</p></a>
-        </div>
-      </div>
-      <div class="fr_case">
-        <h4><a href="#/caseDetails">奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</a></h4>
-        <div class="attestation">
-          <span class="merchant">认证商家</span>
-          <span class="person">认证个人</span>
-          <span class="trust">高可信</span>
-        </div>
-        <div class="putaway">
-          <a class="time" href="#/caseDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="#/caseDetails"><span>权益：</span>所有权</a>
-        </div>
-        <div class="fault">
-          <p>
-            <a href="#/caseDetails">
-              <span>故障现象：</span>客户反映，正常行驶中，等红绿灯时，发现车辆抖动并且越来越严重，随后发动机故障灯亮起，靠边停车熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音
-            </a>
-          </p>
-        </div>
-        <div class="like">收藏</div>
-        <div class="price_box">
-          <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
-          <a href="#/checkOrder"><p class="buy">一键购买</p></a>
-        </div>
-      </div>
-      <div class="fr_case">
-        <h4><a href="#/caseDetails">奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</a></h4>
-        <div class="attestation">
-          <span class="merchant">认证商家</span>
-          <span class="person">认证个人</span>
-          <span class="trust">高可信</span>
-        </div>
-        <div class="putaway">
-          <a class="time" href="#/caseDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="#/caseDetails"><span>权益：</span>所有权</a>
-        </div>
-        <div class="fault">
-          <p>
-            <a href="#/caseDetails">
-              <span>故障现象：</span>客户反映，正常行驶中，等红绿灯时，发现车辆抖动并且越来越严重，随后发动机故障灯亮起，靠边停车熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音
-            </a>
-          </p>
-        </div>
-        <div class="like">收藏</div>
-        <div class="price_box">
-          <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
-          <a href="#/checkOrder"><p class="buy">一键购买</p></a>
-        </div>
-      </div>
-      <div class="fr_case">
-        <h4><a href="#/caseDetails">奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</a></h4>
-        <div class="attestation">
-          <span class="merchant">认证商家</span>
-          <span class="person">认证个人</span>
-          <span class="trust">高可信</span>
-        </div>
-        <div class="putaway">
-          <a class="time" href="#/caseDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="#/caseDetails"><span>权益：</span>所有权</a>
-        </div>
-        <div class="fault">
-          <p>
-            <a href="#/caseDetails">
-              <span>故障现象：</span>客户反映，正常行驶中，等红绿灯时，发现车辆抖动并且越来越严重，随后发动机故障灯亮起，靠边停车熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音
-            </a>
-          </p>
-        </div>
-        <div class="like">收藏</div>
-        <div class="price_box">
-          <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
-          <a href="#/checkOrder"><p class="buy">一键购买</p></a>
-        </div>
-      </div>
-      <div class="fr_case">
-        <h4><a href="#/caseDetails">奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</a></h4>
-        <div class="attestation">
-          <span class="merchant">认证商家</span>
-          <span class="person">认证个人</span>
-          <span class="trust">高可信</span>
-        </div>
-        <div class="putaway">
-          <a class="time" href="#/caseDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="#/caseDetails"><span>权益：</span>所有权</a>
-        </div>
-        <div class="fault">
-          <p>
-            <a href="#/caseDetails">
-              <span>故障现象：</span>客户反映，正常行驶中，等红绿灯时，发现车辆抖动并且越来越严重，随后发动机故障灯亮起，靠边停车熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音
-            </a>
-          </p>
-        </div>
-        <div class="like">收藏</div>
-        <div class="price_box">
-          <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
-          <a href="#/checkOrder"><p class="buy">一键购买</p></a>
-        </div>
-      </div>
-      <div class="fr_case">
-        <h4><a href="#/caseDetails">奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</a></h4>
-        <div class="attestation">
-          <span class="merchant">认证商家</span>
-          <span class="person">认证个人</span>
-          <span class="trust">高可信</span>
-        </div>
-        <div class="putaway">
-          <a class="time" href="#/caseDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="#/caseDetails"><span>权益：</span>所有权</a>
-        </div>
-        <div class="fault">
-          <p>
-            <a href="#/caseDetails">
-              <span>故障现象：</span>客户反映，正常行驶中，等红绿灯时，发现车辆抖动并且越来越严重，随后发动机故障灯亮起，靠边停车熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音
-            </a>
-          </p>
-        </div>
-        <div class="like">收藏</div>
-        <div class="price_box">
-          <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
-          <a href="#/checkOrder"><p class="buy">一键购买</p></a>
-        </div>
-      </div>
-      <div class="fr_case">
-        <h4><a href="#/caseDetails">奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</a></h4>
-        <div class="attestation">
-          <span class="merchant">认证商家</span>
-          <span class="person">认证个人</span>
-          <span class="trust">高可信</span>
-        </div>
-        <div class="putaway">
-          <a class="time" href="#/caseDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="#/caseDetails"><span>权益：</span>所有权</a>
-        </div>
-        <div class="fault">
-          <p>
-            <a href="#/caseDetails">
-              <span>故障现象：</span>客户反映，正常行驶中，等红绿灯时，发现车辆抖动并且越来越严重，随后发动机故障灯亮起，靠边停车熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音
-            </a>
-          </p>
-        </div>
-        <div class="like">收藏</div>
-        <div class="price_box">
-          <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
-          <a href="#/checkOrder"><p class="buy">一键购买</p></a>
-        </div>
-      </div>
-      <div class="fr_case">
-        <h4><a href="#/caseDetails">奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</a></h4>
-        <div class="attestation">
-          <span class="merchant">认证商家</span>
-          <span class="person">认证个人</span>
-          <span class="trust">高可信</span>
-        </div>
-        <div class="putaway">
-          <a class="time" href="#/caseDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="#/caseDetails"><span>权益：</span>所有权</a>
-        </div>
-        <div class="fault">
-          <p>
-            <a href="#/caseDetails">
-              <span>故障现象：</span>客户反映，正常行驶中，等红绿灯时，发现车辆抖动并且越来越严重，随后发动机故障灯亮起，靠边停车熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音
-            </a>
-          </p>
-        </div>
-        <div class="like">收藏</div>
-        <div class="price_box">
-          <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
-          <a href="#/checkOrder"><p class="buy">一键购买</p></a>
-        </div>
-      </div>
-      <div class="fr_case">
-        <h4><a href="#/caseDetails">奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</a></h4>
-        <div class="attestation">
-          <span class="merchant">认证商家</span>
-          <span class="person">认证个人</span>
-          <span class="trust">高可信</span>
-        </div>
-        <div class="putaway">
-          <a class="time" href="#/caseDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="#/caseDetails"><span>权益：</span>所有权</a>
-        </div>
-        <div class="fault">
-          <p>
-            <a href="#/caseDetails">
-              <span>故障现象：</span>客户反映，正常行驶中，等红绿灯时，发现车辆抖动并且越来越严重，随后发动机故障灯亮起，靠边停车熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音
-            </a>
-          </p>
-        </div>
-        <div class="like">收藏</div>
-        <div class="price_box">
-          <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
-          <a href="#/checkOrder"><p class="buy">一键购买</p></a>
-        </div>
-      </div>
-      <div class="fr_case">
-        <h4><a href="#/caseDetails">奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</a></h4>
-        <div class="attestation">
-          <span class="merchant">认证商家</span>
-          <span class="person">认证个人</span>
-          <span class="trust">高可信</span>
-        </div>
-        <div class="putaway">
-          <a class="time" href="#/caseDetails"><span>上架时间：</span>2018.03.23 21:22:24</a>
-          <a class="equity" href="#/caseDetails"><span>权益：</span>所有权</a>
-        </div>
-        <div class="fault">
-          <p>
-            <a href="#/caseDetails">
-              <span>故障现象：</span>客户反映，正常行驶中，等红绿灯时，发现车辆抖动并且越来越严重，随后发动机故障灯亮起，靠边停车熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音，动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解动稍缓解常亮隔15min重新启动车辆，抖动稍缓解熄火，隔15min重新启动车辆，抖动稍缓解，但发动但发动机有很大很很大杂音
-            </a>
-          </p>
-        </div>
-        <div class="like">收藏</div>
-        <div class="price_box">
-          <a href="#/caseDetails"><p class="price">139.00</p></a>
-          <a href="#/caseSource"><p class="tracing">可信溯源</p></a>
+          <a href="#/caseDetails" @click="getCaseDetails(item.Id)"><p class="price">{{item.Price}}</p></a>
+          <a href="#/caseSource" @click="getCaseSource(item.Id)"><p class="tracing">可信溯源</p></a>
           <a href="#/checkOrder"><p class="buy">一键购买</p></a>
         </div>
       </div>
     </div>
     <div class="clearfix paging">
-      <my-paging></my-paging>
+      <el-pagination class="my_paging"
+                     layout="prev, pager, next"
+                     :background=true
+                     :total=total
+                     :page-size=caseLimit
+                     :current-page.sync=casePage
+                     @current-change="handleCurrentChange">
+      </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
+  import "../../common/stylus/paging.styl";
+  import axios from "axios";
+  import _ from "lodash";
+  import {baseURL,cardURL} from '@/common/js/public.js';
   import myTopSearch from "../topSearch/topSearch"
-  import myPaging from "../paging/paging"
+  
   export default {
     name: "moreCase",
     data() {
-      return {}
+      return {
+        casePage: 1,
+        caseLimit: 10,
+        total: 10,
+        caseList: [],
+      }
     },
-    components:{
-      myTopSearch,myPaging
+    mounted() {
+      this.getMoreCase()
+    },
+    methods: {
+      getMoreCase() {
+        //获取维修案例列表
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/asset/casus?page=${this.casePage}&limit=${this.caseLimit}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          this.total=res.data.count;
+          this.caseList = res.data.data;
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
+      handleCurrentChange(val){
+        this.casePage=val
+        this.getMoreCase()
+      },
+      getCaseDetails(val) {
+        this.$store.commit("changeCaseDetails",_.find(this.caseList,function (o) {
+          return o.Id===val
+        }));
+      },
+      getCaseSource(val) {
+        this.$store.commit("changeCaseSource",_.find(this.caseList,function (o) {
+          return o.Id===val
+        }));
+      },
+    },
+    components: {
+      myTopSearch,
     },
   }
 </script>
 
 <style scoped lang="stylus">
-  .moreCase{
-    .site_box{
+  .moreCase {
+    .site_box {
       width 100%
       background-color #7d7d7d;
-      .site{
+      .site {
         width 1212px
         height 40px
         line-height 40px
         margin 0 auto
-        ul{
+        ul {
           padding-left 8px
           font-size 0
           color #ffffff
-          li{
+          li {
             vertical-align top
             display inline-block
             font-size 20px
@@ -304,7 +129,7 @@
         }
       }
     }
-    .case_list{
+    .case_list {
       width 1212px
       margin 0 auto
       padding-top 30px
@@ -328,6 +153,8 @@
           }
         }
         .attestation {
+          width 850px
+          height 74px
           font-size 0px
           span {
             text-align center
@@ -393,7 +220,7 @@
             overflow: hidden;
           }
         }
-        .like{
+        .like {
           position absolute
           top 15px
           right 30px
@@ -411,6 +238,8 @@
           top 78px
           right 40px
           .price {
+            min-width 18px
+            height 24px
             font-size: 24px;
             color: #c6351e;
             background-image: url('./images/currency.png');
@@ -430,7 +259,7 @@
             line-height 18px
             margin-bottom 24px
           }
-          .buy{
+          .buy {
             width 114px
             height 36px
             background-color #c6351e
@@ -442,10 +271,6 @@
         }
       }
     }
-    .paging{
-      width 1212px
-      margin 0 auto
-      text-align center
-    }
   }
 </style>
+

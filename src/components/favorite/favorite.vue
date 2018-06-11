@@ -83,28 +83,42 @@
         </table>
       </div>
       <div class="clearfix paging">
-        <my-paging></my-paging>
+        <el-pagination class="my_paging"
+                       layout="prev, pager, next"
+                       :background=true
+                       :total=total
+                       :page-size=pageSize
+                       :current-page.sync=currentPage
+                       @current-change="handleCurrentChange">
+        </el-pagination>
       </div>
     </div>
 </template>
 <script>
-  import myPaging from "../paging/paging"
+  import "../../common/stylus/paging.styl";
+  import {baseURL,cardURL} from '@/common/js/public.js';
     export default{
       name: "favorite",
         data(){
-            return {}
+            return {
+              total:10,
+              pageSize:10,
+              currentPage:1,
+              favoriteList:[]
+            }
         },
         components: {
-          myPaging
+        },
+      methods:{
+        handleCurrentChange(val){
+          this.currentPage=val;
+          console.log(val)
+          //this.getMoreCase()
         }
+      }
     }
 </script>
 <style scoped>
-.paging{
-  width:1080px;
-  margin: 0 auto;
-  text-align: center
-}
   .nav_content{
     width: 1078px;
     float: right;
