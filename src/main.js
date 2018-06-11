@@ -10,12 +10,9 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 Vue.config.productionTip = false;
-<<<<<<< HEAD
-=======
 
 import '@/common/js/validate.js'
 
->>>>>>> e77d2d3101ef2dddffb54e966a61ecec3958dcaa
 
 /* eslint-disable no-new */
 const store = new Vuex.Store({
