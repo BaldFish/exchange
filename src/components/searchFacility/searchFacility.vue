@@ -58,18 +58,21 @@
         facilityPage: 1,
         facilityLimit: 12,
         total:12,
-        facilityKeyword:"",
+        facilityValue:"",
+        facilityInput:"",
         searchFacilityList: [],
       }
     },
     mounted() {
+      this.facilityValue=this.$store.state.facilityValue;
+      this.facilityInput=this.$store.state.facilityInput;
       this.acquireSearchFacilityList();
     },
     methods: {
       acquireSearchFacilityList() {
         axios({
           method: "GET",
-          url: `${baseURL}/v1/asset/device/search?key=${this.facilityKeyword}page=${this.facilityPage}&limit=${this.facilityLimit}`,
+          url: `${baseURL}/v1/asset/device/search?key=${this.facilityInput}&page=${this.facilityPage}&limit=${this.facilityLimit}`,
           headers: {
             "Content-Type": "application/json",
           }

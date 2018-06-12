@@ -21,6 +21,11 @@ const store = new Vuex.Store({
     caseSource:{},
     facilityDetails:{},
     facilitySource:{},
+    caseValue:"",
+    caseInput:"",
+    facilityValue:"",
+    facilityInput:"",
+    favoriteCount:"",
   },
   mutations: {
     changeCaseDetails(state, params) {
@@ -38,6 +43,14 @@ const store = new Vuex.Store({
     changeFacilitySource(state, params) {
       state.facilitySource = params;
       window.sessionStorage.setItem("facilitySource", JSON.stringify(state.facilitySource))
+    },
+    changeCaseInput(state,params){
+      state.caseValue=params.value;
+      state.caseInput=params.input;
+    },
+    changeFacilityInput(state,params){
+      state.facilityInput=params.value;
+      state.facilityInput=params.input;
     },
   }
 });

@@ -64,19 +64,22 @@
         casePage: 1,
         caseLimit: 10,
         total: 10,
-        caseKeyword:"",
+        caseValue:"",
+        caseInput:"",
         searchCaseList: [],
       }
     },
     mounted() {
-      this.acquireSearchCaseList()
+      this.caseValue=this.$store.state.caseValue;
+      this.caseInput=this.$store.state.caseInput;
+      this.acquireSearchCaseList();
     },
     methods: {
       //获取搜索案例列表
       acquireSearchCaseList() {
         axios({
           method: "GET",
-          url: `${baseURL}/v1/asset/casus/search?key=${this.caseKeyword}page=${this.casePage}&limit=${this.caseLimit}`,
+          url: `${baseURL}/v1/asset/casus/search?key=${this.caseInput}&page=${this.casePage}&limit=${this.caseLimit}`,
           headers: {
             "Content-Type": "application/json",
           }

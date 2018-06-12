@@ -5,7 +5,7 @@
     </div>
     <div class="search_box">
       <div class="search">
-        <el-select class="my_select" v-model="value" placeholder="请选择" >
+        <el-select class="my_select" v-model="value" placeholder="请选择" @change="clearInput">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -15,7 +15,7 @@
         </el-select>
         <div class="line1"></div>
         <el-input class="my_input" v-model="input" placeholder="请输入您要搜索的内容"></el-input>
-        <div class="button"></div>
+        <div class="button" @click="search"></div>
       </div>
       <div class="keyword">
         <ul>
@@ -30,7 +30,7 @@
     </div>
     <div class="favorite" @click="turnFavorite">
         <span class="s_text">收藏夹</span>
-        <span class="s_num">99</span>
+        <span class="s_num">{{favoriteCount}}</span>
     </div>
   </div>
 </template>
@@ -41,22 +41,44 @@
     data() {
       return {
         options: [{
-          value: '选项1',
+          value: '1',
           label: '共享维修案例'
         }, {
-          value: '选项2',
+          value: '2',
           label: '共享维修设备'
         },],
-        value: '选项1',
+        value: '1',
         input: '',
+        favoriteCount:"",
       }
     },
     mounted() {
     },
     methods: {
+      clearInput(){
+        this.input="";
+      },
       turnFavorite(){
         window.location.href="#/favorite"
-      }
+      },
+      search(val,int){
+        let inputValue={};
+        inputValue.value=this.value;
+        inputValue.input=this.input;
+        if(this.value==='1'){
+          this.getCaseInput(inputValue);
+          window.location.href="#/searchCase"
+        }else if(this.value==='2'){
+          this.getFacilityInput(inputValue);
+          window.location.href="#/searchFacility"
+        }
+      },
+      getCaseInput(inputValue){
+        this.$store.commit("changeCaseInput",inputValue);
+      },
+      getFacilityInput(inputValue){
+        this.$store.commit("changeFacilityInput",inputValue);
+      },
     },
     watch: {},
     computed: {},
