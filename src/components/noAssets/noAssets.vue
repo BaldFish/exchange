@@ -21,8 +21,7 @@
         <router-link to="" class="to_buy">去购买 ></router-link>
       </div>
     </div>
-  
-  
+    
   </div>
 </template>
 
@@ -31,7 +30,8 @@
   export default{
     name: "noAssets",
     data(){
-      return {}
+      return {
+      }
     },
     components: {
       myTopSearch

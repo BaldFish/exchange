@@ -30,12 +30,14 @@
     </div>
     <div class="favorite" @click="turnFavorite">
         <span class="s_text">收藏夹</span>
-        <span class="s_num">{{favoriteCount}}</span>
+        <span class="s_num">{{this.$store.state.favoriteCount}}</span>
     </div>
   </div>
 </template>
 
 <script>
+  import axios from "axios";
+  import {baseURL, cardURL} from '@/common/js/public.js';
   export default {
     name: "topSearch",
     data() {
@@ -49,12 +51,30 @@
         },],
         value: '1',
         input: '',
-        favoriteCount:"",
+        user_id: '',
       }
     },
     mounted() {
+      if(sessionStorage.getItem("loginInfo")){
+        this.user_id = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+        this.acquireFavoriteCount();
+      }
     },
     methods: {
+      acquireFavoriteCount(){
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/shopcart/count/${this.user_id}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          this.$store.state.favoriteCount=res.data;
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
       clearInput(){
         this.input="";
       },

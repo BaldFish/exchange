@@ -18,7 +18,7 @@
         <span class="person" v-if="caseDetails.AuthType==='认证个人'">{{caseDetails.AuthType}}</span>
         <span class="trust" v-if="caseDetails.CreditLevel!=='未认证'">{{caseDetails.CreditLevel}}</span>
       </div>
-      <div class="like">收藏</div>
+      <div class="dislike">收藏</div>
       <a href="#/caseSource" @click="getCaseSource(caseDetails)"><p class="tracing">可信溯源</p></a>
       <div class="intro_list">
         <ul>
@@ -165,7 +165,7 @@
           background-color #ffa799
         }
       }
-      .like {
+      .dislike {
         position absolute
         top 48px
         right 0
@@ -175,6 +175,19 @@
         cursor pointer
         padding-left 26px
         background-image: url('./images/dislike.png');
+        background-repeat: no-repeat;
+        background-position: top left;
+      }
+      .like {
+        position absolute
+        top 48px
+        right 0
+        height 20px
+        line-height 20px
+        color: #c6351e;
+        cursor pointer
+        padding-left 26px
+        background-image: url('./images/like.png');
         background-repeat: no-repeat;
         background-position: top left;
       }

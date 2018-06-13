@@ -29,7 +29,7 @@
             </a>
           </p>
         </div>
-        <div class="like">收藏</div>
+        <div class="dislike">收藏</div>
         <div class="price_box">
           <a href="#/caseDetails" @click="getCaseDetails(item.Id)"><p class="price">{{item.Price}}</p></a>
           <a href="#/caseSource" @click="getCaseSource(item.Id)"><p class="tracing">可信溯源</p></a>
@@ -224,7 +224,7 @@
             overflow: hidden;
           }
         }
-        .like {
+        .dislike {
           position absolute
           top 15px
           right 30px
@@ -234,6 +234,19 @@
           cursor pointer
           padding-left 26px
           background-image: url('./images/dislike.png');
+          background-repeat: no-repeat;
+          background-position: top left;
+        }
+        .like {
+          position absolute
+          top 15px
+          right 30px
+          height 20px
+          line-height 20px
+          color: #c6351e;
+          cursor pointer
+          padding-left 26px
+          background-image: url('./images/like.png');
           background-repeat: no-repeat;
           background-position: top left;
         }

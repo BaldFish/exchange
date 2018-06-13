@@ -1,5 +1,5 @@
 <template>
-  <div class="facilityDetails">
+  <div class="facilityProfit">
     <my-topSearch></my-topSearch>
     <div class="site_box">
       <div class="site">
@@ -22,7 +22,7 @@
             <span class="person">认证个人</span>
             <span class="trust">高可信</span>
           </div>
-          <div class="like">收藏</div>
+          <div class="dislike">收藏</div>
           <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
           <div class="intro_list">
             <ul>
@@ -88,7 +88,7 @@
 <script>
   import myTopSearch from "../topSearch/topSearch"
   export default {
-    name: "facilityDetails",
+    name: "facilityProfit",
     data() {
       return {
         num:1
@@ -108,7 +108,7 @@
 </script>
 
 <style scoped lang="stylus">
-  .facilityDetails{
+  .facilityProfit{
     .site_box {
       width 100%
       background-color #7d7d7d;
@@ -189,6 +189,19 @@
             .merchant {
               background-color #ffa799
             }
+          }
+          .dislike {
+            position absolute
+            top 48px
+            right 0
+            height 20px
+            line-height 20px
+            color: #979797;
+            cursor pointer
+            padding-left 26px
+            background-image: url('./images/dislike.png');
+            background-repeat: no-repeat;
+            background-position: top left;
           }
           .like {
             position absolute

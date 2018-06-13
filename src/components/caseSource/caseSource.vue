@@ -13,7 +13,7 @@
     </div>
     <div class="details">
       <h4>{{caseSourceTitle}}</h4>
-      <div class="like">收藏</div>
+      <div class="dislike">收藏</div>
       <div class="transfer_record">
         <span>资产转让记录</span>
         <ul v-for="(item,index) of caseSource" :key="item.id">
@@ -149,7 +149,7 @@
         color: #222222;
         font-size: 20px;
       }
-      .like {
+      .dislike {
         position absolute
         top 48px
         right 0
@@ -159,6 +159,19 @@
         cursor pointer
         padding-left 26px
         background-image: url('./images/dislike.png');
+        background-repeat: no-repeat;
+        background-position: top left;
+      }
+      .like {
+        position absolute
+        top 48px
+        right 0
+        height 20px
+        line-height 20px
+        color: #c6351e;
+        cursor pointer
+        padding-left 26px
+        background-image: url('./images/like.png');
         background-repeat: no-repeat;
         background-position: top left;
       }

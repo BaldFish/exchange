@@ -25,7 +25,7 @@ const store = new Vuex.Store({
     caseInput:"",
     facilityValue:"",
     facilityInput:"",
-    favoriteCount:"",
+    favoriteCount:0,
   },
   mutations: {
     changeCaseDetails(state, params) {

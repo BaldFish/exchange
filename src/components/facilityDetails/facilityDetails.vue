@@ -23,7 +23,7 @@
             <span class="person" v-if="facilityDetails.AuthType==='认证个人'">{{facilityDetails.AuthType}}</span>
             <span class="trust" v-if="facilityDetails.CreditLevel!=='未认证'">{{facilityDetails.CreditLevel}}</span>
           </div>
-          <div class="like">收藏</div>
+          <div class="dislike">收藏</div>
           <a href="#/facilitySource" @click="getFacilitySource(facilityDetails)"><p class="tracing">可信溯源</p></a>
           <div class="intro_list">
             <ul>
@@ -189,6 +189,19 @@
             .merchant {
               background-color #ffa799
             }
+          }
+          .dislike {
+            position absolute
+            top 48px
+            right 0
+            height 20px
+            line-height 20px
+            color: #979797;
+            cursor pointer
+            padding-left 26px
+            background-image: url('./images/dislike.png');
+            background-repeat: no-repeat;
+            background-position: top left;
           }
           .like {
             position absolute

@@ -29,7 +29,7 @@
             </a>
           </p>
         </div>
-        <div class="like">收藏</div>
+        <div :class="item.InShopCart?'like':'dislike'" @click="toggleLike(item.Id)">收藏</div>
         <div class="price_box">
           <a href="#/caseDetails" @click="getCaseDetails(item.Id)"><p class="price">{{item.Price}}</p></a>
           <a href="#/caseSource" @click="getCaseSource(item.Id)"><p class="tracing">可信溯源</p></a>
@@ -65,12 +65,62 @@
         caseLimit: 10,
         total: 10,
         caseList: [],
+        token:"",
+        user_id:"",
+        apikey:"",
+        assetid:"",
+        id:"",
       }
     },
     mounted() {
       this.acquireCaseList()
     },
     methods: {
+      toggleLike(val){
+        if(sessionStorage.getItem("loginInfo")){
+          let likeInfo=_.find(this.caseList,function (o) {
+            return o.Id===val
+          });
+          console.log(likeInfo);
+          this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+          this.user_id=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+          this.apikey=likeInfo.Apikey;
+          this.assetid=likeInfo.Assetid;
+          console.log(this.apikey,this.assetid)
+          if(likeInfo.InShopCart===0){
+            axios({
+              method: "POST",
+              url: `${baseURL}/v1/shopcart/${this.user_id}/${this.apikey}/${this.assetid}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token
+              }
+            }).then((res) => {
+              console.log(res);
+              this.id=res.data._id;
+              likeInfo.InShopCart=1
+            }).catch((err) => {
+              console.log(err);
+            });
+            likeInfo.InShopCart=1
+          }else if(likeInfo.InShopCart===1){
+            axios({
+              method: "DELETE",
+              url: `${baseURL}/v1/shopcart/${this.user_id}/${this.id}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token
+              }
+            }).then((res) => {
+              console.log(1);
+              likeInfo.InShopCart=0
+            }).catch((err) => {
+              console.log(err);
+            });
+          }
+        }
+      console.log()
+      },
       acquireCaseList() {
         //获取维修案例列表
         axios({
@@ -85,6 +135,34 @@
         }).catch((err) => {
           console.log(err);
         })
+      },
+      addCollection(){
+        axios({
+          method: "POST",
+          url: `${baseURL}/v1/shopcart/${this.user_id}/${this.apikey}/${this.assetid}`,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-Access-Token":this.token
+          }
+        }).then((res) => {
+          console.log(res);
+        }).catch((err) => {
+          console.log(err);
+        });
+      },
+      cancelCollection(){
+        axios({
+          method: "DELETE",
+          url: `${baseURL}/v1/shopcart/${this.user_id}/${this.id}`,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-Access-Token":this.token
+          }
+        }).then((res) => {
+          console.log(res);
+        }).catch((err) => {
+          console.log(err);
+        });
       },
       handleCurrentChange(val){
         this.casePage=val;
@@ -220,7 +298,7 @@
             overflow: hidden;
           }
         }
-        .like {
+        .dislike {
           position absolute
           top 15px
           right 30px
@@ -230,6 +308,19 @@
           cursor pointer
           padding-left 26px
           background-image: url('./images/dislike.png');
+          background-repeat: no-repeat;
+          background-position: top left;
+        }
+        .like {
+          position absolute
+          top 15px
+          right 30px
+          height 20px
+          line-height 20px
+          color: #c6351e;
+          cursor pointer
+          padding-left 26px
+          background-image: url('./images/like.png');
           background-repeat: no-repeat;
           background-position: top left;
         }

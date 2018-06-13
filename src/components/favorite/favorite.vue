@@ -3,7 +3,7 @@
     <div class="nav_content_title">
       <span>收藏夹</span>
     </div>
-    <div class="nav_content_table">
+    <div class="nav_content_table" v-if="favoriteList.length>0">
       <table>
         <thead>
         <tr class="content_thead">
@@ -13,30 +13,30 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="classify">
+        <tr class="classify" v-if="caseList.length!==0">
           <td colspan="5">维修案例</td>
         </tr>
-        <tr class="content_tbody">
-          <td>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功率德国车载吸尘你充电强力大功率</td>
-          <td>所有权</td>
-          <td class="quick_buy_td" @click="cancel">
+        <tr class="content_tbody" v-for="(item,index) of caseList" :key="item._id">
+          <td>{{item.assetname}}</td>
+          <td>{{item.sell_type}}</td>
+          <td class="quick_buy_td" @click="cancel(item._id)">
             <button>取消收藏</button>
           </td>
         </tr>
-        <tr class="classify">
+        <tr class="classify" v-if="facilityList.length!==0">
           <td colspan="5">维修设备</td>
         </tr>
-        <tr class="content_tbody">
-          <td><span><img src="" alt=""></span>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功率德国车载吸尘你充电强力大功率</td>
-          <td>所有权</td>
-          <td class="quick_buy_td" @click="cancel">
+        <tr class="content_tbody" v-for="(item,index) of facilityList" :key="item._id">
+          <td><span><img src="" alt=""></span>{{item.assetname}}</td>
+          <td>{{item.sell_type}}</td>
+          <td class="quick_buy_td" @click="cancel(item._id)">
             <button>取消收藏</button>
           </td>
         </tr>
         </tbody>
       </table>
     </div>
-    <div class="clearfix paging">
+    <div class="clearfix paging" v-if="favoriteList.length>0">
       <el-pagination class="my_paging"
                      layout="prev, pager, next"
                      :background=true
@@ -46,6 +46,13 @@
                      @current-change="handleCurrentChange">
       </el-pagination>
     </div>
+    <div class="no_assets_content"v-if="favoriteList.length===0">
+      <div class="no_assets_box">
+        <img src="./images/empty.png" alt="">
+        <p>暂时没有资产</p>
+        <router-link to="/" class="to_buy">去收藏 ></router-link>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -54,30 +61,41 @@
   import {baseURL, cardURL} from '@/common/js/public.js';
   export default {
     name: "favorite",
+    components: {},
     data() {
       return {
         total: 10,
         pageSize: 10,
         currentPage: 1,
         favoriteList: [],
-        caseList: [],
-        facilityList: [],
         user_id: '',
-        id:"5b1fbcff3eb34b00018ebd9c",
+        id:"",
         token:"",
       }
     },
-    components: {},
+    computed:{
+      caseList: function () {
+        return this.favoriteList.filter(function (value, index, array) {
+          return value.apikey==="5a6be74a55aaf50001a5e250"
+        })
+      },
+      facilityList:function () {
+        return this.favoriteList.filter(function (value, index, array) {
+          return value.apikey==="5ae04522cff7cb000194f2f4"
+        })
+      },
+    },
     mounted() {
-      this.user_id = JSON.parse(sessionStorage.getItem("loginInfo")).user._id;
-      this.token=JSON.parse(sessionStorage.getItem("loginInfo")).session.token;
-      this.acquireFacilityList();
+      this.user_id = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+      this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      this.acquireFavoriteList();
     },
     methods: {
       handleCurrentChange(val) {
         this.currentPage = val;
+        this.acquireFavoriteList();
       },
-      acquireFacilityList() {
+      acquireFavoriteList() {
         axios({
           method: "GET",
           url: `${baseURL}/v1/shopcart/list/${this.user_id}?page=${this.currentPage}&limit=${this.pageSize}`,
@@ -87,17 +105,6 @@
         }).then((res) => {
           this.total = res.data.count;
           this.favoriteList = res.data.data;
-          let that = this;
-          this.favoriteList.forEach(function (value, index, array) {
-            switch (value.apikey) {
-              case "5a6be74a55aaf50001a5e250":
-                that.caseList.push(value)
-                break;
-              case "5ae04522cff7cb000194f2f4":
-                that.facilityList.push(value)
-                break;
-            }
-          });
           console.log(res);
           console.log(this.caseList);
           console.log(this.facilityList);
@@ -105,7 +112,8 @@
           console.log(err);
         });
       },
-      cancel(){
+      cancel(val){
+        this.id=val;
         axios({
           method: "DELETE",
           url: `${baseURL}/v1/shopcart/${this.user_id}/${this.id}`,
@@ -114,6 +122,8 @@
             "X-Access-Token":this.token
           }
         }).then((res) => {
+          console.log(1);
+          this.acquireFavoriteList();
           console.log(res);
         }).catch((err) => {
           console.log(err);
@@ -127,7 +137,6 @@
     width: 1078px;
     float: right;
   }
-  
   .nav_content_title {
     width: 1078px;
     height: 50px;
@@ -141,14 +150,12 @@
   .nav_content_title span {
     padding-left: 20px;
   }
-  
   .nav_content_table {
     margin-top: 12px;
     width: 1078px;
     background-color: #ffffff;
     border: solid 1px #bfbfbf;
   }
-  
   .content_thead {
     font-size: 16px;
     color: #222222;
@@ -163,7 +170,6 @@
     padding-left: 46px;
     width: 800px;
   }
-  
   .classify td {
     background-color: #f6f7fa;
     text-align: left;
@@ -220,5 +226,36 @@
     font-size: 14px;
     color: #c6351e;
     margin: 0 10px;
+  }
+
+  .no_assets_content{
+    margin-top: 12px;
+    width: 1078px;
+    height: 542px;
+    background-color: #ffffff;
+    border: solid 1px #bfbfbf;
+    margin-bottom: 40px;
+  }
+  .no_assets_box img{
+    float: left;
+  }
+  .no_assets_box{
+    width: 186px;
+    height:70px;
+    margin: 0 auto;
+    position: relative;
+    top: 236px;
+  }
+  .no_assets_box p{
+    font-size: 18px;
+    color: #222222;
+    float:right;
+    padding: 14px 0;
+    padding-top: 8px;
+  }
+  .to_buy{
+    font-size: 18px;
+    color: #c6351e;
+    margin-left: 12px;
   }
 </style>
