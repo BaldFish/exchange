@@ -18,8 +18,8 @@
         <span class="person" v-if="caseDetails.AuthType==='认证个人'">{{caseDetails.AuthType}}</span>
         <span class="trust" v-if="caseDetails.CreditLevel!=='未认证'">{{caseDetails.CreditLevel}}</span>
       </div>
-      <div class="dislike">收藏</div>
-      <a href="#/caseSource" @click="getCaseSource(caseDetails)"><p class="tracing">可信溯源</p></a>
+      <div :class="caseDetails.InShopCart?'like':'dislike'" @click="toggleLike(caseDetails.Id)">收藏</div>
+      <a href="#/caseSource" @click="getCaseSource"><p class="tracing">可信溯源</p></a>
       <div class="intro_list">
         <ul>
           <li>
@@ -62,8 +62,11 @@
     data() {
       return {
         caseDetails:{},
+        userId:"",
+        token:"",
         apiKey:"",
-        assetId:""
+        assetId:"",
+        id:"",
       }
     },
     mounted() {
@@ -73,6 +76,49 @@
       this.acquireCaseDetails()
     },
     methods: {
+      toggleLike(val){
+        if(sessionStorage.getItem("loginInfo")){
+          let likeInfo=this.caseDetails;
+          console.log(likeInfo);
+          this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+          this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+          this.apiKey=likeInfo.Apikey;
+          this.assetId=likeInfo.Assetid;
+          //this.id=likeInfo.Id;
+          console.log(this.apiKey,this.assetId);
+          if(likeInfo.InShopCart===0){
+            axios({
+              method: "POST",
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token
+              }
+            }).then((res) => {
+              console.log(res);
+              this.id=res.data._id;
+              likeInfo.InShopCart=1
+            }).catch((err) => {
+              console.log(err);
+            });
+            likeInfo.InShopCart=1
+          }else if(likeInfo.InShopCart===1){
+            axios({
+              method: "DELETE",
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token
+              }
+            }).then((res) => {
+              console.log(11111111111);
+              likeInfo.InShopCart=0
+            }).catch((err) => {
+              console.log(err);
+            });
+          }
+        }
+      },
       acquireCaseDetails(){
         axios({
           method: "GET",
@@ -81,13 +127,14 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
+          console.log(res)
           this.caseDetails=res.data
         }).catch((err) => {
           console.log(err);
         })
       },
-      getCaseSource(val) {
-        this.$store.commit("changeCaseSource",val);
+      getCaseSource() {
+        this.$store.commit("changeCaseSource",this.caseDetails);
       },
     },
     watch: {},

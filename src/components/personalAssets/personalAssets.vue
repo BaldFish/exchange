@@ -1,8 +1,11 @@
 <template>
   <div class="nav_content">
     <div class="assets_summary">
-      <p>186***4168</p>
-      <p>钱包地址：0X93f478321.....5498268554</p>
+      <p>{{phone}}</p>
+      <p v-if="walletAddress===''">未绑定钱包地址
+        <router-link to="/securityCenter" class="to_bind">去绑定 ></router-link>
+      </p>
+      <p v-if="walletAddress!==''">钱包地址：{{walletAddress}}</p>
       <p>可信币：234567.00</p>
     </div>
     <div class="nav_content_title">
@@ -81,8 +84,10 @@
         pageSize: 10,
         currentPage: 1,
         assetList:[],
-        user_id:"",
+        userId:"",
         token:"",
+        phone:"",
+        walletAddress:""
       }
     },
     computed:{
@@ -98,18 +103,34 @@
       },
     },
     mounted() {
-      this.user_id = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+      this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
       this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
       this.acquireAssetList();
+      this.acquireUserInfo();
     },
     methods:{
       handleCurrentChange(val){
         this.currentPage = val;
       },
+      acquireUserInfo(){
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/users/${this.userId}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          console.log(res);
+          this.phone=res.data.phone.substr(3,3)+"***"+res.data.phone.substr(10,4);
+          this.walletAddress=res.data.wallet_address;
+        }).catch((err) => {
+          console.log(err);
+        });
+      },
       acquireAssetList() {
         axios({
           method: "GET",
-          url: `${baseURL}/v1/order/list/${this.user_id}?page=${this.currentPage}&limit=${this.pageSize}`,
+          url: `${baseURL}/v1/order/list/${this.userId}?page=${this.currentPage}&limit=${this.pageSize}`,
           headers: {
             "Content-Type": "application/json",
           }
@@ -217,6 +238,11 @@
   }
   .assets_summary p:nth-child(2){
     margin-bottom: 10px;
+  }
+  .to_bind{
+    font-size: 14px;
+    color: #c6351e;
+    margin-left: 10px;
   }
   .nav_content_title span {
     padding-left: 20px;

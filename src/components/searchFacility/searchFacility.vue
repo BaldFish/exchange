@@ -58,15 +58,24 @@
         facilityPage: 1,
         facilityLimit: 12,
         total:12,
-        facilityValue:"",
-        facilityInput:"",
         searchFacilityList: [],
       }
     },
     mounted() {
-      this.facilityValue=this.$store.state.facilityValue;
-      this.facilityInput=this.$store.state.facilityInput;
       this.acquireSearchFacilityList();
+    },
+    computed: {
+      facilityValue:function () {
+        return this.$store.state.facilityValue
+      },
+      facilityInput:function () {
+        return this.$store.state.facilityInput
+      }
+    },
+    watch: {
+      facilityInput:function () {
+        this.acquireSearchFacilityList();
+      }
     },
     methods: {
       acquireSearchFacilityList() {

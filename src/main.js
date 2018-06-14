@@ -5,9 +5,11 @@ import App from './App';
 import router from './router';
 import Vuex from 'vuex';
 import $ from 'jquery';
+
 Vue.use(Vuex);
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+
 Vue.use(ElementUI);
 Vue.config.productionTip = false;
 
@@ -18,14 +20,14 @@ import '@/common/js/validate.js'
 const store = new Vuex.Store({
   state: {
     caseDetails: {},
-    caseSource:{},
-    facilityDetails:{},
-    facilitySource:{},
-    caseValue:"",
-    caseInput:"",
-    facilityValue:"",
-    facilityInput:"",
-    favoriteCount:0,
+    caseSource: {},
+    facilityDetails: {},
+    facilitySource: {},
+    caseValue: "",
+    caseInput: "",
+    facilityValue: "",
+    facilityInput: "",
+    favoriteCount: 0,
   },
   mutations: {
     changeCaseDetails(state, params) {
@@ -44,13 +46,19 @@ const store = new Vuex.Store({
       state.facilitySource = params;
       window.sessionStorage.setItem("facilitySource", JSON.stringify(state.facilitySource))
     },
-    changeCaseInput(state,params){
-      state.caseValue=params.value;
-      state.caseInput=params.input;
+    changeCaseInput(state, params) {
+      state.caseValue = params.value;
+      state.caseInput = params.input;
     },
-    changeFacilityInput(state,params){
-      state.facilityInput=params.value;
-      state.facilityInput=params.input;
+    changeFacilityInput(state, params) {
+      state.facilityInput = params.value;
+      state.facilityInput = params.input;
+    },
+    addCollection(state, params) {
+      state.favoriteCount++
+    },
+    subtractCollection(state, params) {
+      state.favoriteCount--
     },
   }
 });
@@ -58,6 +66,6 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App },
+  components: {App},
   template: '<App/>'
 });

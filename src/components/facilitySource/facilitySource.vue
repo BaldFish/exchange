@@ -13,7 +13,7 @@
     </div>
     <div class="details">
       <h4>{{facilitySourceTitle}}</h4>
-      <div class="dislike">收藏</div>
+      <div :class="facilityDetails.InShopCart?'like':'dislike'" @click="toggleLike(facilityDetails.Id)">收藏</div>
       <div class="transfer_record">
         <span>资产转让记录</span>
         <ul v-for="(item,index) of facilitySource" :key="item.id">
@@ -34,8 +34,8 @@
             <span>：{{item.updated_at}}</span>
           </li>
         </ul>
-        <a href="#/facilityDetails" @click="getFacilityDetails(facilityDetails)"><p class="asset_details">案例详情</p></a>
-        <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
+        <a href="#/facilityDetails" @click="getFacilityDetails"><p class="asset_details">案例详情</p></a>
+        <a href="#/checkOrder"><p class="buy">一键购买</p></a>
       </div>
       <div class="transfer_record use_record">
         <span>资产使用记录</span>
@@ -83,8 +83,11 @@
         facilitySourceTitle: "",
         facilitySource: [],
         usageRecord: [],
-        assetId: "",
-        apiKey: "",
+        userId:"",
+        token:"",
+        apiKey:"",
+        assetId:"",
+        id:"",
       }
     },
     mounted() {
@@ -93,9 +96,55 @@
       this.apiKey = JSON.parse(sessionStorage.getItem("facilitySource")).Apikey;
       this.facilityDetails = JSON.parse(sessionStorage.getItem("facilitySource"));
       this.acquireFacilitySource();
-      this.acquireUsageRecord()
+      this.acquireUsageRecord();
+      this.acquireFacilityDetails();
     },
     methods: {
+      toggleLike(val){
+        if(sessionStorage.getItem("loginInfo")){
+          let likeInfo=this.facilityDetails;
+          console.log(likeInfo);
+          this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+          this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+          this.apiKey=likeInfo.Apikey;
+          this.assetId=likeInfo.Assetid;
+          //this.id=likeInfo.Id;
+          console.log(this.apiKey,this.assetId);
+          if(likeInfo.InShopCart===0){
+            axios({
+              method: "POST",
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token
+              }
+            }).then((res) => {
+              console.log(res);
+              this.id=res.data._id;
+              console.log(this.id);
+              likeInfo.InShopCart=1
+            }).catch((err) => {
+              console.log(err);
+            });
+            likeInfo.InShopCart=1
+          }else if(likeInfo.InShopCart===1){
+            console.log(this.id);
+            axios({
+              method: "DELETE",
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token
+              }
+            }).then((res) => {
+              console.log(11111111111);
+              likeInfo.InShopCart=0
+            }).catch((err) => {
+              console.log(err);
+            });
+          }
+        }
+      },
       acquireFacilitySource() {
         axios({
           method: "GET",
@@ -130,8 +179,21 @@
           console.log(err);
         });
       },
+      acquireFacilityDetails(){
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          this.facilityDetails=res.data
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
       getFacilityDetails(val) {
-        this.$store.commit("changeFacilityDetails",val);
+        this.$store.commit("changeFacilityDetails",this.facilityDetails);
       },
     },
     watch: {},

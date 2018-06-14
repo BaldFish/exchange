@@ -13,7 +13,7 @@
     </div>
     <div class="details">
       <h4>{{caseSourceTitle}}</h4>
-      <div class="dislike">收藏</div>
+      <div :class="caseDetails.InShopCart?'like':'dislike'"  @click="toggleLike(caseDetails.Id)">收藏</div>
       <div class="transfer_record">
         <span>资产转让记录</span>
         <ul v-for="(item,index) of caseSource" :key="item.id">
@@ -34,8 +34,8 @@
             <span>：{{item.updated_at}}</span>
           </li>
         </ul>
-        <a href="#/caseDetails" @click="getCaseDetails(caseDetails)"><p class="asset_details">案例详情</p></a>
-        <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
+        <a href="#/caseDetails" @click="getCaseDetails"><p class="asset_details">案例详情</p></a>
+        <a href="#/checkOrder"><p class="buy">一键购买</p></a>
       </div>
     </div>
   </div>
@@ -53,8 +53,11 @@
         caseSourceTitle: "",
         caseSource: [],
         caseDetails:{},
-        assetId: "",
-        apiKey: "",
+        userId:"",
+        token:"",
+        apiKey:"",
+        assetId:"",
+        id:"",
       }
     },
     mounted() {
@@ -63,9 +66,52 @@
       this.apiKey = JSON.parse(sessionStorage.getItem("caseSource")).Apikey;
       this.caseDetails=JSON.parse(sessionStorage.getItem("caseSource"));
       this.acquireCaseSource();
-      //this.acquireCaseDetails();
+      this.acquireCaseDetails();
     },
     methods: {
+      toggleLike(val){
+        if(sessionStorage.getItem("loginInfo")){
+          let likeInfo=this.caseDetails;
+          console.log(likeInfo);
+          this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+          this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+          this.apiKey=likeInfo.Apikey;
+          this.assetId=likeInfo.Assetid;
+          //this.id=likeInfo.Id;
+          console.log(this.apiKey,this.assetId);
+          if(likeInfo.InShopCart===0){
+            axios({
+              method: "POST",
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token
+              }
+            }).then((res) => {
+              console.log(res);
+              this.id=res.data._id;
+              likeInfo.InShopCart=1;
+            }).catch((err) => {
+              console.log(err);
+            });
+            likeInfo.InShopCart=1;
+          }else if(likeInfo.InShopCart===1){
+            axios({
+              method: "DELETE",
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token
+              }
+            }).then((res) => {
+              console.log(11111111111);
+              likeInfo.InShopCart=0
+            }).catch((err) => {
+              console.log(err);
+            });
+          }
+        }
+      },
       acquireCaseSource(){
         axios({
           method: "GET",
@@ -83,7 +129,7 @@
           console.log(err);
         })
       },
-      /*acquireCaseDetails(){
+      acquireCaseDetails(){
           axios({
             method: "GET",
             url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
@@ -95,9 +141,9 @@
           }).catch((err) => {
             console.log(err);
           })
-      },*/
+      },
       getCaseDetails(val){
-        this.$store.commit("changeCaseDetails",val);
+        this.$store.commit("changeCaseDetails",this.caseDetails);
       }
     },
     watch: {},

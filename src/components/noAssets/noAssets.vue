@@ -3,9 +3,7 @@
     <div class="assets_summary">
       <p>186***4168</p>
       <p>未绑定钱包地址
-        <router-link to="" class="to_bind">
-          去绑定 >
-        </router-link>
+        <router-link to="" class="to_bind">去绑定 ></router-link>
       </p>
       <p>可信币：0.00</p>
     </div>

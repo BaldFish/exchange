@@ -23,8 +23,8 @@
             <span class="person" v-if="facilityDetails.AuthType==='认证个人'">{{facilityDetails.AuthType}}</span>
             <span class="trust" v-if="facilityDetails.CreditLevel!=='未认证'">{{facilityDetails.CreditLevel}}</span>
           </div>
-          <div class="dislike">收藏</div>
-          <a href="#/facilitySource" @click="getFacilitySource(facilityDetails)"><p class="tracing">可信溯源</p></a>
+          <div :class="facilityDetails.InShopCart?'like':'dislike'" @click="toggleLike(facilityDetails.Id)">收藏</div>
+          <a href="#/facilitySource" @click="getFacilitySource"><p class="tracing">可信溯源</p></a>
           <div class="intro_list">
             <ul>
               <li>
@@ -69,17 +69,65 @@
     data() {
       return {
         facilityDetails:{},
+        userId:"",
+        token:"",
         apiKey:"",
-        assetId:""
+        assetId:"",
+        id:"",
       }
     },
     mounted() {
-      this.facilityDetails=JSON.parse(sessionStorage.getItem("facilityDetails"))
+      this.facilityDetails=JSON.parse(sessionStorage.getItem("facilityDetails"));
       this.apiKey=this.facilityDetails.Apikey;
       this.assetId=this.facilityDetails.Assetid;
       this.acquireFacilityDetails()
     },
     methods: {
+      toggleLike(val){
+        if(sessionStorage.getItem("loginInfo")){
+          let likeInfo=this.facilityDetails;
+          console.log(likeInfo);
+          this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+          this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+          this.apiKey=likeInfo.Apikey;
+          this.assetId=likeInfo.Assetid;
+          //this.id=likeInfo.Id;
+          console.log(this.apiKey,this.assetId);
+          if(likeInfo.InShopCart===0){
+            axios({
+              method: "POST",
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token
+              }
+            }).then((res) => {
+              console.log(res);
+              this.id=res.data._id;
+              console.log(this.id);
+              likeInfo.InShopCart=1
+            }).catch((err) => {
+              console.log(err);
+            });
+            likeInfo.InShopCart=1
+          }else if(likeInfo.InShopCart===1){
+            console.log(this.id);
+            axios({
+              method: "DELETE",
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token
+              }
+            }).then((res) => {
+              console.log(11111111111);
+              likeInfo.InShopCart=0
+            }).catch((err) => {
+              console.log(err);
+            });
+          }
+        }
+      },
       acquireFacilityDetails(){
         axios({
           method: "GET",
@@ -94,7 +142,7 @@
         })
       },
       getFacilitySource(val) {
-        this.$store.commit("changeFacilitySource",val);
+        this.$store.commit("changeFacilitySource",this.facilityDetails);
       },
     },
     watch: {},

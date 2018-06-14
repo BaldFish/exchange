@@ -29,7 +29,7 @@
             </a>
           </p>
         </div>
-        <div class="dislike">收藏</div>
+        <div :class="item.InShopCart?'like':'dislike'" @click="toggleLike(item.Id)">收藏</div>
         <div class="price_box">
           <a href="#/caseDetails" @click="getCaseDetails(item.Id)"><p class="price">{{item.Price}}</p></a>
           <a href="#/caseSource" @click="getCaseSource(item.Id)"><p class="tracing">可信溯源</p></a>
@@ -64,17 +64,71 @@
         casePage: 1,
         caseLimit: 10,
         total: 10,
-        caseValue:"",
-        caseInput:"",
         searchCaseList: [],
       }
     },
     mounted() {
-      this.caseValue=this.$store.state.caseValue;
-      this.caseInput=this.$store.state.caseInput;
       this.acquireSearchCaseList();
     },
+    computed: {
+      caseValue:function () {
+        return this.$store.state.caseValue
+      },
+      caseInput:function () {
+        return this.$store.state.caseInput
+      }
+    },
+    watch: {
+      caseInput:function () {
+        this.acquireSearchCaseList();
+      }
+    },
     methods: {
+      toggleLike(val){
+        if(sessionStorage.getItem("loginInfo")){
+          let likeInfo=_.find(this.searchCaseList,function (o) {
+            return o.Id===val
+          });
+          console.log(likeInfo);
+          this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+          this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+          this.apiKey=likeInfo.Apikey;
+          this.assetId=likeInfo.Assetid;
+          //this.id=likeInfo.Id;
+          console.log(this.apiKey,this.assetId);
+          if(likeInfo.InShopCart===0){
+            axios({
+              method: "POST",
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token
+              }
+            }).then((res) => {
+              console.log(res);
+              this.id=res.data._id;
+              likeInfo.InShopCart=1
+            }).catch((err) => {
+              console.log(err);
+            });
+            likeInfo.InShopCart=1
+          }else if(likeInfo.InShopCart===1){
+            axios({
+              method: "DELETE",
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token
+              }
+            }).then((res) => {
+              console.log(11111111111);
+              likeInfo.InShopCart=0
+            }).catch((err) => {
+              console.log(err);
+            });
+          }
+        }
+      },
       //获取搜索案例列表
       acquireSearchCaseList() {
         axios({

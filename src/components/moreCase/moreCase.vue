@@ -29,7 +29,7 @@
             </a>
           </p>
         </div>
-        <div :class="item.InShopCart?'like':'dislike'" @click="toggleLike(item.Id)">收藏</div>
+        <div :class="item.ShopCartId?'like':'dislike'" @click="toggleLike(item.Id)">收藏</div>
         <div class="price_box">
           <a href="#/caseDetails" @click="getCaseDetails(item.Id)"><p class="price">{{item.Price}}</p></a>
           <a href="#/caseSource" @click="getCaseSource(item.Id)"><p class="tracing">可信溯源</p></a>
@@ -65,14 +65,15 @@
         caseLimit: 10,
         total: 10,
         caseList: [],
+        userId:"",
         token:"",
-        user_id:"",
-        apikey:"",
-        assetid:"",
+        apiKey:"",
+        assetId:"",
         id:"",
       }
     },
     mounted() {
+      this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
       this.acquireCaseList()
     },
     methods: {
@@ -83,14 +84,15 @@
           });
           console.log(likeInfo);
           this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
-          this.user_id=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-          this.apikey=likeInfo.Apikey;
-          this.assetid=likeInfo.Assetid;
-          console.log(this.apikey,this.assetid)
-          if(likeInfo.InShopCart===0){
+          this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+          this.apiKey=likeInfo.Apikey;
+          this.assetId=likeInfo.Assetid;
+          //this.id=likeInfo.Id;
+          console.log(this.apiKey,this.assetId);
+          if(likeInfo.ShopCartId===""){
             axios({
               method: "POST",
-              url: `${baseURL}/v1/shopcart/${this.user_id}/${this.apikey}/${this.assetid}`,
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "X-Access-Token":this.token
@@ -98,71 +100,60 @@
             }).then((res) => {
               console.log(res);
               this.id=res.data._id;
-              likeInfo.InShopCart=1
+              likeInfo.ShopCartId=res.data._id;
+              this.addCollection()
             }).catch((err) => {
               console.log(err);
             });
-            likeInfo.InShopCart=1
-          }else if(likeInfo.InShopCart===1){
+          }else if(likeInfo.ShopCartId!==""){
             axios({
               method: "DELETE",
-              url: `${baseURL}/v1/shopcart/${this.user_id}/${this.id}`,
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              console.log(1);
-              likeInfo.InShopCart=0
+              console.log(111111111);
+              likeInfo.ShopCartId=""
+              this.subtractCollection()
             }).catch((err) => {
               console.log(err);
             });
           }
         }
-      console.log()
       },
       acquireCaseList() {
         //获取维修案例列表
-        axios({
-          method: "GET",
-          url: `${baseURL}/v1/asset/casus?page=${this.casePage}&limit=${this.caseLimit}`,
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }).then((res) => {
-          this.total=res.data.count;
-          this.caseList = res.data.data;
-        }).catch((err) => {
-          console.log(err);
-        })
-      },
-      addCollection(){
-        axios({
-          method: "POST",
-          url: `${baseURL}/v1/shopcart/${this.user_id}/${this.apikey}/${this.assetid}`,
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "X-Access-Token":this.token
-          }
-        }).then((res) => {
-          console.log(res);
-        }).catch((err) => {
-          console.log(err);
-        });
-      },
-      cancelCollection(){
-        axios({
-          method: "DELETE",
-          url: `${baseURL}/v1/shopcart/${this.user_id}/${this.id}`,
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "X-Access-Token":this.token
-          }
-        }).then((res) => {
-          console.log(res);
-        }).catch((err) => {
-          console.log(err);
-        });
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/asset/casus?page=${this.casePage}&limit=${this.caseLimit}&userid=${this.userId}`,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((res) => {
+            this.total=res.data.count;
+            this.caseList = res.data.data;
+            console.log(this.caseList);
+          }).catch((err) => {
+            console.log(err);
+          })
+        }else {
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/asset/casus?page=${this.casePage}&limit=${this.caseLimit}`,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((res) => {
+            this.total=res.data.count;
+            this.caseList = res.data.data;
+            console.log(this.caseList);
+          }).catch((err) => {
+            console.log(err);
+          })
+        }
       },
       handleCurrentChange(val){
         this.casePage=val;
@@ -177,6 +168,12 @@
         this.$store.commit("changeCaseSource",_.find(this.caseList,function (o) {
           return o.Id===val
         }));
+      },
+      addCollection(){
+        this.$store.commit("addCollection")
+      },
+      subtractCollection(){
+        this.$store.commit("subtractCollection")
       },
     },
     components: {

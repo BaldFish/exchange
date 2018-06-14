@@ -5,7 +5,7 @@
     </div>
     <div class="search_box">
       <div class="search">
-        <el-select class="my_select" v-model="value" placeholder="请选择" @change="clearInput">
+        <el-select class="my_select" v-model="value" placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -51,13 +51,24 @@
         },],
         value: '1',
         input: '',
-        user_id: '',
+        userId: '',
+        token:"",
       }
     },
     mounted() {
       if(sessionStorage.getItem("loginInfo")){
-        this.user_id = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
         this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+        this.acquireFavoriteCount();
+      }
+    },
+    computed: {
+      favoriteCount:function(){
+        return this.$store.state.favoriteCount
+      }
+    },
+    watch: {
+      favoriteCount:function () {
         this.acquireFavoriteCount();
       }
     },
@@ -65,7 +76,7 @@
       acquireFavoriteCount(){
         axios({
           method: "GET",
-          url: `${baseURL}/v1/shopcart/count/${this.user_id}`,
+          url: `${baseURL}/v1/shopcart/count/${this.userId}`,
           headers: {
             "Content-Type": "application/json",
           }
@@ -100,8 +111,6 @@
         this.$store.commit("changeFacilityInput",inputValue);
       },
     },
-    watch: {},
-    computed: {},
     components: {},
   }
 </script>
