@@ -31,31 +31,32 @@
               <li>
                 <i></i>
                 <input type="text" placeholder="请输入手机号" v-model="phone" v-validate="'required|mobile'" name='mobile'>
-                <!--<span v-show="errors.has('mobile')" class="error" style="width: 200px">{{errors.first('mobile')}}</span>-->
+                <span v-show="errors.has('mobile')" class="error" style="width: 200px">{{errors.first('mobile')}}</span>
               </li>
               <li>
                 <i></i>
-                <input type="text" placeholder="请输入验证码" v-model="captcha_number" v-validate="'required'" name='captcha_number'>
+                <input type="text" placeholder="请输入验证码" v-model="captcha_number" v-validate="'required'" name='captcha_number' @blur="captchaError">
                 <img class="img_change_img" @click="getCaptcha" :src="captcha">
-                <!--<span v-show="errors.has('captcha_number')" class="error">{{errors.first('captcha_number')}}</span>-->
+                <span v-show="errors.has('captcha_number')" class="error">{{errors.first('captcha_number')}}</span>
+                <span v-show="captchaNotice" class="error">图形验证码错误</span>
               </li>
               <li>
                 <i></i>
-                <input type="text" placeholder="请输入手机验证码" v-model="code" v-validate="'required'" name='code'>
+                <input type="text" placeholder="请输入手机验证码" v-model="code" v-validate="'required'" name='code' @blur="codeError">
                 <div class="img_change_img get_code" @click="getCode" v-if="codeValue">获取验证码</div>
                 <div class="img_change_img count_down" v-else>倒计时（{{second}}）</div>
-                <!--<span v-show="errors.has('code')" class="error">{{errors.first('code')}}</span>-->
+                <span v-show="errors.has('code')" class="error">{{errors.first('code')}}</span>
+                <span v-show="codeNotice" class="error">短信验证码错误</span>
               </li>
             </ul>
           </div>
           <div class="contract">
-            <input type="radio">
-           <!-- <input type="radio" v-model="contract" v-validate="'required'" name='contract'>-->
+            <input type="radio" @click="radioChange" :checked="isChecked">
             <i></i>
             <span>我已阅读并同意《服务协议》</span>
-           <!-- <span v-show="errors.has('contract')" class="error">{{errors.first('contract')}}</span>-->
+            <span v-show="showNotice" class="error error-contract">请勾选已阅读并同意服务协议</span>
           </div>
-          <div class="next_btn" @click="nextStep(2)"><span>下一步</span></div>
+          <div :class="{ 'next_btn_top': showNotice, 'next_btn': !showNotice}" @click="nextStep(2)"><span>下一步</span></div>
         </section>
 
         <section class="forget_psw_sec" v-if="stepTwo">
@@ -71,12 +72,12 @@
               <li>
                 <i></i>
                 <input type="password" placeholder="请输入密码" v-model="password" v-validate="'required'" name='password'>
-               <!-- <span v-show="errors.has('password')" class="error_password">{{errors.first('password')}}</span>-->
+                <span v-show="errors.has('password')" class="error_password">{{errors.first('password')}}</span>
               </li>
               <li>
                 <i></i>
-                <input type="password" placeholder="请确认密码" v-model="repassword" v-validate="'required'" name='repassword'>
-                <!--<span v-show="errors.has('repassword')" class="error_password">{{errors.first('repassword')}}</span>-->
+                <input type="password" placeholder="请确认密码" v-model="repassword" v-validate="'required|confirmed:password'" name='repassword'>
+                <span v-show="errors.has('repassword')" class="error_password">{{errors.first('repassword')}}</span>
               </li>
             </ul>
           </div>
@@ -95,11 +96,14 @@
             <ul>
               <li>
                 <i></i>
-                <input type="text" placeholder="请输入姓名" v-model="realname">
+                <input type="text" placeholder="请输入姓名" v-model="realname" v-validate="'required'" name='realname'>
+                <span v-show="errors.has('realname')" class="error_auth">{{errors.first('realname')}}</span>
               </li>
               <li>
                 <i></i>
-                <input type="text" placeholder="请确认身份证号" v-model="idcard">
+                <input type="text" placeholder="请输入身份证号" v-model="idcard" v-validate="'required|idcard'" name='idcard' @blur="authError">
+                <span v-show="errors.has('idcard')" class="error_auth">{{errors.first('idcard')}}</span>
+                <span v-show="authNotice" class="error_auth">姓名身份证号码不匹配</span>
               </li>
             </ul>
           </div>
@@ -137,11 +141,16 @@
     data(){
       return {
         codeValue:true,
-        second:5, //发送验证码倒计时
+        second:60, //发送验证码倒计时
         stepOne:true,
         stepTwo:false,
         stepThree:false,
         stepFour:false,
+        captchaNotice:false,//校验图形码是否正确
+        codeNotice:false,//校验短信码是否正确
+        authNotice:false,//校验姓名&身份证是否匹配
+        isChecked:'',
+        showNotice:false,//合同协议--校验用
         phone:"", //手机号
         captcha_number:"", //图形验证码
         captcha_id:"", //图形验证码--ID
@@ -178,6 +187,10 @@
       }
     },
     methods: {
+      radioChange(){
+        this.showNotice = false;
+        this.isChecked = 'checked'
+      },
       //获取图片验证码--图片
       getCaptcha(){
         axios({
@@ -187,51 +200,100 @@
         }).then(res => {
           this.captcha = `data:image/png;base64,${res.data.png}`;
           this.captcha_id =res.data.captcha_id;
+          //校验图形验证码
+          this.captchaError();
         }).catch(error => {
           console.log(error);
         });
       },
       //获取短信验证码
       getCode() {
-        //倒计时
-        let me = this;
-        me.codeValue = false;
-        let interval = window.setInterval(function() {
-          if ((me.second--) <= 0) {
-            me.second = 5;
-            me.codeValue = true;
-            window.clearInterval(interval);
-          }
-        }, 1000);
-        //get短信验证码
-        axios({
-          method: 'post',
-          url: `${baseURL}/v1/sms/code`,
-          data: querystring.stringify({
-            phone:"+86"+this.phone, //手机号
-            type:1 //1-注册，2-修改密码, 3-登录
+        if(this.phone){
+          //倒计时
+          let me = this;
+          me.codeValue = false;
+          let interval = window.setInterval(function() {
+            if ((me.second--) <= 0) {
+              me.second = 60;
+              me.codeValue = true;
+              window.clearInterval(interval);
+            }
+          }, 1000);
+          //get短信验证码
+          axios({
+            method: 'post',
+            url: `${baseURL}/v1/sms/code`,
+            data: querystring.stringify({
+              phone:"+86"+this.phone, //手机号
+              type:1 //1-注册，2-修改密码, 3-登录
+            })
+          }).then(res => {
+            console.log(res)
+          }).catch(error => {
+            console.log(error);
           })
-        }).then(res => {
-          console.log(res)
-        }).catch(error => {
-          console.log(error);
-        })
+        }
+      },
+      //校验图形验证码
+      captchaError(){
+        if(this.captcha_number){
+          axios({
+            method: 'get',
+            url: `${baseURL}/v1/captcha/${this.captcha_id}/code/${this.captcha_number}`
+          }).then(res => {
+            console.log(res);
+            this.captchaNotice = false
+          }).catch(error => {
+            console.log(error);
+            this.captchaNotice = true
+          });
+        }else{
+          this.captchaNotice = false
+        }
+      },
+      //校验短信验证码
+      codeError(){
+        if(this.code){
+          axios({
+            method: 'get',
+            url: `${baseURL}/v1/sms/+86${this.phone}/code/${this.code}`
+          }).then(res => {
+            console.log(res);
+            this.codeNotice = false
+          }).catch(error => {
+            console.log(error);
+            this.codeNotice = true
+          });
+        }else{
+          this.codeNotice = false
+        }
+      },
+      //validate校验出现，Name&idCard不匹配消失
+      authError(){
+        this.authNotice = false
       },
       nextStep(id){
         if (id == 2){
-
-        /*  this.$validator.validateAll().then((result)=>{
-            if(result){
-
+          this.$validator.validateAll().then((result)=>{
+            //校验是否正确：图形验证码、短信验证码
+            if (this.captchaNotice || this.codeNotice){
+              return false
+            }else{
+              //校验input输入值&服务协议checked
+              if(result && this.isChecked == 'checked'){
+                //进入下一步
+                this.stepTwo = true;
+                this.stepOne = false;
+              }else{
+                if (this.isChecked == 'checked'){
+                  this.showNotice = false;
+                } else{
+                  this.showNotice = true;
+                }
+              }
             }
-          })*/
-
-          //进入下一步
-          this.stepTwo = true;
-          this.stepOne = false;
-
+          })
         } else if(id == 3){
-
           let regFormData = {
             phone:"+86"+this.phone, //手机号
             captcha_number: this.captcha_number, //图形验证码
@@ -242,62 +304,50 @@
             device_id:this.uuid, //设备ID
             platform:1
           };
-
-         /* this.$validator.validateAll().then((result)=>{
+          this.$validator.validateAll().then((result)=>{
             if(result){
-
+              axios({
+                method: 'post',
+                url: `${baseURL}/v1/users`,
+                data: querystring.stringify(regFormData)
+              }).then(res => {
+                sessionStorage.setItem("regInfo",JSON.stringify(res.data));
+                //进入下一步
+                this.stepOne = false;
+                this.stepTwo = false;
+                this.stepThree = true;
+              }).catch(error => {
+                console.log(error);
+              })
             }
-          })*/
-
-          axios({
-            method: 'post',
-            url: `${baseURL}/v1/users`,
-            data: querystring.stringify(regFormData)
-          }).then(res => {
-            sessionStorage.setItem("regInfo",JSON.stringify(res.data));
-            //进入下一步
-            this.stepOne = false;
-            this.stepTwo = false;
-            this.stepThree = true;
-          }).catch(error => {
-            console.log(error);
-
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-            console.log('Error', error.message);
-            console.log(error.config);
-
-          });
+          })
         }else {
-
           let authFormData = {
             type:1, //1-实名认证，2-人像认证
             realname: this.realname, //姓名
             idcard: this.idcard, //身份证号
           };
-
-
           let regInfo = JSON.parse(sessionStorage.getItem("regInfo"));
 
-          console.log(regInfo.user._id)
-
-          axios({
-            method: 'post',
-            url: `${baseURL}/v1/users/${regInfo.user._id}/authentication`,
-            data: querystring.stringify(authFormData)
-          }).then(res => {
-
-            console.log(res)
-
-            //进入下一步
-            this.stepOne = false;
-            this.stepTwo = false;
-            this.stepThree = false;
-            this.stepFour = true;
-          }).catch(error => {
-            console.log(error);
-          });
+          this.$validator.validateAll().then((result)=>{
+            if(result){
+              axios({
+                method: 'post',
+                url: `${baseURL}/v1/users/${regInfo.user._id}/authentication`,
+                data: querystring.stringify(authFormData)
+              }).then(res => {
+                console.log(res);
+                //进入下一步
+                this.stepOne = false;
+                this.stepTwo = false;
+                this.stepThree = false;
+                this.stepFour = true;
+              }).catch(error => {
+                console.log(error);
+                this.authNotice = true
+              })
+            }
+          })
         }
       },
       skipToStep(){
@@ -306,21 +356,7 @@
         this.stepThree = false;
         this.stepFour = true;
       }
-
-    },
-  /*  mounted:{
-     /!* getPhoneCode(){
-
-      }*!/
-    }*/
-/*    created() {
-    },
-
-    watch(){
-
-    }*/
-
-
+    }
   }
 </script>
 <style scoped>
@@ -599,6 +635,30 @@
   .error_password{
     position: relative;
     bottom: 14px;
+    left: 194px;
+    color: #c6351e;
+    display: inline-block;
+  }
+  .error-contract{
+    bottom: 18px !important;
+    left: 250px !important;
+  }
+  .next_btn_top{
+    width: 380px;
+    height: 40px;
+    background-color: #c7361e;
+    font-size: 18px;
+    color: #ffffff;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    margin-left: 68px;
+    position: relative;
+    top: 36px;
+  }
+  .error_auth{
+    position: relative;
+    bottom: 12px;
     left: 194px;
     color: #c6351e;
     display: inline-block;

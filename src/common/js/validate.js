@@ -21,18 +21,18 @@ Vue.use(VeeValidate, config); //一般插件都要use一下
 const dictionary = {
   zh_CN: {
     messages: {
-      required: (field) => "请输入" + field
+      required: (field) =>"请输入" + field,
+      confirmed:() =>"两次输入密码不一致"
     },
     attributes: {
-      realName: '真实姓名',
-      idCard: '身份证',
+      realname: '真实姓名',
+      idcard: '身份证号',
       email: '邮箱',
       mobile: '手机号',
-      captcha_number:'验证码',
+      captcha_number:'图形验证码',
       code:'手机验证码',
-      contract:'服务协议',
       password:'密码',
-      repassword:'密码',
+      repassword:'重复密码',
     }
   }
 };
@@ -50,16 +50,16 @@ Validator.extend('email', {
 
 Validator.extend('mobile', {
   messages: {
-    zh_CN: (field) => '手机号格式不正确！'
+    zh_CN: (field) => '请输入正确的手机号'
   },
   validate: (value) => {
     return value.length == 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value);
   }
 });
 
-Validator.extend('idCard', {
+Validator.extend('idcard', {
   messages: {
-    zh_CN: (field) => '身份证号码不正确！'
+    zh_CN: (field) => '请输入正确的身份证号'
   },
   validate: (value) => {
     var city = { 11: "北京", 12: "天津", 13: "河北", 14: "山西", 15: "内蒙古", 21: "辽宁", 22: "吉林", 23: "黑龙江 ", 31: "上海", 32: "江苏", 33: "浙江", 34: "安徽", 35: "福建", 36: "江西", 37: "山东", 41: "河南", 42: "湖北 ", 43: "湖南", 44: "广东", 45: "广西", 46: "海南", 50: "重庆", 51: "四川", 52: "贵州", 53: "云南", 54: "西藏 ", 61: "陕西", 62: "甘肃", 63: "青海", 64: "宁夏", 65: "新疆", 71: "台湾", 81: "香港", 82: "澳门", 91: "国外 " };
