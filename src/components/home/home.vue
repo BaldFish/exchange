@@ -104,6 +104,8 @@
         facilityLimit: 6,
         caseList:[],
         facilityList:[],
+        userId:"",
+        token:"",
       }
     },
     mounted() {

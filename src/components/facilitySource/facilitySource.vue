@@ -13,7 +13,7 @@
     </div>
     <div class="details">
       <h4>{{facilitySourceTitle}}</h4>
-      <div :class="facilityDetails.InShopCart?'like':'dislike'" @click="toggleLike(facilityDetails.Id)">收藏</div>
+      <div :class="facilityDetails.ShopCartId?'like':'dislike'" @click="toggleLike(facilityDetails.Id)">收藏</div>
       <div class="transfer_record">
         <span>资产转让记录</span>
         <ul v-for="(item,index) of facilitySource" :key="item.id">
@@ -110,7 +110,7 @@
           this.assetId=likeInfo.Assetid;
           //this.id=likeInfo.Id;
           console.log(this.apiKey,this.assetId);
-          if(likeInfo.InShopCart===0){
+          if(likeInfo.ShopCartId===""){
             axios({
               method: "POST",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
@@ -121,14 +121,12 @@
             }).then((res) => {
               console.log(res);
               this.id=res.data._id;
-              console.log(this.id);
-              likeInfo.InShopCart=1
+              likeInfo.ShopCartId=this.id
+              this.addCollection()
             }).catch((err) => {
               console.log(err);
             });
-            likeInfo.InShopCart=1
-          }else if(likeInfo.InShopCart===1){
-            console.log(this.id);
+          }else if(likeInfo.ShopCartId!==""){
             axios({
               method: "DELETE",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
@@ -138,7 +136,8 @@
               }
             }).then((res) => {
               console.log(11111111111);
-              likeInfo.InShopCart=0
+              likeInfo.ShopCartId=""
+              this.subtractCollection()
             }).catch((err) => {
               console.log(err);
             });
@@ -194,6 +193,12 @@
       },
       getFacilityDetails(val) {
         this.$store.commit("changeFacilityDetails",this.facilityDetails);
+      },
+      addCollection(){
+        this.$store.commit("addCollection")
+      },
+      subtractCollection(){
+        this.$store.commit("subtractCollection")
       },
     },
     watch: {},

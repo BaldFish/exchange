@@ -6,7 +6,7 @@
         <router-link to="/securityCenter" class="to_bind">去绑定 ></router-link>
       </p>
       <p v-if="walletAddress!==''">钱包地址：{{walletAddress}}</p>
-      <p>可信币：234567.00</p>
+      <p>可信币：{{}}</p>
     </div>
     <div class="nav_content_title">
       <span>已购资产</span>
@@ -87,7 +87,8 @@
         userId:"",
         token:"",
         phone:"",
-        walletAddress:""
+        walletAddress:"",
+        balance:"",
       }
     },
     computed:{
@@ -105,8 +106,8 @@
     mounted() {
       this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
       this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
-      this.acquireAssetList();
       this.acquireUserInfo();
+      this.acquireAssetList();
     },
     methods:{
       handleCurrentChange(val){
@@ -123,6 +124,27 @@
           console.log(res);
           this.phone=res.data.phone.substr(3,3)+"***"+res.data.phone.substr(10,4);
           this.walletAddress=res.data.wallet_address;
+          if(this.walletAddress){
+            this.acquireBalance()
+          };
+        }).catch((err) => {
+          console.log(err);
+        });
+      },
+      acquireBalance(){
+        axios({
+          method: "POST",
+          url: `${baseURL}/v1/users/${this.userId}/${this.walletAddress}`,
+          headers: {
+            "Content-Type": "application/json",
+            "jsonrpc":"2.0",
+            "method":"eth_getBalance",
+            "params":[0x34eb1d640b18ba90a3e8a6a546d6414772f88924,2.0],
+            "id":1
+          }
+        }).then((res) => {
+          console.log(res);
+          this.balance=res.data.result;
         }).catch((err) => {
           console.log(err);
         });

@@ -29,7 +29,7 @@
             </a>
           </p>
         </div>
-        <div :class="item.InShopCart?'like':'dislike'" @click="toggleLike(item.Id)">收藏</div>
+        <div :class="item.ShopCartId?'like':'dislike'" @click="toggleLike(item.Id)">收藏</div>
         <div class="price_box">
           <a href="#/caseDetails" @click="getCaseDetails(item.Id)"><p class="price">{{item.Price}}</p></a>
           <a href="#/caseSource" @click="getCaseSource(item.Id)"><p class="tracing">可信溯源</p></a>
@@ -96,7 +96,7 @@
           this.assetId=likeInfo.Assetid;
           //this.id=likeInfo.Id;
           console.log(this.apiKey,this.assetId);
-          if(likeInfo.InShopCart===0){
+          if(likeInfo.ShopCartId===""){
             axios({
               method: "POST",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
@@ -107,12 +107,12 @@
             }).then((res) => {
               console.log(res);
               this.id=res.data._id;
-              likeInfo.InShopCart=1
+              likeInfo.ShopCartId=this.id
+              this.addCollection()
             }).catch((err) => {
               console.log(err);
             });
-            likeInfo.InShopCart=1
-          }else if(likeInfo.InShopCart===1){
+          }else if(likeInfo.ShopCartId!==""){
             axios({
               method: "DELETE",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
@@ -122,7 +122,8 @@
               }
             }).then((res) => {
               console.log(11111111111);
-              likeInfo.InShopCart=0
+              likeInfo.ShopCartId=""
+              this.subtractCollection()
             }).catch((err) => {
               console.log(err);
             });
@@ -157,6 +158,12 @@
         this.$store.commit("changeCaseSource",_.find(this.searchCaseList,function (o) {
           return o.Id===val
         }));
+      },
+      addCollection(){
+        this.$store.commit("addCollection")
+      },
+      subtractCollection(){
+        this.$store.commit("subtractCollection")
       },
     },
     components: {

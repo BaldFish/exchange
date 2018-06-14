@@ -23,7 +23,7 @@
             <span class="person" v-if="facilityDetails.AuthType==='认证个人'">{{facilityDetails.AuthType}}</span>
             <span class="trust" v-if="facilityDetails.CreditLevel!=='未认证'">{{facilityDetails.CreditLevel}}</span>
           </div>
-          <div :class="facilityDetails.InShopCart?'like':'dislike'" @click="toggleLike(facilityDetails.Id)">收藏</div>
+          <div :class="facilityDetails.ShopCartId?'like':'dislike'" @click="toggleLike(facilityDetails.Id)">收藏</div>
           <a href="#/facilitySource" @click="getFacilitySource"><p class="tracing">可信溯源</p></a>
           <div class="intro_list">
             <ul>
@@ -93,7 +93,7 @@
           this.assetId=likeInfo.Assetid;
           //this.id=likeInfo.Id;
           console.log(this.apiKey,this.assetId);
-          if(likeInfo.InShopCart===0){
+          if(likeInfo.ShopCartId===""){
             axios({
               method: "POST",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
@@ -104,13 +104,12 @@
             }).then((res) => {
               console.log(res);
               this.id=res.data._id;
-              console.log(this.id);
-              likeInfo.InShopCart=1
+              likeInfo.ShopCartId=this.id
+              this.addCollection()
             }).catch((err) => {
               console.log(err);
             });
-            likeInfo.InShopCart=1
-          }else if(likeInfo.InShopCart===1){
+          }else if(likeInfo.ShopCartId!==""){
             console.log(this.id);
             axios({
               method: "DELETE",
@@ -121,7 +120,8 @@
               }
             }).then((res) => {
               console.log(11111111111);
-              likeInfo.InShopCart=0
+              likeInfo.ShopCartId=""
+              this.subtractCollection()
             }).catch((err) => {
               console.log(err);
             });
@@ -143,6 +143,12 @@
       },
       getFacilitySource(val) {
         this.$store.commit("changeFacilitySource",this.facilityDetails);
+      },
+      addCollection(){
+        this.$store.commit("addCollection")
+      },
+      subtractCollection(){
+        this.$store.commit("subtractCollection")
       },
     },
     watch: {},

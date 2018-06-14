@@ -18,7 +18,7 @@
         <span class="person" v-if="caseDetails.AuthType==='认证个人'">{{caseDetails.AuthType}}</span>
         <span class="trust" v-if="caseDetails.CreditLevel!=='未认证'">{{caseDetails.CreditLevel}}</span>
       </div>
-      <div :class="caseDetails.InShopCart?'like':'dislike'" @click="toggleLike(caseDetails.Id)">收藏</div>
+      <div :class="caseDetails.ShopCartId?'like':'dislike'" @click="toggleLike(caseDetails.Id)">收藏</div>
       <a href="#/caseSource" @click="getCaseSource"><p class="tracing">可信溯源</p></a>
       <div class="intro_list">
         <ul>
@@ -86,7 +86,7 @@
           this.assetId=likeInfo.Assetid;
           //this.id=likeInfo.Id;
           console.log(this.apiKey,this.assetId);
-          if(likeInfo.InShopCart===0){
+          if(likeInfo.ShopCartId===""){
             axios({
               method: "POST",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
@@ -97,12 +97,12 @@
             }).then((res) => {
               console.log(res);
               this.id=res.data._id;
-              likeInfo.InShopCart=1
+              likeInfo.ShopCartId=this.id
+              this.addCollection()
             }).catch((err) => {
               console.log(err);
             });
-            likeInfo.InShopCart=1
-          }else if(likeInfo.InShopCart===1){
+          }else if(likeInfo.ShopCartId!==""){
             axios({
               method: "DELETE",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
@@ -112,7 +112,8 @@
               }
             }).then((res) => {
               console.log(11111111111);
-              likeInfo.InShopCart=0
+              likeInfo.ShopCartId=""
+              this.subtractCollection()
             }).catch((err) => {
               console.log(err);
             });
@@ -120,21 +121,42 @@
         }
       },
       acquireCaseDetails(){
-        axios({
-          method: "GET",
-          url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }).then((res) => {
-          console.log(res)
-          this.caseDetails=res.data
-        }).catch((err) => {
-          console.log(err);
-        })
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail?userid=${this.userId}`,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((res) => {
+            console.log(res)
+            this.caseDetails=res.data
+          }).catch((err) => {
+            console.log(err);
+          })
+        }else{
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((res) => {
+            console.log(res)
+            this.caseDetails=res.data
+          }).catch((err) => {
+            console.log(err);
+          })
+        }
       },
       getCaseSource() {
         this.$store.commit("changeCaseSource",this.caseDetails);
+      },
+      addCollection(){
+        this.$store.commit("addCollection")
+      },
+      subtractCollection(){
+        this.$store.commit("subtractCollection")
       },
     },
     watch: {},

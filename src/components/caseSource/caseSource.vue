@@ -13,7 +13,7 @@
     </div>
     <div class="details">
       <h4>{{caseSourceTitle}}</h4>
-      <div :class="caseDetails.InShopCart?'like':'dislike'"  @click="toggleLike(caseDetails.Id)">收藏</div>
+      <div :class="caseDetails.ShopCartId?'like':'dislike'"  @click="toggleLike(caseDetails.Id)">收藏</div>
       <div class="transfer_record">
         <span>资产转让记录</span>
         <ul v-for="(item,index) of caseSource" :key="item.id">
@@ -79,7 +79,7 @@
           this.assetId=likeInfo.Assetid;
           //this.id=likeInfo.Id;
           console.log(this.apiKey,this.assetId);
-          if(likeInfo.InShopCart===0){
+          if(likeInfo.ShopCartId===""){
             axios({
               method: "POST",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
@@ -90,12 +90,12 @@
             }).then((res) => {
               console.log(res);
               this.id=res.data._id;
-              likeInfo.InShopCart=1;
+              likeInfo.ShopCartId=this.id;
+              this.addCollection()
             }).catch((err) => {
               console.log(err);
             });
-            likeInfo.InShopCart=1;
-          }else if(likeInfo.InShopCart===1){
+          }else if(likeInfo.ShopCartId!==""){
             axios({
               method: "DELETE",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
@@ -105,7 +105,8 @@
               }
             }).then((res) => {
               console.log(11111111111);
-              likeInfo.InShopCart=0
+              likeInfo.ShopCartId=""
+              this.subtractCollection()
             }).catch((err) => {
               console.log(err);
             });
@@ -144,7 +145,13 @@
       },
       getCaseDetails(val){
         this.$store.commit("changeCaseDetails",this.caseDetails);
-      }
+      },
+      addCollection(){
+        this.$store.commit("addCollection")
+      },
+      subtractCollection(){
+        this.$store.commit("subtractCollection")
+      },
     },
     watch: {},
     computed: {},

@@ -105,9 +105,6 @@
         }).then((res) => {
           this.total = res.data.count;
           this.favoriteList = res.data.data;
-          console.log(res);
-          console.log(this.caseList);
-          console.log(this.facilityList);
         }).catch((err) => {
           console.log(err);
         });
@@ -122,12 +119,14 @@
             "X-Access-Token":this.token
           }
         }).then((res) => {
-          console.log(1);
           this.acquireFavoriteList();
-          console.log(res);
+          this.subtractCollection()
         }).catch((err) => {
           console.log(err);
         });
+      },
+      subtractCollection(){
+        this.$store.commit("subtractCollection")
       },
     }
   }
