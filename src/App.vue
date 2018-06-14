@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="main_wrap">
-      <router-view class="main"></router-view>
+      <router-view class="main" v-if="isRouterAlive"></router-view>
     </div>
     <div class="footer-wrap">
       <div class="footer">
@@ -47,9 +47,27 @@
 
 <script>
   import "./common/stylus/index.styl";
-  
+
   export default {
-    name: 'App'
+    name: 'App',
+    provide(){
+      return {
+        reload:this.reload
+      }
+    },
+    data(){
+      return{
+        isRouterAlive:true
+      }
+    },
+    methods:{
+      reload(){
+        this.isRouterAlive = false;
+        this.$nextTick( ()=>{
+          this.isRouterAlive = true
+        })
+      }
+    }
   }
 </script>
 
@@ -59,7 +77,7 @@
     display: flex;
     flex-direction: column;
   }
-  
+
   .head-wrap {
     width: 100%;
     min-width 1212px
@@ -77,7 +95,7 @@
       }
     }
   }
-  
+
   .main_wrap {
     flex: 1;
     box-sizing: border-box;

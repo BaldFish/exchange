@@ -25,18 +25,23 @@
             <ul>
               <li>
                 <i></i>
-                <input type="text" placeholder="请输入手机号" v-model="phone">
+                <input type="text" placeholder="请输入手机号" v-model="phone" v-validate="'required|mobile'" name='mobile'>
+                <span v-show="errors.has('mobile')" class="error" style="width: 200px">{{errors.first('mobile')}}</span>
               </li>
               <li>
                 <i></i>
-                <input type="text" placeholder="请输入验证码" v-model="captcha_number">
+                <input type="text" placeholder="请输入验证码" v-model="captcha_number" v-validate="'required'" name='captcha_number' @blur="captchaError">
                 <img class="img_change_img" @click="getCaptcha" :src="captcha">
+                <span v-show="errors.has('captcha_number')" class="error">{{errors.first('captcha_number')}}</span>
+                <span v-show="captchaNotice" class="error">图形验证码错误</span>
               </li>
               <li>
                 <i></i>
-                <input type="text" placeholder="请输入手机验证码" v-model="code">
+                <input type="text" placeholder="请输入手机验证码" v-model="code" v-validate="'required'" name='code' @blur="codeError">
                 <div class="img_change_img get_code" @click="getCode" v-if="codeValue">获取验证码</div>
                 <div class="img_change_img count_down" v-else>倒计时（{{second}}）</div>
+                <span v-show="errors.has('code')" class="error">{{errors.first('code')}}</span>
+                <span v-show="codeNotice" class="error">短信验证码错误</span>
               </li>
             </ul>
           </div>
@@ -54,11 +59,13 @@
             <ul>
               <li>
                 <i></i>
-                <input type="password" placeholder="请输入新密码" v-model="newpwd">
+                <input type="password" placeholder="请输入新密码" v-model="password" v-validate="'required'" name='password'>
+                <span v-show="errors.has('password')" class="error_password">{{errors.first('password')}}</span>
               </li>
               <li>
                 <i></i>
-                <input type="password" placeholder="请确认新密码" v-model="renew">
+                <input type="password" placeholder="请确认新密码" v-model="repassword" v-validate="'required|confirmed:password'" name='repassword'>
+                <span v-show="errors.has('repassword')" class="error_password">{{errors.first('repassword')}}</span>
               </li>
             </ul>
           </div>
@@ -100,17 +107,19 @@
     data(){
       return {
         codeValue:true,
-        second:5,// 发送验证码倒计时
+        second:60,// 发送验证码倒计时
         stepOne:true,
         stepTwo:false,
         stepThree:false,
+        captchaNotice:false,//校验图形码是否正确
+        codeNotice:false,//校验短信码是否正确
         phone:"", //手机号
         captcha_number:"", //图形验证码
         captcha_id:"", //图形验证码--ID
         captcha:"../login/images/code.png", //图形验证码--图片
         code:"", //短信验证码
-        newpwd:"", //新密码
-        renew:"", //新密码
+        password:"", //新密码
+        repassword:"", //新密码
       };
     },
     computed:{
@@ -147,75 +156,130 @@
         }).then(res => {
           this.captcha = `data:image/png;base64,${res.data.png}`;
           this.captcha_id =res.data.captcha_id;
+          //校验图形验证码
+          this.captchaError();
         }).catch(error => {
           console.log(error);
         });
       },
       //获取短信验证码
       getCode() {
-        //倒计时
-        let me = this;
-        me.codeValue = false;
-        let interval = window.setInterval(function() {
-          if ((me.second--) <= 0) {
-            me.second = 5;
-            me.codeValue = true;
-            window.clearInterval(interval);
-          }
-        }, 1000);
-        //get短信验证码
-        axios({
-          method: 'post',
-          url: `${baseURL}/v1/sms/code`,
-          data: querystring.stringify({
-            phone:"+86"+this.phone, //手机号
-            type:2 //1-注册，2-修改密码, 3-登录
+        if(this.phone){
+          //倒计时
+          let me = this;
+          me.codeValue = false;
+          let interval = window.setInterval(function() {
+            if ((me.second--) <= 0) {
+              me.second = 60;
+              me.codeValue = true;
+              window.clearInterval(interval);
+            }
+          }, 1000);
+          //get短信验证码
+          axios({
+            method: 'post',
+            url: `${baseURL}/v1/sms/code`,
+            data: querystring.stringify({
+              phone:"+86"+this.phone, //手机号
+              type:2 //1-注册，2-修改密码, 3-登录
+            })
+          }).then(res => {
+            console.log(res)
+          }).catch(error => {
+            console.log(error);
           })
-        }).then(res => {
-          console.log(res)
-        }).catch(error => {
-          console.log(error);
-        })
+        }
+      },
+      //校验图形验证码
+      captchaError(){
+        if(this.captcha_number){
+          axios({
+            method: 'get',
+            url: `${baseURL}/v1/captcha/${this.captcha_id}/code/${this.captcha_number}`
+          }).then(res => {
+            console.log(res);
+            this.captchaNotice = false
+          }).catch(error => {
+            console.log(error);
+            this.captchaNotice = true
+          });
+        }else{
+          this.captchaNotice = false
+        }
+      },
+      //校验短信验证码
+      codeError(){
+        if(this.code){
+          axios({
+            method: 'get',
+            url: `${baseURL}/v1/sms/+86${this.phone}/code/${this.code}`
+          }).then(res => {
+            console.log(res);
+            this.codeNotice = false
+          }).catch(error => {
+            console.log(error);
+            this.codeNotice = true
+          });
+        }else{
+          this.codeNotice = false
+        }
       },
       nextStep(id){
         if (id){
+
+        /*  //进入下一步
           this.stepTwo = true;
-          this.stepOne = false;
+          this.stepOne = false;*/
+          this.$validator.validateAll().then((result)=>{
+            //校验是否正确：图形验证码、短信验证码
+            if (this.captchaNotice || this.codeNotice){
+              return false
+            }else{
+              //校验input输入值
+              if(result){
+                //进入下一步
+                this.stepTwo = true;
+                this.stepOne = false;
+              }
+            }
+          })
         } else{
+
+
+          console.log(999999)
           let loginFormData = {
             phone:"+86"+this.phone, //手机号
             captcha_number: this.captcha_number, //图形验证码
             captcha_id: this.captcha_id, //图形验证码--ID
             code: this.code, //短信验证码
-            new: this.newpwd, //新密码
-            renew: this.renew, //新密码
+            new: this.password, //新密码
+            renew: this.repassword, //新密码
           };
-          axios({
-            method: 'post',
-            url: `${baseURL}/v1/phones/${loginFormData.phone}/password`,
-            data: querystring.stringify(loginFormData)
-          }).then(res => {
+          this.$validator.validateAll().then((result)=>{
+            if(result){
 
-            console.log(res)
-            //进入下一步
-            this.stepTwo = false;
-            this.stepThree = true;
-          }).catch(error => {
-            console.log(error);
-          });
+              console.log(5555555)
 
-
-
+              axios({
+                method: 'post',
+                url: `${baseURL}/v1/phones/${loginFormData.phone}/password`,
+                data: querystring.stringify(loginFormData)
+              }).then(res => {
+                console.log(res);
+                //进入下一步
+                this.stepTwo = false;
+                this.stepThree = true;
+              }).catch(error => {
+                console.log(error);
+              });
+            }
+          })
         }
       }
 
     }
 
 
-
-    /*components: {
-     'other-component': OtherComponent, HeaderComponent
-     }*/
   }
 </script>
 <style scoped>
@@ -412,4 +476,18 @@
   .title .caption .line { position: absolute; top: 11px; width: 40px; height: 1px; background-color: #bfbfbf; }
   .title .caption .line-l { right: 100%; margin-right: 10px; }
   .title .caption .line-r { left: 100%; margin-left: 10px; }
+  .error{
+    position: relative;
+    bottom: 36px;
+    left: 390px;
+    color: #c6351e;
+    display: inline-block;
+  }
+  .error_password{
+    position: relative;
+    bottom: 14px;
+    left: 194px;
+    color: #c6351e;
+    display: inline-block;
+  }
 </style>

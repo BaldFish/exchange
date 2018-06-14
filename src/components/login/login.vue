@@ -19,16 +19,20 @@
                     <ul>
                       <li>
                         <i></i>
-                        <input type="text" placeholder="请输入账号" v-model="phone">
+                        <input type="text" placeholder="请输入账号" v-model="phone" v-validate="'required|mobile'" name='mobile'>
+                        <span v-show="errors.has('mobile')" class="error" style="width: 200px">{{errors.first('mobile')}}</span>
                       </li>
                       <li>
                         <i></i>
-                        <input type="password" placeholder="请输入密码" v-model="password">
+                        <input type="password" placeholder="请输入密码" v-model="password"  v-validate="'required'" name='password'>
+                        <span v-show="errors.has('password')" class="error">{{errors.first('password')}}</span>
                       </li>
                       <li>
                         <i></i>
-                        <input type="text" placeholder="请输入验证码" v-model="captcha_number">
+                        <input type="text" placeholder="请输入验证码" v-model="captcha_number" v-validate="'required'" name='captcha_number' @blur="captchaError">
                         <img class="img_change_img" @click="getCaptcha" :src="captcha">
+                        <span v-show="errors.has('captcha_number')" class="error">{{errors.first('captcha_number')}}</span>
+                        <span v-show="captchaNotice" class="error">图形验证码错误</span>
                       </li>
                     </ul>
                   </section>
@@ -36,18 +40,23 @@
                     <ul>
                       <li>
                         <i></i>
-                        <input type="text" placeholder="请输入手机号" v-model="phone">
+                        <input type="text" placeholder="请输入手机号" v-model="phone" v-validate="'required|mobile'" name='mobile'>
+                        <span v-show="errors.has('mobile')" class="error" style="width: 200px">{{errors.first('mobile')}}</span>
                       </li>
                       <li>
                         <i></i>
-                        <input type="text" placeholder="请输入验证码" v-model="captcha_number">
+                        <input type="text" placeholder="请输入验证码" v-model="captcha_number" v-validate="'required'" name='captcha_number' @blur="captchaError">
                         <img class="img_change_img" @click="getCaptcha" :src="captcha">
+                        <span v-show="errors.has('captcha_number')" class="error">{{errors.first('captcha_number')}}</span>
+                        <span v-show="captchaNotice" class="error">图形验证码错误</span>
                       </li>
                       <li>
                         <i></i>
-                        <input type="text" placeholder="请输入手机验证码" v-model="code">
+                        <input type="text" placeholder="请输入手机验证码" v-model="code" v-validate="'required'" name='code' @blur="codeError">
                         <div class="img_change_img get_code" @click="getCode" v-if="codeValue">获取验证码</div>
                         <div class="img_change_img count_down" v-else>倒计时（{{second}}）</div>
+                        <span v-show="errors.has('code')" class="error">{{errors.first('code')}}</span>
+                        <span v-show="codeNotice" class="error">短信验证码错误</span>
                       </li>
                     </ul>
                   </section>
@@ -75,7 +84,9 @@
           return {
             loginWay: true,
             codeValue:true,
-            second:5,// 发送验证码倒计时
+            captchaNotice:false,//校验图形码是否正确
+            codeNotice:false,//校验短信码是否正确
+            second:60,// 发送验证码倒计时
             phone:"", //手机号
             captcha_number:"", //图形验证码
             captcha_id:"", //图形验证码--ID
@@ -121,35 +132,73 @@
             }).then(res => {
               this.captcha = `data:image/png;base64,${res.data.png}`;
               this.captcha_id =res.data.captcha_id;
+              //校验图形验证码
+              this.captchaError();
             }).catch(error => {
               console.log(error);
             });
           },
           //获取短信验证码
           getCode() {
-            //倒计时
-            let me = this;
-            me.codeValue = false;
-            let interval = window.setInterval(function() {
-              if ((me.second--) <= 0) {
-                me.second = 5;
-                me.codeValue = true;
-                window.clearInterval(interval);
-              }
-            }, 1000);
-            //get短信验证码
-            axios({
-              method: 'post',
-              url: `${baseURL}/v1/sms/code`,
-              data: querystring.stringify({
-                phone:"+86"+this.phone, //手机号
-                type:3 //1-注册，2-修改密码, 3-登录
+            if(this.phone){
+              //倒计时
+              let me = this;
+              me.codeValue = false;
+              let interval = window.setInterval(function() {
+                if ((me.second--) <= 0) {
+                  me.second = 60;
+                  me.codeValue = true;
+                  window.clearInterval(interval);
+                }
+              }, 1000);
+              //get短信验证码
+              axios({
+                method: 'post',
+                url: `${baseURL}/v1/sms/code`,
+                data: querystring.stringify({
+                  phone:"+86"+this.phone, //手机号
+                  type:3 //1-注册，2-修改密码, 3-登录
+                })
+              }).then(res => {
+                console.log(res)
+              }).catch(error => {
+                console.log(error);
               })
-            }).then(res => {
-              console.log(res)
-            }).catch(error => {
-              console.log(error);
-            })
+            }
+          },
+          //校验图形验证码
+          captchaError(){
+            if(this.captcha_number){
+              axios({
+                method: 'get',
+                url: `${baseURL}/v1/captcha/${this.captcha_id}/code/${this.captcha_number}`
+              }).then(res => {
+                console.log(res);
+                this.captchaNotice = false
+              }).catch(error => {
+                console.log(error);
+                this.captchaNotice = true
+              });
+            }else{
+              this.captchaNotice = false
+            }
+          },
+          //校验短信验证码
+          codeError(){
+            if(this.code){
+              axios({
+                method: 'get',
+                url: `${baseURL}/v1/sms/+86${this.phone}/code/${this.code}`
+              }).then(res => {
+                console.log(res);
+                this.codeNotice = false
+              }).catch(error => {
+                console.log(error);
+                this.codeNotice = true
+              });
+            }else{
+              this.codeNotice = false
+            }
           },
           login(){
             if(this.loginWay){
@@ -161,16 +210,26 @@
                 captcha_id:this.captcha_id, //图片验证码ID
                 captcha_number:this.captcha_number //图片验证码--图片
               };
-              axios({
-                method: 'post',
-                url: `${baseURL}/v1/sessions`,
-                data: querystring.stringify(loginFormData)
-              }).then(res => {
-                sessionStorage.setItem("loginInfo",JSON.stringify(res.data));
-                this.$router.push({ path: '/home' })
-              }).catch(error => {
-                console.log(error);
-              });
+              this.$validator.validateAll().then((result)=>{
+                //校验是否正确：图形验证码
+                if (this.captchaNotice){
+                  return false
+                }else{
+                  //校验input输入值
+                  if(result){
+                    axios({
+                      method: 'post',
+                      url: `${baseURL}/v1/sessions`,
+                      data: querystring.stringify(loginFormData)
+                    }).then(res => {
+                      sessionStorage.setItem("loginInfo",JSON.stringify(res.data));
+                      this.$router.push({ path: '/home' })
+                    }).catch(error => {
+                      console.log(error);
+                    })
+                  }
+                }
+              })
             }else{
               let loginFormData = {
                 phone:"+86"+this.phone, //手机号
@@ -181,16 +240,26 @@
                 captcha_id:this.captcha_id, //图片验证码ID
                 captcha_number:this.captcha_number //图片验证码--图片
               };
-              axios({
-                method: 'post',
-                url: `${baseURL}/v1/sessions/phone`,
-                data: querystring.stringify(loginFormData)
-              }).then(res => {
-                sessionStorage.setItem("loginInfo",JSON.stringify(res.data));
-                this.$router.push({ path: '/home' })
-              }).catch(error => {
-                console.log(error);
-              });
+              this.$validator.validateAll().then((result)=>{
+                //校验是否正确：图形验证码、短信验证码
+                if (this.captchaNotice || this.codeNotice){
+                  return false
+                }else{
+                  //校验input输入值
+                  if(result){
+                    axios({
+                      method: 'post',
+                      url: `${baseURL}/v1/sessions/phone`,
+                      data: querystring.stringify(loginFormData)
+                    }).then(res => {
+                      sessionStorage.setItem("loginInfo",JSON.stringify(res.data));
+                      this.$router.push({ path: '/home' })
+                    }).catch(error => {
+                      console.log(error);
+                    })
+                  }
+                }
+              })
             }
 
 
@@ -200,10 +269,6 @@
         },
 
 
-
-        /*components: {
-            'other-component': OtherComponent, HeaderComponent
-        }*/
     }
 </script>
 <style scoped>
@@ -257,7 +322,7 @@
     z-index: 5;
   }
   .right-details{
-    margin-top: 36px;
+    margin-top: 26px;
     margin-left: 62px;
   }
   .content-nav{
@@ -286,7 +351,8 @@
     width: 380px;
     height: 40px;
     background-color: #f3f3f3;
-    margin-bottom: 16px;
+    /*margin-bottom: 16px;*/
+    margin-bottom: 24px
   }
   .account-login li input{
     background-color: #f3f3f3;
@@ -345,7 +411,7 @@
     margin-top: -5px;
     font-size: 16px;
     color: #666;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
   }
   .to_login span{
     font-size: 18px;
@@ -398,5 +464,11 @@
     color: #ffffff;
     text-align: center;
     line-height: 33px;
+  }
+  .error{
+    position: relative;
+    color: #c6351e;
+    display: inline-block;
+    width: 200px;
   }
 </style>
