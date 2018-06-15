@@ -68,7 +68,7 @@
         pageSize: 10,
         currentPage: 1,
         favoriteList: [],
-        user_id: '',
+        userId: '',
         id:"",
         token:"",
       }
@@ -86,8 +86,10 @@
       },
     },
     mounted() {
-      this.user_id = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-      this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+        this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      }
       this.acquireFavoriteList();
     },
     methods: {
@@ -96,18 +98,22 @@
         this.acquireFavoriteList();
       },
       acquireFavoriteList() {
-        axios({
-          method: "GET",
-          url: `${baseURL}/v1/shopcart/list/${this.user_id}?page=${this.currentPage}&limit=${this.pageSize}`,
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }).then((res) => {
-          this.total = res.data.count;
-          this.favoriteList = res.data.data;
-        }).catch((err) => {
-          console.log(err);
-        });
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/shopcart/list/${this.userId}?page=${this.currentPage}&limit=${this.pageSize}`,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((res) => {
+            this.total = res.data.count;
+            this.favoriteList = res.data.data;
+          }).catch((err) => {
+            console.log(err);
+          });
+        }else {
+          this.favoriteList =[]
+        }
       },
       cancel(val){
         this.id=val;

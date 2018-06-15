@@ -7,7 +7,7 @@
           <li>当前位置 ：</li>
           <li>首页></li>
           <li>维修案例></li>
-          <li>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</li>
+          <li>{{caseDetails.Assetname}}</li>
         </ul>
       </div>
     </div>
@@ -43,7 +43,7 @@
             <span>：{{caseDetails.SellAt}}</span>
           </li>
         </ul>
-        <a href="#/checkOrder"><p class="buy">一键购买</p></a>
+        <a href="javascript:void(0)" @click="buy(caseDetails.Id)"><p class="buy">一键购买</p></a>
       </div>
       <div class="intro_text">
         <span>案例简介</span>
@@ -70,6 +70,10 @@
       }
     },
     mounted() {
+      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+        this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      }
       this.caseDetails=JSON.parse(sessionStorage.getItem("caseDetails"));
       this.apiKey=this.caseDetails.Apikey;
       this.assetId=this.caseDetails.Assetid;
@@ -79,13 +83,9 @@
       toggleLike(val){
         if(sessionStorage.getItem("loginInfo")){
           let likeInfo=this.caseDetails;
-          console.log(likeInfo);
-          this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
-          this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
           this.apiKey=likeInfo.Apikey;
           this.assetId=likeInfo.Assetid;
-          //this.id=likeInfo.Id;
-          console.log(this.apiKey,this.assetId);
+          this.id=likeInfo.ShopCartId;
           if(likeInfo.ShopCartId===""){
             axios({
               method: "POST",
@@ -95,7 +95,6 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              console.log(res);
               this.id=res.data._id;
               likeInfo.ShopCartId=this.id
               this.addCollection()
@@ -111,13 +110,14 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              console.log(11111111111);
-              likeInfo.ShopCartId=""
+              likeInfo.ShopCartId="";
               this.subtractCollection()
             }).catch((err) => {
               console.log(err);
             });
           }
+        }else {
+          alert("请先登录")
         }
       },
       acquireCaseDetails(){
@@ -129,8 +129,7 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
-            console.log(res)
-            this.caseDetails=res.data
+            this.caseDetails=res.data;
           }).catch((err) => {
             console.log(err);
           })
@@ -142,8 +141,7 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
-            console.log(res)
-            this.caseDetails=res.data
+            this.caseDetails=res.data;
           }).catch((err) => {
             console.log(err);
           })
@@ -158,6 +156,34 @@
       subtractCollection(){
         this.$store.commit("subtractCollection")
       },
+      buy(val){
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          let buyInfo=this.caseDetails
+          this.apiKey=buyInfo.Apikey;
+          this.assetId=buyInfo.Assetid;
+          axios({
+            method: "POST",
+            url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
+            headers: {
+              "Content-Type": "application/json",
+              "X-Access-Token":this.token,
+            }
+          }).then((res) => {
+            let buyInfoObj={};
+            buyInfoObj.buyInfo=buyInfo;
+            buyInfoObj.turnInfo=res.data;
+            this.getBuy(buyInfoObj);
+            window.location.href="#/checkOrder"
+          }).catch((err) => {
+            console.log(err);
+          })
+        }else{
+          alert("请先登录")
+        }
+      },
+      getBuy(val){
+        this.$store.commit("changeBuy",val);
+      }
     },
     watch: {},
     computed: {},

@@ -35,7 +35,7 @@
           </li>
         </ul>
         <a href="#/caseDetails" @click="getCaseDetails"><p class="asset_details">案例详情</p></a>
-        <a href="#/checkOrder"><p class="buy">一键购买</p></a>
+        <a href="javascript:void(0)" @click="buy(caseDetails.Id)"><p class="buy">一键购买</p></a>
       </div>
     </div>
   </div>
@@ -61,6 +61,10 @@
       }
     },
     mounted() {
+      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+        this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      }
       this.caseSourceTitle = JSON.parse(sessionStorage.getItem("caseSource")).Assetname;
       this.assetId = JSON.parse(sessionStorage.getItem("caseSource")).Assetid;
       this.apiKey = JSON.parse(sessionStorage.getItem("caseSource")).Apikey;
@@ -72,13 +76,9 @@
       toggleLike(val){
         if(sessionStorage.getItem("loginInfo")){
           let likeInfo=this.caseDetails;
-          console.log(likeInfo);
-          this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
-          this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
           this.apiKey=likeInfo.Apikey;
           this.assetId=likeInfo.Assetid;
-          //this.id=likeInfo.Id;
-          console.log(this.apiKey,this.assetId);
+          this.id=likeInfo.ShopCartId;
           if(likeInfo.ShopCartId===""){
             axios({
               method: "POST",
@@ -88,7 +88,6 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              console.log(res);
               this.id=res.data._id;
               likeInfo.ShopCartId=this.id;
               this.addCollection()
@@ -104,13 +103,14 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              console.log(11111111111);
-              likeInfo.ShopCartId=""
+              likeInfo.ShopCartId="";
               this.subtractCollection()
             }).catch((err) => {
               console.log(err);
             });
           }
+        }else {
+          alert("请先登录")
         }
       },
       acquireCaseSource(){
@@ -131,6 +131,19 @@
         })
       },
       acquireCaseDetails(){
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail?userid=${this.userId}`,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((res) => {
+            this.caseDetails=res.data;
+          }).catch((err) => {
+            console.log(err);
+          })
+        }else{
           axios({
             method: "GET",
             url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
@@ -142,6 +155,7 @@
           }).catch((err) => {
             console.log(err);
           })
+        }
       },
       getCaseDetails(val){
         this.$store.commit("changeCaseDetails",this.caseDetails);
@@ -152,6 +166,34 @@
       subtractCollection(){
         this.$store.commit("subtractCollection")
       },
+      buy(val){
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          let buyInfo=this.caseDetails
+          this.apiKey=buyInfo.Apikey;
+          this.assetId=buyInfo.Assetid;
+          axios({
+            method: "POST",
+            url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
+            headers: {
+              "Content-Type": "application/json",
+              "X-Access-Token":this.token,
+            }
+          }).then((res) => {
+            let buyInfoObj={};
+            buyInfoObj.buyInfo=buyInfo;
+            buyInfoObj.turnInfo=res.data;
+            this.getBuy(buyInfoObj);
+            window.location.href="#/checkOrder"
+          }).catch((err) => {
+            console.log(err);
+          })
+        }else{
+          alert("请先登录")
+        }
+      },
+      getBuy(val){
+        this.$store.commit("changeBuy",val);
+      }
     },
     watch: {},
     computed: {},

@@ -6,7 +6,7 @@
         <router-link to="/securityCenter" class="to_bind">去绑定 ></router-link>
       </p>
       <p v-if="walletAddress!==''">钱包地址：{{walletAddress}}</p>
-      <p>可信币：{{}}</p>
+      <p>可信币：{{balance}}</p>
     </div>
     <div class="nav_content_title">
       <span>已购资产</span>
@@ -29,7 +29,7 @@
         <tr class="content_tbody" v-for="(item,index) of caseList" :key="item._id">
           <td>{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
-          <td>10</td>
+          <td>1</td>
           <td>{{item.price}}</td>
           <td class="quick_buy_td">
             <button>查看</button>
@@ -41,7 +41,7 @@
         <tr class="content_tbody" v-for="(item,index) of facilityList" :key="item._id">
           <td><span><img src="" alt=""></span>{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
-          <td>10</td>
+          <td>1</td>
           <td>{{item.price}}</td>
           <td class="quick_buy_td">
             <button>查看</button>
@@ -104,46 +104,53 @@
       },
     },
     mounted() {
-      this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-      this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
-      this.acquireUserInfo();
-      this.acquireAssetList();
+      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+        this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+        this.acquireUserInfo();
+        this.acquireAssetList();
+      }else{
+        alert("请先登录")
+      }
     },
     methods:{
       handleCurrentChange(val){
         this.currentPage = val;
       },
       acquireUserInfo(){
-        axios({
-          method: "GET",
-          url: `${baseURL}/v1/users/${this.userId}`,
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }).then((res) => {
-          console.log(res);
-          this.phone=res.data.phone.substr(3,3)+"***"+res.data.phone.substr(10,4);
-          this.walletAddress=res.data.wallet_address;
-          if(this.walletAddress){
-            this.acquireBalance()
-          };
-        }).catch((err) => {
-          console.log(err);
-        });
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/users/${this.userId}`,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((res) => {
+            this.phone=res.data.phone.substr(3,3)+"***"+res.data.phone.substr(10,4);
+            this.walletAddress=res.data.wallet_address;
+            console.log(this.walletAddress);
+            if(this.walletAddress){
+              this.acquireBalance()
+            }else{
+              this.balance=""
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
       },
       acquireBalance(){
         axios({
           method: "POST",
-          url: `${baseURL}/v1/users/${this.userId}/${this.walletAddress}`,
+          url: `${cardURL}/`,
           headers: {
             "Content-Type": "application/json",
+          },
+          data:{
             "jsonrpc":"2.0",
             "method":"eth_getBalance",
-            "params":[0x34eb1d640b18ba90a3e8a6a546d6414772f88924,2.0],
+            "params":[this.walletAddress,"latest"],
             "id":1
-          }
+          },
         }).then((res) => {
-          console.log(res);
           this.balance=res.data.result;
         }).catch((err) => {
           console.log(err);
@@ -157,68 +164,8 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          var res={
-            "count": 4,
-            "data": [
-              {
-                "orderNum": "1006088337674473472",
-                "apikey": "5a6be74a55aaf50001a5e250",
-                "assetid": "0000000000000000001",
-                "price": "2",
-                "orderStatus": 1,
-                "created_at": "2018-06-11T16:18:46.576720941+08:00",
-                "updated_at": "2018-06-11T16:18:46.576721108+08:00",
-                "created_by": "5b1a546f4f39b000013b7d55",
-                "updated_by": "5b1a546f4f39b000013b7d55",
-                "sell_type": "所有权",
-                "assetname": "测试案例1"
-              },
-              {
-                "orderNum": "1006088337674473472",
-                "apikey": "5a6be74a55aaf50001a5e250",
-                "assetid": "0000000000000000002",
-                "price": "2",
-                "orderStatus": 1,
-                "created_at": "2018-06-11T16:18:46.576720941+08:00",
-                "updated_at": "2018-06-11T16:18:46.576721108+08:00",
-                "created_by": "5b1a546f4f39b000013b7d55",
-                "updated_by": "5b1a546f4f39b000013b7d55",
-                "sell_type": "所有权",
-                "assetname": "测试案例2"
-              },
-              {
-                "orderNum": "1006088337674473472",
-                "apikey": "5ae04522cff7cb000194f2f4",
-                "assetid": "0000000000000000001",
-                "price": "2",
-                "orderStatus": 1,
-                "created_at": "2018-06-11T16:18:46.576720941+08:00",
-                "updated_at": "2018-06-11T16:18:46.576721108+08:00",
-                "created_by": "5b1a546f4f39b000013b7d55",
-                "updated_by": "5b1a546f4f39b000013b7d55",
-                "sell_type": "所有权",
-                "assetname": "测试设备1"
-              },
-              {
-                "orderNum": "1006088337674473472",
-                "apikey": "5ae04522cff7cb000194f2f4",
-                "assetid": "0000000000000000002",
-                "price": "2",
-                "orderStatus": 1,
-                "created_at": "2018-06-11T16:18:46.576720941+08:00",
-                "updated_at": "2018-06-11T16:18:46.576721108+08:00",
-                "created_by": "5b1a546f4f39b000013b7d55",
-                "updated_by": "5b1a546f4f39b000013b7d55",
-                "sell_type": "所有权",
-                "assetname": "测试设备2"
-              },
-            ]
-          };
           this.total = res.count;
-          this.assetList = res.data;
-          console.log(this.assetList);
-          console.log(this.caseList);
-          console.log(this.facilityList);
+          this.assetList = res.data.data;
         }).catch((err) => {
           console.log(err);
         });

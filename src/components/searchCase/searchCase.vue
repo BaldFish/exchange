@@ -33,7 +33,7 @@
         <div class="price_box">
           <a href="#/caseDetails" @click="getCaseDetails(item.Id)"><p class="price">{{item.Price}}</p></a>
           <a href="#/caseSource" @click="getCaseSource(item.Id)"><p class="tracing">可信溯源</p></a>
-          <a href="#/checkOrder"><p class="buy">一键购买</p></a>
+          <a href="javascript:void(0)" @click="buy(item.Id)"><p class="buy">一键购买</p></a>
         </div>
       </div>
     </div>
@@ -65,9 +65,18 @@
         caseLimit: 10,
         total: 10,
         searchCaseList: [],
+        userId:"",
+        token:"",
+        apiKey:"",
+        assetId:"",
+        id:"",
       }
     },
     mounted() {
+      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+        this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      }
       this.acquireSearchCaseList();
     },
     computed: {
@@ -89,13 +98,9 @@
           let likeInfo=_.find(this.searchCaseList,function (o) {
             return o.Id===val
           });
-          console.log(likeInfo);
-          this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
-          this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
           this.apiKey=likeInfo.Apikey;
           this.assetId=likeInfo.Assetid;
-          //this.id=likeInfo.Id;
-          console.log(this.apiKey,this.assetId);
+          this.id=likeInfo.ShopCartId;
           if(likeInfo.ShopCartId===""){
             axios({
               method: "POST",
@@ -105,9 +110,8 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              console.log(res);
               this.id=res.data._id;
-              likeInfo.ShopCartId=this.id
+              likeInfo.ShopCartId=this.id;
               this.addCollection()
             }).catch((err) => {
               console.log(err);
@@ -121,29 +125,45 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              console.log(11111111111);
-              likeInfo.ShopCartId=""
+              likeInfo.ShopCartId="";
               this.subtractCollection()
             }).catch((err) => {
               console.log(err);
             });
           }
+        }else {
+          alert("请先登录")
         }
       },
       //获取搜索案例列表
       acquireSearchCaseList() {
-        axios({
-          method: "GET",
-          url: `${baseURL}/v1/asset/casus/search?key=${this.caseInput}&page=${this.casePage}&limit=${this.caseLimit}`,
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }).then((res) => {
-          this.total=res.data.count;
-          this.searchCaseList = res.data.data;
-        }).catch((err) => {
-          console.log(err);
-        })
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/asset/casus/search?key=${this.caseInput}&page=${this.casePage}&limit=${this.caseLimit}&userid=${this.userId}`,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((res) => {
+            this.total=res.data.count;
+            this.searchCaseList = res.data.data;
+          }).catch((err) => {
+            console.log(err);
+          })
+        }else{
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/asset/casus/search?key=${this.caseInput}&page=${this.casePage}&limit=${this.caseLimit}`,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((res) => {
+            this.total=res.data.count;
+            this.searchCaseList = res.data.data;
+          }).catch((err) => {
+            console.log(err);
+          })
+        }
       },
       handleCurrentChange(val){
         this.casePage=val;
@@ -165,6 +185,36 @@
       subtractCollection(){
         this.$store.commit("subtractCollection")
       },
+      buy(val){
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          let buyInfo=_.find(this.caseList,function (o) {
+            return o.Id===val
+          });
+          this.apiKey=buyInfo.Apikey;
+          this.assetId=buyInfo.Assetid;
+          axios({
+            method: "POST",
+            url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
+            headers: {
+              "Content-Type": "application/json",
+              "X-Access-Token":this.token,
+            }
+          }).then((res) => {
+            let buyInfoObj={};
+            buyInfoObj.buyInfo=buyInfo;
+            buyInfoObj.turnInfo=res.data;
+            this.getBuy(buyInfoObj);
+            window.location.href="#/checkOrder"
+          }).catch((err) => {
+            console.log(err);
+          })
+        }else{
+          alert("请先登录")
+        }
+      },
+      getBuy(val){
+        this.$store.commit("changeBuy",val);
+      }
     },
     components: {
       myTopSearch,

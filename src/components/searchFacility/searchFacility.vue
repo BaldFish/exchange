@@ -6,7 +6,7 @@
         <ul>
           <li>当前位置 ：</li>
           <li>首页></li>
-          <li>共享维修设备</li>
+          <li>维修设备</li>
         </ul>
       </div>
     </div>
@@ -59,6 +59,11 @@
         facilityLimit: 12,
         total:12,
         searchFacilityList: [],
+        userId:"",
+        token:"",
+        apiKey:"",
+        assetId:"",
+        id:"",
       }
     },
     mounted() {
@@ -79,18 +84,34 @@
     },
     methods: {
       acquireSearchFacilityList() {
-        axios({
-          method: "GET",
-          url: `${baseURL}/v1/asset/device/search?key=${this.facilityInput}&page=${this.facilityPage}&limit=${this.facilityLimit}`,
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }).then((res) => {
-          this.total=res.data.count;
-          this.searchFacilityList = res.data.data
-        }).catch((err) => {
-          console.log(err)
-        })
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/asset/device/search?key=${this.facilityInput}&page=${this.facilityPage}&limit=${this.facilityLimit}&userid=${this.userId}`,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((res) => {
+            this.total=res.data.count;
+            this.searchFacilityList = res.data.data
+          }).catch((err) => {
+            console.log(err)
+          })
+        }else{
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/asset/device/search?key=${this.facilityInput}&page=${this.facilityPage}&limit=${this.facilityLimit}`,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((res) => {
+            this.total=res.data.count;
+            this.searchFacilityList = res.data.data
+          }).catch((err) => {
+            console.log(err)
+          })
+        }
+        
       },
       handleCurrentChange(val){
         this.facilityPage=val;

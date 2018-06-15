@@ -6,7 +6,7 @@
         <ul>
           <li>当前位置 ：</li>
           <li>首页></li>
-          <li>维修案例></li>
+          <li>维修设备></li>
           <li>{{facilityDetails.Assetname}}</li>
         </ul>
       </div>
@@ -48,7 +48,7 @@
                 <span>：{{facilityDetails.SellAt}}</span>
               </li>
             </ul>
-            <a href="#/checkOrder"><p class="buy">一键购买</p></a>
+            <a href="javascript:void(0)" @click="buy(facilityDetails.Id)"><p class="buy">一键购买</p></a>
           </div>
         </div>
       </div>
@@ -77,6 +77,10 @@
       }
     },
     mounted() {
+      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+        this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      }
       this.facilityDetails=JSON.parse(sessionStorage.getItem("facilityDetails"));
       this.apiKey=this.facilityDetails.Apikey;
       this.assetId=this.facilityDetails.Assetid;
@@ -86,13 +90,9 @@
       toggleLike(val){
         if(sessionStorage.getItem("loginInfo")){
           let likeInfo=this.facilityDetails;
-          console.log(likeInfo);
-          this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
-          this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
           this.apiKey=likeInfo.Apikey;
           this.assetId=likeInfo.Assetid;
-          //this.id=likeInfo.Id;
-          console.log(this.apiKey,this.assetId);
+          this.id=likeInfo.ShopCartId;
           if(likeInfo.ShopCartId===""){
             axios({
               method: "POST",
@@ -102,15 +102,13 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              console.log(res);
               this.id=res.data._id;
-              likeInfo.ShopCartId=this.id
-              this.addCollection()
+              likeInfo.ShopCartId=this.id;
+              this.addCollection();
             }).catch((err) => {
               console.log(err);
             });
           }else if(likeInfo.ShopCartId!==""){
-            console.log(this.id);
             axios({
               method: "DELETE",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
@@ -119,27 +117,42 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              console.log(11111111111);
-              likeInfo.ShopCartId=""
-              this.subtractCollection()
+              likeInfo.ShopCartId="";
+              this.subtractCollection();
             }).catch((err) => {
               console.log(err);
             });
           }
+        }else {
+          alert("请先登录")
         }
       },
       acquireFacilityDetails(){
-        axios({
-          method: "GET",
-          url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }).then((res) => {
-          this.facilityDetails=res.data
-        }).catch((err) => {
-          console.log(err);
-        })
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail?userid=${this.userId}`,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((res) => {
+            this.facilityDetails=res.data
+          }).catch((err) => {
+            console.log(err);
+          })
+        }else{
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((res) => {
+            this.facilityDetails=res.data
+          }).catch((err) => {
+            console.log(err);
+          })
+        }
       },
       getFacilitySource(val) {
         this.$store.commit("changeFacilitySource",this.facilityDetails);
@@ -150,6 +163,34 @@
       subtractCollection(){
         this.$store.commit("subtractCollection")
       },
+      buy(val){
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          let buyInfo=this.facilityDetails;
+          this.apiKey=buyInfo.Apikey;
+          this.assetId=buyInfo.Assetid;
+          axios({
+            method: "POST",
+            url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
+            headers: {
+              "Content-Type": "application/json",
+              "X-Access-Token":this.token,
+            }
+          }).then((res) => {
+            let buyInfoObj={};
+            buyInfoObj.buyInfo=buyInfo;
+            buyInfoObj.turnInfo=res.data;
+            this.getBuy(buyInfoObj);
+            window.location.href="#/checkOrder"
+          }).catch((err) => {
+            console.log(err);
+          })
+        }else{
+          alert("请先登录")
+        }
+      },
+      getBuy(val){
+        this.$store.commit("changeBuy",val);
+      }
     },
     watch: {},
     computed: {},

@@ -33,7 +33,7 @@
         <div class="price_box">
           <a href="#/caseDetails" @click="getCaseDetails(item.Id)"><p class="price">{{item.Price}}</p></a>
           <a href="#/caseSource" @click="getCaseSource(item.Id)"><p class="tracing">可信溯源</p></a>
-          <a href="#/checkOrder"><p class="buy">一键购买</p></a>
+          <a href="javascript:void(0)" @click="buy(item.Id)"><p class="buy">一键购买</p></a>
         </div>
       </div>
     </div>
@@ -70,10 +70,14 @@
         apiKey:"",
         assetId:"",
         id:"",
+        
       }
     },
     mounted() {
-      this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+        this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      }
       this.acquireCaseList()
     },
     methods: {
@@ -82,13 +86,9 @@
           let likeInfo=_.find(this.caseList,function (o) {
             return o.Id===val
           });
-          console.log(likeInfo);
-          this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
-          this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
           this.apiKey=likeInfo.Apikey;
           this.assetId=likeInfo.Assetid;
-          //this.id=likeInfo.Id;
-          console.log(this.apiKey,this.assetId);
+          this.id=likeInfo.ShopCartId;
           if(likeInfo.ShopCartId===""){
             axios({
               method: "POST",
@@ -98,7 +98,6 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              console.log(res);
               this.id=res.data._id;
               likeInfo.ShopCartId=res.data._id;
               this.addCollection()
@@ -114,13 +113,14 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              console.log(111111111);
-              likeInfo.ShopCartId=""
+              likeInfo.ShopCartId="";
               this.subtractCollection()
             }).catch((err) => {
               console.log(err);
             });
           }
+        }else {
+          alert("请先登录")
         }
       },
       acquireCaseList() {
@@ -135,7 +135,6 @@
           }).then((res) => {
             this.total=res.data.count;
             this.caseList = res.data.data;
-            console.log(this.caseList);
           }).catch((err) => {
             console.log(err);
           })
@@ -149,7 +148,6 @@
           }).then((res) => {
             this.total=res.data.count;
             this.caseList = res.data.data;
-            console.log(this.caseList);
           }).catch((err) => {
             console.log(err);
           })
@@ -175,6 +173,36 @@
       subtractCollection(){
         this.$store.commit("subtractCollection")
       },
+      buy(val){
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          let buyInfo=_.find(this.caseList,function (o) {
+            return o.Id===val
+          });
+          this.apiKey=buyInfo.Apikey;
+          this.assetId=buyInfo.Assetid;
+          axios({
+            method: "POST",
+            url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
+            headers: {
+              "Content-Type": "application/json",
+              "X-Access-Token":this.token,
+            }
+          }).then((res) => {
+            let buyInfoObj={};
+            buyInfoObj.buyInfo=buyInfo;
+            buyInfoObj.turnInfo=res.data;
+            this.getBuy(buyInfoObj);
+            window.location.href="#/checkOrder"
+          }).catch((err) => {
+            console.log(err);
+          })
+        }else{
+          alert("请先登录")
+        }
+      },
+      getBuy(val){
+        this.$store.commit("changeBuy",val);
+      }
     },
     components: {
       myTopSearch,
