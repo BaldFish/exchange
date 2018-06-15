@@ -1,10 +1,10 @@
 <template>
   <div class="nav_content">
-    
+
     <div class="nav_content_title">
       <span>订单商品信息</span>
     </div>
-    
+
     <table class="order_nav">
       <tr>
         <td>
@@ -24,8 +24,8 @@
         <td>全部状态</td>
       </tr>
     </table>
-    
-    <div class="nav_content_table">
+
+    <!-- <div class="nav_content_table">
       <table>
         <thead>
         <tr class="no_img_thead">
@@ -55,9 +55,9 @@
         </tr>
         </tbody>
       </table>
-    </div>
-    
-    <div class="nav_content_table">
+    </div>-->
+
+    <!--<div class="nav_content_table">
       <table>
         <thead>
         <tr class="img_thead">
@@ -71,13 +71,13 @@
           <th>维修设备
             <span>订单号： 752642823580</span>
           </th>
-          <th colspan="5">下单日期：2018-04-01 12:12:56</th>
+          <th colspan="4">下单日期：2018-04-01 12:12:56</th>
         </tr>
         </thead>
         <tbody>
         <tr class="img_tbody">
           <td>
-            <img src="" alt="">
+            <img src="item.asseturl" alt="">
             <p>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功率德国车载吸尘你充电强力大功率</p>
           </td>
           <td>所有权</td>
@@ -85,23 +85,70 @@
           <td>23456</td>
           <td class="img_lastTd">
             <p>已完成</p>
-            <p>查阅</p>
+            <router-link to=""><p>查阅</p></router-link>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>-->
+
+    <div class="nav_content_table" v-for="(item,index) in dataList">
+      <table>
+        <thead>
+        <tr class="img_thead">
+          <th>支付钱包地址：{{userInfo.wallet_address}}</th>
+          <!--<th colspan="5" class="order_amount">
+            订单金额：
+            <span>￥{{item.price}}</span>
+          </th>-->
+        </tr>
+        <tr class="th_classify">
+          <th>{{item.apiname}}
+            <span>订单号： {{item.orderNum}}</span>
+          </th>
+          <th colspan="4">下单日期：2018-04-01 12:12:56</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="img_tbody">
+          <td  v-if="item.apiname == '共享维修设备'">
+            <img src="" alt="">
+            <p>{{item.assetname}}</p>
+          </td>
+          <td v-if="item.apiname == '案例'">
+            <p class="no_img_p">{{item.assetname}}</p>
+          </td>
+          <td>{{item.sell_type}}</td>
+          <td>{{item.split_count}}</td>
+          <td>￥{{item.price}}</td>
+          <td class="img_lastTd" v-if="item.orderStatus == 2">
+            <p>已完成</p>
+            <router-link to=""><p>查阅</p></router-link>
+          </td>
+          <td class="no_img_lastTd" v-if="item.orderStatus == 1">
+            <p>未完成</p>
+            <router-link to="/checkOrder">去支付 ></router-link>
           </td>
         </tr>
         </tbody>
       </table>
     </div>
-    
+
     <div class="clearfix paging">
       <my-paging></my-paging>
     </div>
-  
+
   </div>
 </template>
 
 <script>
-  import myPaging from "../paging/paging"
+  import myPaging from "../paging/paging";
+  import axios from "axios";
+  import {baseURL} from '@/common/js/public.js';
+  const querystring = require('querystring');
+
   export default{
+    inject:['reload'],
     name: "orderHistory",
     data(){
       return {
@@ -116,9 +163,48 @@
           label: '2017年订单'
         }],
         value: '选项1',
-        input: '',
+        //input: '',
+        dataList:'',
+        userInfo:''
       }
     },
+    mounted: function() {
+      //获取用户信息
+      let logInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
+      axios({
+        method: 'get',
+        url: `${baseURL}/v1/users/${logInfo.user_id}`,
+      }).then(res => {
+        this.userInfo = res.data;
+        sessionStorage.setItem("userInfo",JSON.stringify(res.data))
+      }).catch(error => {
+        console.log(error);
+      });
+      //获取表格数据
+      this.getData()
+    },
+    methods: {
+      getData(){
+        let loginInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
+        axios({
+          method: 'get',
+          url: `${baseURL}/v1/order/list/${loginInfo.user_id}?page=1&limit=10&begin=2017-01-01`,
+        }).then(res => {
+          this.dataList = res.data.data
+        }).catch(error => {
+          console.log(error);
+        });
+      }
+    },
+
+
+ /*   watch:{
+      value:()=>{
+
+        console.log(this.value)
+      }
+    },*/
+
     components: {
       myPaging
     }
@@ -191,7 +277,7 @@
     line-height: 40px;
   }
   .th_classify span{
-    margin-left: 100px;
+    margin-left: 50px;
   }
   .th_classify th:nth-child(1){
     padding-left: 46px;
@@ -214,6 +300,7 @@
   }
   .img_lastTd p:last-child{
     margin-top: 10px;
+    color: #666666;
   }
   .img_thead{
     height: 50px;
@@ -281,6 +368,10 @@
   }
   .order_amount span{
     color: #c6351e;
+  }
+  .no_img_p{
+    padding-left: 46px;
+    float: none !important;
   }
 </style>
 <style>
