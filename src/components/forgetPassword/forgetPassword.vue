@@ -14,7 +14,7 @@
     <div class="forget_psw_body">
       <div class="forget_psw_content">
 
-        <section class="forget_psw_sec" v-if="stepOne">
+        <section class="forget_psw_sec" v-show="stepOne">
           <div class="sec_step">
             <img src="./images/forget_psw_step01.png" alt="">
             <span class="step_color">输入手机号</span>
@@ -48,7 +48,7 @@
           <div class="next_btn" @click="nextStep(2)"><span>下一步</span></div>
         </section>
 
-        <section class="forget_psw_sec" v-if="stepTwo">
+        <section class="forget_psw_sec" v-show="stepTwo">
           <div class="sec_step">
             <img src="./images/forget_psw_step02.png" alt="">
             <span class="step_color">输入手机号</span>
@@ -226,10 +226,6 @@
       },
       nextStep(id){
         if (id){
-
-        /*  //进入下一步
-          this.stepTwo = true;
-          this.stepOne = false;*/
           this.$validator.validateAll().then((result)=>{
             //校验是否正确：图形验证码、短信验证码
             if (this.captchaNotice || this.codeNotice){
@@ -244,9 +240,6 @@
             }
           })
         } else{
-
-
-          console.log(999999)
           let loginFormData = {
             phone:"+86"+this.phone, //手机号
             captcha_number: this.captcha_number, //图形验证码
@@ -257,9 +250,6 @@
           };
           this.$validator.validateAll().then((result)=>{
             if(result){
-
-              console.log(5555555)
-
               axios({
                 method: 'post',
                 url: `${baseURL}/v1/phones/${loginFormData.phone}/password`,

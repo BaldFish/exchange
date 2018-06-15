@@ -15,7 +15,7 @@
                     <li @click="tabChange" :class="{'nav-avtive': loginWay,'nav-unavtive': !loginWay}">账户登陆</li>
                     <li @click="tabChange" :class="{'nav-avtive': !loginWay,'nav-unavtive':loginWay }">手机登录</li>
                   </ul>
-                  <section class="account-login" v-if="loginWay">
+                  <section class="account-login" v-show="loginWay">
                     <ul>
                       <li>
                         <i></i>
@@ -36,19 +36,19 @@
                       </li>
                     </ul>
                   </section>
-                  <section class="account-login phone-login" v-else>
+                  <section class="account-login phone-login" v-show="!loginWay">
                     <ul>
                       <li>
                         <i></i>
                         <input type="text" placeholder="请输入手机号" v-model="phone" v-validate="'required|mobile'" name='mobile'>
-                        <span v-show="errors.has('mobile')" class="error" style="width: 200px">{{errors.first('mobile')}}</span>
+                        <span v-show="errors.has('mobile')" class="error error_bot">{{errors.first('mobile')}}</span>
                       </li>
                       <li>
                         <i></i>
                         <input type="text" placeholder="请输入验证码" v-model="captcha_number" v-validate="'required'" name='captcha_number' @blur="captchaError">
                         <img class="img_change_img" @click="getCaptcha" :src="captcha">
-                        <span v-show="errors.has('captcha_number')" class="error">{{errors.first('captcha_number')}}</span>
-                        <span v-show="captchaNotice" class="error">图形验证码错误</span>
+                        <span v-show="errors.has('captcha_number')" class="error error_top">{{errors.first('captcha_number')}}</span>
+                        <span v-show="captchaNotice" class="error error_top">图形验证码错误</span>
                       </li>
                       <li>
                         <i></i>
@@ -240,6 +240,22 @@
                 captcha_id:this.captcha_id, //图片验证码ID
                 captcha_number:this.captcha_number //图片验证码--图片
               };
+
+           /*   console.log(this.$validator.validate('mobile',this.phone))
+
+              this.$validator.validate('mobile',this.phone).then((result)=>{
+                console.log(result)
+              })
+
+              this.$validator.validateAll({
+                mobile:this.phone,
+                password:this.password,
+                captcha_number:this.captcha_number
+                }).then((result)=>{
+                console.log(result)
+              })*/
+
+
               this.$validator.validateAll().then((result)=>{
                 //校验是否正确：图形验证码、短信验证码
                 if (this.captchaNotice || this.codeNotice){
@@ -470,5 +486,11 @@
     color: #c6351e;
     display: inline-block;
     width: 200px;
+  }
+  .error_bot{
+    bottom: 3px;
+  }
+  .error_top{
+    top: 3px;
   }
 </style>
