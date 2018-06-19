@@ -1,7 +1,7 @@
 <template>
   <div class="topBox">.
     <div class="logo">
-      <img src="./images/logo_head.png" alt="logo">
+      <a href="#/"><img src="./images/logo_head.png" alt="logo"></a>
     </div>
     <div class="search_box">
       <div class="search">
@@ -17,16 +17,12 @@
         <el-input class="my_input" v-model="input" placeholder="请输入您要搜索的内容"></el-input>
         <div class="button" @click="search"></div>
       </div>
-      <div class="keyword">
-        <ul>
-          <li>热门搜索：</li>
-          <li>关键字</li>
-          <li>关键字</li>
-          <li>关键字</li>
-          <li>关键字</li>
-          <li>关键字</li>
-        </ul>
-      </div>
+      <!--<div class="keyword">-->
+        <!--<ul>-->
+          <!--<li>热门搜索：</li>-->
+          <!--<li>关键字</li>-->
+        <!--</ul>-->
+      <!--</div>-->
     </div>
     <div class="favorite" @click="turnFavorite">
         <span class="s_text">收藏夹</span>

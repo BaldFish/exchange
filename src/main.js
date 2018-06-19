@@ -28,7 +28,8 @@ const store = new Vuex.Store({
     facilityValue: "",
     facilityInput: "",
     favoriteCount: 0,
-    buyInfoObj:{},
+    buyInfoObj: {},
+    isLogin: false,
   },
   mutations: {
     changeCaseDetails(state, params) {
@@ -61,10 +62,13 @@ const store = new Vuex.Store({
     subtractCollection(state, params) {
       state.favoriteCount--
     },
-    changeBuy(state, params){
+    changeBuy(state, params) {
       state.buyInfoObj = params;
       window.sessionStorage.setItem("buyInfoObj", JSON.stringify(state.buyInfoObj));
-      console.log(state.buyInfoObj)
+    },
+    changeIsLogin(state, params) {
+      state.isLogin = params;
+      window.sessionStorage.setItem("isLogin", JSON.stringify(state.isLogin));
     }
   }
 });

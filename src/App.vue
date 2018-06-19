@@ -3,8 +3,19 @@
     <div class="head-wrap">
       <div class="head">
         <a href="/">欢迎来到 可信链 ！</a>
-        <a href="#/login">请登录</a>
-        <a href="#/register">免费注册</a>
+        <div class="no_login" v-if="!login">
+          <a href="#/login">请登录</a>
+          <a href="#/register">免费注册</a>
+        </div>
+        <div class="login" v-if="login">
+          <div>111111</div>
+          <ul>
+            <li><a href="#/personalAssets">个人中心</a></li>
+            <li><a href="#/personalAssets">安全中心</a></li>
+            <li>退出</li>
+          </ul>
+        </div>
+        
       </div>
     </div>
     <div class="main_wrap">
@@ -47,26 +58,67 @@
 
 <script>
   import "./common/stylus/index.styl";
-
+  import {baseURL, cardURL} from '@/common/js/public.js';
+  import axios from "axios";
+  
   export default {
     name: 'App',
-    provide(){
+    provide() {
       return {
-        reload:this.reload
+        reload: this.reload
       }
     },
-    data(){
-      return{
-        isRouterAlive:true
+    data() {
+      return {
+        isRouterAlive: true,
+        a:this.login
       }
     },
-    methods:{
-      reload(){
+    computed: {
+      login:function(){
+        return this.$store.state.isLogin
+      },
+      userName(){
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          return JSON.parse(sessionStorage.getItem("loginInfo")).user_id.substr(3,3)+"***"+JSON.parse(sessionStorage.getItem("loginInfo")).user_id.substr(10,4)
+        }else{
+          return ""
+        }
+      }
+    },
+    watch: {
+      login:function () {
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          this.getIsLogin(true)
+        }
+      }
+    },
+    methods: {
+      reload() {
         this.isRouterAlive = false;
-        this.$nextTick( ()=>{
+        this.$nextTick(() => {
           this.isRouterAlive = true
         })
-      }
+      },
+      dropOut(command){
+      },
+      acquireUserInfo(){
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/users/${this.userId}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          this.userName=res.data.phone.substr(3,3)+"***"+res.data.phone.substr(10,4);
+          return this.userName
+        }).catch((err) => {
+          console.log(err);
+        });
+      },
+      getIsLogin(val){
+        this.$store.commit("changeIsLogin",val);
+      },
     }
   }
 </script>
@@ -77,7 +129,7 @@
     display: flex;
     flex-direction: column;
   }
-
+  
   .head-wrap {
     width: 100%;
     min-width 1212px
@@ -90,12 +142,25 @@
       text-align right
       line-height 34px
       a {
-        margin-left 30px
+        //margin-left 30px
         color: #666666;
+      }
+      .no_login{
+        display inline-block
+        width 160px
+        a{
+          margin-left 28px
+          color: #666666;
+        }
+      }
+      .login{
+        //display inline-block
+        cursor pointer
+        width 160px
       }
     }
   }
-
+  
   .main_wrap {
     flex: 1;
     box-sizing: border-box;
@@ -104,6 +169,7 @@
     min-width 1212px
     background-color #f3f3f3
   }
+  
   .footer-wrap {
     width 100%
     min-width 1212px

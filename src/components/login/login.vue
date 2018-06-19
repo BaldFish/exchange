@@ -120,6 +120,9 @@
           })
         },
         methods: {
+          getIsLogin(val){
+            this.$store.commit("changeIsLogin",val);
+          },
           tabChange(){
             this.loginWay = !this.loginWay
           },
@@ -224,6 +227,7 @@
                     }).then(res => {
                       sessionStorage.setItem("loginInfo",JSON.stringify(res.data));
                       this.$router.push({ path: '/home' })
+                      this.getIsLogin(true)
                     }).catch(error => {
                       console.log(error);
                     })
@@ -270,6 +274,7 @@
                     }).then(res => {
                       sessionStorage.setItem("loginInfo",JSON.stringify(res.data));
                       this.$router.push({ path: '/home' })
+                      this.getIsLogin(true)
                     }).catch(error => {
                       console.log(error);
                     })
