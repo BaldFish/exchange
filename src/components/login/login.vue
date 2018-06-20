@@ -19,7 +19,7 @@
                     <ul>
                       <li>
                         <i></i>
-                        <input type="text" placeholder="请输入账号" v-model="phone" v-validate="'required|mobile'" name='mobile'>
+                        <input type="text" placeholder="请输入账号" v-model="phoneLeft" v-validate="'required|mobile'" name='mobile'>
                         <span v-show="errors.has('mobile')" class="error" style="width: 200px">{{errors.first('mobile')}}</span>
                       </li>
                       <li>
@@ -40,8 +40,8 @@
                     <ul>
                       <li>
                         <i></i>
-                        <input type="text" placeholder="请输入手机号" v-model="phone" v-validate="'required|mobile'" name='mobile'>
-                        <span v-show="errors.has('mobile')" class="error error_bot">{{errors.first('mobile')}}</span>
+                        <input type="text" placeholder="请输入手机号" v-model="phoneRight" v-validate="'required|mobileRight'" name='mobileRight'>
+                        <span v-show="errors.has('mobileRight')" class="error error_bot">{{errors.first('mobileRight')}}</span>
                       </li>
                       <li>
                         <i></i>
@@ -87,6 +87,8 @@
             captchaNotice:false,//校验图形码是否正确
             codeNotice:false,//校验短信码是否正确
             second:60,// 发送验证码倒计时
+            phoneLeft:"", //手机号
+            phoneRight:"", //手机号
             phone:"", //手机号
             captcha_number:"", //图形验证码
             captcha_id:"", //图形验证码--ID
@@ -143,7 +145,7 @@
           },
           //获取短信验证码
           getCode() {
-            if(this.phone){
+            if(this.phoneRight){
               //倒计时
               let me = this;
               me.codeValue = false;
@@ -159,7 +161,7 @@
                 method: 'post',
                 url: `${baseURL}/v1/sms/code`,
                 data: querystring.stringify({
-                  phone:"+86"+this.phone, //手机号
+                  phone:"+86"+this.phoneRight, //手机号
                   type:3 //1-注册，2-修改密码, 3-登录
                 })
               }).then(res => {
@@ -191,7 +193,7 @@
             if(this.code){
               axios({
                 method: 'get',
-                url: `${baseURL}/v1/sms/+86${this.phone}/code/${this.code}`
+                url: `${baseURL}/v1/sms/+86${this.phoneRight}/code/${this.code}`
               }).then(res => {
                 console.log(res);
                 this.codeNotice = false
@@ -206,14 +208,18 @@
           login(){
             if(this.loginWay){
               let loginFormData = {
-                phone:"+86"+this.phone, //手机号
+                phone:"+86"+this.phoneLeft, //手机号
                 password: this.password, //密码
                 device_id:this.uuid, //设备ID
                 platform:1,
                 captcha_id:this.captcha_id, //图片验证码ID
                 captcha_number:this.captcha_number //图片验证码--图片
               };
-              this.$validator.validateAll().then((result)=>{
+              this.$validator.validateAll({
+                //mobile:this.phone,
+                //password:this.password,
+                //captcha_number:this.captcha_number
+              }).then((result)=>{
                 //校验是否正确：图形验证码
                 if (this.captchaNotice){
                   return false
@@ -227,6 +233,10 @@
                     }).then(res => {
                       sessionStorage.setItem("loginInfo",JSON.stringify(res.data));
                       this.$router.push({ path: '/home' });
+<<<<<<< HEAD
+=======
+                      this.$store.state.isRegister = true;
+>>>>>>> f22a8edcb24230ce436b402d4ee9695f33b883b5
                     }).catch(error => {
                       console.log(error);
                     })
@@ -235,7 +245,7 @@
               })
             }else{
               let loginFormData = {
-                phone:"+86"+this.phone, //手机号
+                phone:"+86"+this.phoneRight, //手机号
                 password: this.password, //密码
                 device_id:this.uuid, //设备ID
                 platform:1,
@@ -251,7 +261,7 @@
               })
 
               this.$validator.validateAll({
-                mobile:this.phone,
+                phone   :this.phone,
                 password:this.password,
                 captcha_number:this.captcha_number
                 }).then((result)=>{
@@ -259,7 +269,11 @@
               })*/
 
 
-              this.$validator.validateAll().then((result)=>{
+              this.$validator.validateAll({
+                //mobileRight:this.phone,
+                //password:this.password,
+                //captcha_number:this.captcha_number
+              }).then((result)=>{
                 //校验是否正确：图形验证码、短信验证码
                 if (this.captchaNotice || this.codeNotice){
                   return false
@@ -272,7 +286,8 @@
                       data: querystring.stringify(loginFormData)
                     }).then(res => {
                       sessionStorage.setItem("loginInfo",JSON.stringify(res.data));
-                      this.$router.push({ path: '/home' })
+                      this.$router.push({ path: '/home' });
+                      this.$store.state.isRegister = true;
                     }).catch(error => {
                       console.log(error);
                     })
