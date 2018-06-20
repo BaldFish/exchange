@@ -29,6 +29,7 @@ const dictionary = {
       idcard: '身份证号',
       email: '邮箱',
       mobile: '手机号',
+      mobileRight: '手机号',
       captcha_number:'图形验证码',
       code:'手机验证码',
       password:'密码',
@@ -49,6 +50,15 @@ Validator.extend('email', {
 });
 
 Validator.extend('mobile', {
+  messages: {
+    zh_CN: (field) => '请输入正确的手机号'
+  },
+  validate: (value) => {
+    return value.length == 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value);
+  }
+});
+
+Validator.extend('mobileRight', {
   messages: {
     zh_CN: (field) => '请输入正确的手机号'
   },

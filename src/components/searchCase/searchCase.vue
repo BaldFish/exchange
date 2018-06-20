@@ -56,7 +56,7 @@
   import _ from "lodash";
   import {baseURL,cardURL} from '@/common/js/public.js';
   import myTopSearch from "../topSearch/topSearch"
-  
+
   export default {
     name: "searchCase",
     data() {

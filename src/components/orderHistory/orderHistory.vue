@@ -8,7 +8,7 @@
     <table class="order_nav">
       <tr>
         <td>
-          <el-select class="my_select" v-model="value" placeholder="请选择" >
+          <el-select class="my_select" v-model="value" placeholder="请选择" @change="selectChange">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -135,14 +135,21 @@
     </div>
 
     <div class="clearfix paging">
-      <my-paging></my-paging>
+      <el-pagination class="my_paging"
+                     layout="prev, pager, next"
+                     :background=true
+                     :total=total
+                     :page-size=limit
+                     :current-page.sync= currentPage
+                     @current-change="handleCurrentChange">
+      </el-pagination>
     </div>
 
   </div>
 </template>
 
 <script>
-  import myPaging from "../paging/paging";
+  import "../../common/stylus/paging.styl";
   import axios from "axios";
   import {baseURL} from '@/common/js/public.js';
   const querystring = require('querystring');
@@ -153,19 +160,24 @@
     data(){
       return {
         options: [{
-          value: '选项1',
+          value: '1',
           label: '近三个月的订单'
         }, {
-          value: '选项2',
+          value: '2',
           label: '今年内订单'
         }, {
-          value: '选项3',
+          value: '3',
           label: '2017年订单'
         }],
-        value: '选项1',
+        value: '1',
         //input: '',
         dataList:'',
-        userInfo:''
+        userInfo:'',
+        total: 10,//总页数
+        limit: 1,//每页显示多少条
+        currentPage: 1,//当前页数
+        begin: "",//开始时间
+        end: "",//结束时间
       }
     },
     mounted: function() {
@@ -188,26 +200,85 @@
         let loginInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
         axios({
           method: 'get',
-          url: `${baseURL}/v1/order/list/${loginInfo.user_id}?page=1&limit=10&begin=2017-01-01`,
+          url: `${baseURL}/v1/order/list/${loginInfo.user_id}?page=${this.currentPage}&limit=${this.limit}&begin=${this.begin}&end=${this.end}`,
         }).then(res => {
-          this.dataList = res.data.data
+          this.dataList = res.data.data;
+          this.total = res.data.count;
         }).catch(error => {
           console.log(error);
         });
+      },
+      //当前页变动
+      handleCurrentChange(val){
+        this.currentPage = val;
+        //再次请求数据
+        this.getData()
+      },
+      //最近三个月时间
+      get3MonthBefor(){
+        let resultDate,year,month,date;
+        let currDate = new Date();
+        year = currDate.getFullYear();
+        month = currDate.getMonth()+1;
+        date = currDate.getDate();
+        switch(month)
+        {
+          case 1:
+          case 2:
+          case 3:
+            month += 9;
+            year--;
+            break;
+          default:
+            month -= 3;
+            break;
+        }
+        month = (month < 10) ? ('0' + month) : month;
+        resultDate = year + '-'+month+'-'+date;
+        return resultDate;
+      },
+      //下拉选择
+      selectChange(){
+        //时间格式化
+        Date.prototype.Format = function (fmt) { //author: meizz
+          var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+          };
+          if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+          for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+          return fmt;
+        };
+
+        if (this.value == 1){
+          this.begin = this.get3MonthBefor();
+          this.end = new Date().Format("yyyy-MM-dd");
+          //再次请求数据
+          this.currentPage = 1;
+          this.getData()
+        }else if (this.value == 2){
+          this.begin = '2018-01-01';
+          this.end = new Date().Format("yyyy-MM-dd");
+          //再次请求数据
+          this.currentPage = 1;
+          this.getData()
+        }else {
+          this.begin = '2017-01-01';
+          this.end = '2017-12-31';
+          //再次请求数据
+          this.currentPage = 1;
+          this.getData()
+        }
+
       }
     },
 
-
- /*   watch:{
-      value:()=>{
-
-        console.log(this.value)
-      }
-    },*/
-
-    components: {
-      myPaging
-    }
   }
 </script>
 <style scoped>
