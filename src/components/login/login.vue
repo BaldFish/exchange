@@ -226,8 +226,7 @@
                       data: querystring.stringify(loginFormData)
                     }).then(res => {
                       sessionStorage.setItem("loginInfo",JSON.stringify(res.data));
-                      this.$router.push({ path: '/home' })
-                      this.getIsLogin(true)
+                      this.$router.push({ path: '/home' });
                     }).catch(error => {
                       console.log(error);
                     })
@@ -274,7 +273,6 @@
                     }).then(res => {
                       sessionStorage.setItem("loginInfo",JSON.stringify(res.data));
                       this.$router.push({ path: '/home' })
-                      this.getIsLogin(true)
                     }).catch(error => {
                       console.log(error);
                     })

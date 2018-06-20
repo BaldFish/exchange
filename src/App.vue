@@ -3,16 +3,16 @@
     <div class="head-wrap">
       <div class="head">
         <a href="/">欢迎来到 可信链 ！</a>
-        <div class="no_login" v-if="!login">
+        <div class="no_login" v-if="">
           <a href="#/login">请登录</a>
           <a href="#/register">免费注册</a>
         </div>
-        <div class="login" v-if="login">
-          <div>111111</div>
-          <ul>
+        <div class="login" v-if=""  @mouseleave="leaveUl">
+          <div @click.capture="toggle">111111 <img src="./down.png" alt=""></div>
+          <ul v-if="switchover">
             <li><a href="#/personalAssets">个人中心</a></li>
-            <li><a href="#/personalAssets">安全中心</a></li>
-            <li>退出</li>
+            <li><a href="#/securityCenter">安全中心</a></li>
+            <li @click="dropOut">退出</li>
           </ul>
         </div>
         
@@ -71,7 +71,7 @@
     data() {
       return {
         isRouterAlive: true,
-        a:this.login
+        switchover:false,
       }
     },
     computed: {
@@ -88,9 +88,6 @@
     },
     watch: {
       login:function () {
-        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-          this.getIsLogin(true)
-        }
       }
     },
     methods: {
@@ -102,6 +99,8 @@
       },
       dropOut(command){
       },
+      toggle(){this.switchover=!this.switchover},
+      leaveUl(){this.switchover=false},
       acquireUserInfo(){
         axios({
           method: "GET",
@@ -135,6 +134,7 @@
     min-width 1212px
     height: 34px;
     background-color: #e5e5e5;
+    z-index:9999;
     .head {
       box-sizing: border-box
       width: 1212px;
@@ -142,7 +142,6 @@
       text-align right
       line-height 34px
       a {
-        //margin-left 30px
         color: #666666;
       }
       .no_login{
@@ -154,9 +153,25 @@
         }
       }
       .login{
-        //display inline-block
+        display inline-block
         cursor pointer
         width 160px
+        position relative
+        ul{
+          background-color #ffffff
+          position absolute
+          top 34
+          right 0
+          text-align center
+          width 86px
+          color #666666
+          li:hover{
+            color #c6351e
+            a{
+              color #c6351e
+            }
+          }
+        }
       }
     }
   }
