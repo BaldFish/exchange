@@ -3,12 +3,12 @@
     <div class="head-wrap">
       <div class="head">
         <a href="/">欢迎来到 可信链 ！</a>
-        <div class="no_login" v-if="">
+        <div class="no_login" v-if="!isLogin">
           <a href="#/login">请登录</a>
           <a href="#/register">免费注册</a>
         </div>
-        <div class="login" v-if=""  @mouseleave="leaveUl">
-          <div @click.capture="toggle">111111 <img src="./down.png" alt=""></div>
+        <div class="login" v-if="isLogin"  @mouseleave="leaveUl">
+          <div @click.capture="toggle">{{userName}} <img src="./down.png" alt=""></div>
           <ul v-if="switchover">
             <li><a href="#/personalAssets">个人中心</a></li>
             <li><a href="#/securityCenter">安全中心</a></li>
@@ -72,22 +72,24 @@
       return {
         isRouterAlive: true,
         switchover:false,
+        isLogin:false,
+        userName:"",
       }
     },
-    computed: {
-      login:function(){
-        return this.$store.state.isLogin
-      },
-      userName(){
-        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-          return JSON.parse(sessionStorage.getItem("loginInfo")).user_id.substr(3,3)+"***"+JSON.parse(sessionStorage.getItem("loginInfo")).user_id.substr(10,4)
-        }else{
-          return ""
-        }
+    beforeMount(){
+      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+        this.isLogin=true;
+        this.userName=JSON.parse(sessionStorage.getItem("userName")).phone
+      }else{
+        this.isLogin=false
       }
     },
-    watch: {
-      login:function () {
+    beforeUpdate(){
+      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+        this.isLogin=true;
+        this.userName=JSON.parse(sessionStorage.getItem("userName")).phone
+      }else{
+        this.isLogin=false
       }
     },
     methods: {
@@ -98,26 +100,14 @@
         })
       },
       dropOut(command){
+        sessionStorage.removeItem('loginInfo');
+        sessionStorage.removeItem('userInfo');
+        sessionStorage.removeItem('userName');
+        this.switchover=false;
+        location.reload()
       },
       toggle(){this.switchover=!this.switchover},
       leaveUl(){this.switchover=false},
-      acquireUserInfo(){
-        axios({
-          method: "GET",
-          url: `${baseURL}/v1/users/${this.userId}`,
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }).then((res) => {
-          this.userName=res.data.phone.substr(3,3)+"***"+res.data.phone.substr(10,4);
-          return this.userName
-        }).catch((err) => {
-          console.log(err);
-        });
-      },
-      getIsLogin(val){
-        this.$store.commit("changeIsLogin",val);
-      },
     }
   }
 </script>

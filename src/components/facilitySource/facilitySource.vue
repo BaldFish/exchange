@@ -37,7 +37,7 @@
         <a href="#/facilityDetails" @click="getFacilityDetails"><p class="asset_details">案例详情</p></a>
         <a href="javascript:void(0)" @click="buy(facilityDetails.Id)"><p class="buy">一键购买</p></a>
       </div>
-      <div class="transfer_record use_record">
+      <div class="use_record">
         <span>资产使用记录</span>
         <ul v-for="(item,index) of usageRecord" :key="item.id">
           <li>
@@ -382,7 +382,41 @@
         }
       }
       .use_record {
+        box-sizing border-box
+        min-height 218px
+        padding 20px 30px
+        background-color #ffffff
+        border 1px solid #bfbfbf;
+        margin-top 30px
         margin-bottom 70px
+        span {
+          display inline-block
+          font-size 18px
+          //height 18px
+          color #000000
+          margin-bottom 10px
+        }
+        ul {
+          padding 8px 0
+          li {
+            font-size 0
+            padding 2px 0
+            span {
+              display inline-block
+              font-size 16px
+              vertical-align top
+              color: #666666;
+              margin-bottom 0px
+              width 900px
+              word-break: break-all;
+              word-wrap: break-word;
+            }
+            span:first-child {
+              width 86px
+              color: #333333;
+            }
+          }
+        }
       }
     }
   }

@@ -139,6 +139,7 @@
         facilityDetails: {},
         next: 1,
         mallId: "5b18e49ea4cc0d14ed0a3a1c",
+        timer:""
       }
     },
     mounted() {
@@ -148,26 +149,23 @@
         if (JSON.parse(sessionStorage.getItem("buyInfoObj"))) {
           this.buyInfoObj = JSON.parse(sessionStorage.getItem("buyInfoObj"));
           this.buyInfo = this.buyInfoObj.buyInfo;
-          this.assetId = this.buyInfo.Assetid
           this.turnInfo = this.buyInfoObj.turnInfo;
-          console.log(this.buyInfoObj)
-          /*if(this.buyInfo.Apikey==='5a6be74a55aaf50001a5e250'){
-            this.acquireCaseDetails()
-          }else if(this.buyInfo.Apikey==='5ae04522cff7cb000194f2f4'){
-            this.acquireFacilityDetails()
-          }*/
+          this.assetId = this.buyInfo.Assetid;
         }
-        this.acquireUserInfo()
+        this.acquireUserInfo();
       }
-      console.log(this.next)
+    },
+    beforeRouteLeave(to,from,next){
+      clearTimeout(this.timer);
+      next()
     },
     methods: {
       notarize() {
         this.next = 2;
         var that = this;
-        /*var timer = window.setInterval(function () {
+        this.timer = window.setTimeout(function () {
           that.acquireOrderStatus()
-        }, 5000);*/
+        }, 5000);
       },
       acquireOrderStatus() {
         axios({
@@ -177,14 +175,13 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          console.log(res);
-          /*if (res.data.status === 1) {
-            window.clearInterval(timer);
-            this.next = 3
-          } else if (this.next === 2) {
-            window.clearInterval(timer);
-            this.next = 3
-          }*/
+          if (res.data.status === 1||res.data.status === 0) {
+            clearTimeout(this.timer);
+            this.notarize()
+          } else if (res.data.status === 2) {
+            clearTimeout(this.timer);
+            this.next=3
+          }
         }).catch((err) => {
           console.log(err);
         });
