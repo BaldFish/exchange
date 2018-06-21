@@ -93,6 +93,21 @@
       }
     },
     methods: {
+      /*turnCentre(event){
+        if(event.target.innerText==="个人中心"){
+          if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+            window.location.href="#/personalAssets"
+          }else{
+            alert("请先登录")
+          }
+        }else if(event.target.innerText==="安全中心"){
+          if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+            window.location.href="#/securityCenter"
+          }else{
+            alert("请先登录")
+          }
+        }
+      },*/
       reload() {
         this.isRouterAlive = false;
         this.$nextTick(() => {

@@ -1,7 +1,9 @@
 <template>
   <div class="topBox">.
     <div class="logo">
-      <a href="#/"><img src="./images/logo_head.png" alt="logo"></a>
+      <a href="/">
+        <p>Trusted Assets Blockchain</p>
+      </a>
     </div>
     <div class="search_box">
       <div class="search">
@@ -14,15 +16,15 @@
           </el-option>
         </el-select>
         <div class="line1"></div>
-        <el-input class="my_input" v-model="input" placeholder="请输入您要搜索的内容"></el-input>
+        <el-input class="my_input" v-model="input" placeholder="请输入您要搜索的内容" @change="search"></el-input>
         <div class="button" @click="search"></div>
       </div>
-      <!--<div class="keyword">-->
-        <!--<ul>-->
-          <!--<li>热门搜索：</li>-->
-          <!--<li>关键字</li>-->
-        <!--</ul>-->
-      <!--</div>-->
+<!--      <div class="keyword">
+        <ul>
+          <li>热门搜索：</li>
+          <li>关键字</li>
+        </ul>
+      </div>-->
     </div>
     <div class="favorite" @click="turnFavorite">
         <span class="s_text">收藏夹</span>
@@ -69,6 +71,17 @@
       }
     },
     methods: {
+      open() {
+        this.$confirm('此操作需要先登录, 是否登录?', '提示', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          window.location.href="#/login"
+        }).catch(() => {
+        });
+      },
       acquireFavoriteCount(){
         axios({
           method: "GET",
@@ -86,7 +99,11 @@
         this.input="";
       },
       turnFavorite(){
-        window.location.href="#/favorite"
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          window.location.href="#/favorite"
+        }else{
+          this.open()
+        }
       },
       search(val,int){
         let inputValue={};
@@ -126,7 +143,23 @@
     .logo {
       margin-top 30px
       margin-left 8px
-      margin-right 116px
+      margin-right 50px
+      a{
+        display inline-block
+        color #d92000
+        font-size 10px
+        background-image: url('./images/logo.png');
+        background-position: top left;
+        background-repeat: no-repeat;
+        width 216px
+        height 58px
+        position relative
+        p{
+          position absolute
+          right 0
+          bottom 0
+        }
+      }
     }
     .search_box {
       width 680px

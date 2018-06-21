@@ -5,8 +5,8 @@
       <div class="site">
         <ul>
           <li>当前位置 ：</li>
-          <li>首页></li>
-          <li>维修设备></li>
+          <li><a href="#/">首页></a></li>
+          <li><a href="#/moreFacility">维修设备></a></li>
           <li>{{facilitySourceTitle}}</li>
         </ul>
       </div>
@@ -104,6 +104,17 @@
       this.acquireFacilityDetails();
     },
     methods: {
+      open() {
+        this.$confirm('此操作需要先登录, 是否登录?', '提示', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          window.location.href="#/login"
+        }).catch(() => {
+        });
+      },
       toggleLike(val){
         if(sessionStorage.getItem("loginInfo")){
           let likeInfo=this.facilityDetails;
@@ -142,7 +153,7 @@
             });
           }
         }else {
-          alert("请先登录")
+          this.open()
         }
       },
       acquireFacilitySource() {
@@ -237,7 +248,7 @@
             console.log(err);
           })
         }else{
-          alert("请先登录")
+          this.open()
         }
       },
       getBuy(val){
@@ -270,6 +281,9 @@
             vertical-align top
             display inline-block
             font-size 20px
+            a{
+              color #ffffff
+            }
           }
           li:last-child {
             width 500px

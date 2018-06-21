@@ -111,21 +111,21 @@
         </thead>
         <tbody>
         <tr class="img_tbody">
-          <td  v-if="item.apiname == '共享维修设备'">
-            <img src="" alt="">
+          <td  v-if="item.apiname === '共享维修设备'">
+            <img :src="item.asseturl" alt="">
             <p>{{item.assetname}}</p>
           </td>
-          <td v-if="item.apiname == '案例'">
+          <td v-if="item.apiname === '案例'">
             <p class="no_img_p">{{item.assetname}}</p>
           </td>
           <td>{{item.sell_type}}</td>
           <td>{{item.split_count}}</td>
           <td>￥{{item.price}}</td>
-          <td class="img_lastTd" v-if="item.orderStatus == 2">
+          <td class="img_lastTd" v-if="item.orderStatus === 2">
             <p>已完成</p>
             <router-link to=""><p>查阅</p></router-link>
           </td>
-          <td class="no_img_lastTd" v-if="item.orderStatus == 1">
+          <td class="no_img_lastTd" v-if="item.orderStatus === 1">
             <p>未完成</p>
             <router-link to="/checkOrder">去支付 ></router-link>
           </td>
@@ -174,7 +174,7 @@
         dataList:'',
         userInfo:'',
         total: 10,//总页数
-        limit: 1,//每页显示多少条
+        limit: 10,//每页显示多少条
         currentPage: 1,//当前页数
         begin: "",//开始时间
         end: "",//结束时间
@@ -202,6 +202,7 @@
           method: 'get',
           url: `${baseURL}/v1/order/list/${loginInfo.user_id}?page=${this.currentPage}&limit=${this.limit}&begin=${this.begin}&end=${this.end}`,
         }).then(res => {
+          console.log(res)
           this.dataList = res.data.data;
           this.total = res.data.count;
         }).catch(error => {

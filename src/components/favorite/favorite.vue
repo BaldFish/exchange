@@ -17,8 +17,8 @@
           <td colspan="5">维修案例</td>
         </tr>
         <tr class="content_tbody" v-for="(item,index) of caseList" :key="item._id">
-          <td>{{item.assetname}}</td>
-          <td>{{item.sell_type}}</td>
+          <td @click="turnDetails(item.Apikey,item.Assetid)">{{item.Assetname}}</td>
+          <td>{{item.SellType}}</td>
           <td class="quick_buy_td" @click="cancel(item._id)">
             <button>取消收藏</button>
           </td>
@@ -27,8 +27,8 @@
           <td colspan="5">维修设备</td>
         </tr>
         <tr class="content_tbody" v-for="(item,index) of facilityList" :key="item._id">
-          <td><span><img src="" alt=""></span>{{item.assetname}}</td>
-          <td>{{item.sell_type}}</td>
+          <td @click="turnDetails(item.Apikey,item.Assetid)"><span><img src="" alt=""></span>{{item.Assetname}}</td>
+          <td>{{item.SellType}}</td>
           <td class="quick_buy_td" @click="cancel(item._id)">
             <button>取消收藏</button>
           </td>
@@ -46,7 +46,7 @@
                      @current-change="handleCurrentChange">
       </el-pagination>
     </div>
-    <div class="no_assets_content"v-if="favoriteList.length===0">
+    <div class="no_assets_content" v-if="favoriteList.length===0">
       <div class="no_assets_box">
         <img src="./images/empty.png" alt="">
         <p>暂时没有资产</p>
@@ -59,6 +59,7 @@
   import axios from "axios";
   import "../../common/stylus/paging.styl";
   import {baseURL, cardURL} from '@/common/js/public.js';
+  
   export default {
     name: "favorite",
     components: {},
@@ -69,26 +70,26 @@
         currentPage: 1,
         favoriteList: [],
         userId: '',
-        id:"",
-        token:"",
+        id: "",
+        token: "",
       }
     },
-    computed:{
+    computed: {
       caseList: function () {
         return this.favoriteList.filter(function (value, index, array) {
-          return value.apikey==="5a6be74a55aaf50001a5e250"
+          return value.Apikey === "5a6be74a55aaf50001a5e250"
         })
       },
-      facilityList:function () {
+      facilityList: function () {
         return this.favoriteList.filter(function (value, index, array) {
-          return value.apikey==="5ae04522cff7cb000194f2f4"
+          return value.Apikey === "5ae04522cff7cb000194f2f4"
         })
       },
     },
     mounted() {
-      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-        this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+        this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
       }
       this.acquireFavoriteList();
     },
@@ -98,7 +99,7 @@
         this.acquireFavoriteList();
       },
       acquireFavoriteList() {
-        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+        if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
           axios({
             method: "GET",
             url: `${baseURL}/v1/shopcart/list/${this.userId}?page=${this.currentPage}&limit=${this.pageSize}`,
@@ -111,18 +112,18 @@
           }).catch((err) => {
             console.log(err);
           });
-        }else {
-          this.favoriteList =[]
+        } else {
+          this.favoriteList = []
         }
       },
-      cancel(val){
-        this.id=val;
+      cancel(val) {
+        this.id = val;
         axios({
           method: "DELETE",
-          url: `${baseURL}/v1/shopcart/${this.user_id}/${this.id}`,
+          url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            "X-Access-Token":this.token
+            "X-Access-Token": this.token
           }
         }).then((res) => {
           this.acquireFavoriteList();
@@ -131,8 +132,27 @@
           console.log(err);
         });
       },
-      subtractCollection(){
+      subtractCollection() {
         this.$store.commit("subtractCollection")
+      },
+      turnDetails(apiKey, assetId) {
+        if (apiKey === "5a6be74a55aaf50001a5e250") {
+          this.getCaseDetails(assetId);
+          window.location.href = "#/caseDetails"
+        } else if (apiKey === "5ae04522cff7cb000194f2f4") {
+          this.getFacilityDetails(assetId);
+          window.location.href = "#/facilityDetails"
+        }
+      },
+      getCaseDetails(val) {
+        this.$store.commit("changeCaseDetails", _.find(this.favoriteList, function (o) {
+          return o.Assetid === val
+        }));
+      },
+      getFacilityDetails(val) {
+        this.$store.commit("changeFacilityDetails", _.find(this.favoriteList, function (o) {
+          return o.Assetid === val
+        }));
       },
     }
   }
@@ -142,6 +162,7 @@
     width: 1078px;
     float: right;
   }
+  
   .nav_content_title {
     width: 1078px;
     height: 50px;
@@ -155,26 +176,31 @@
   .nav_content_title span {
     padding-left: 20px;
   }
+  
   .nav_content_table {
     margin-top: 12px;
     width: 1078px;
     background-color: #ffffff;
     border: solid 1px #bfbfbf;
   }
+  
   .content_thead {
     font-size: 16px;
     color: #222222;
     height: 50px;
     line-height: 50px;
   }
+  
   .content_thead th {
     width: 140px;
   }
+  
   .content_thead th:first-child {
     text-align: left;
     padding-left: 46px;
     width: 800px;
   }
+  
   .classify td {
     background-color: #f6f7fa;
     text-align: left;
@@ -183,9 +209,11 @@
     font-size: 16px;
     color: #222222;
   }
-  .content_tbody{
+  
+  .content_tbody {
     border-bottom: 1px solid #d2d2d2;
   }
+  
   .content_tbody td {
     font-size: 14px;
     color: #666666;
@@ -193,7 +221,8 @@
     height: 90px;
     vertical-align: middle;
   }
-  .content_tbody td span{
+  
+  .content_tbody td span {
     box-sizing: border-box;
     display: inline-block;
     width: 54px;
@@ -202,23 +231,28 @@
     border: solid 1px #bfbfbf;
     margin-right: 40px;
   }
-  .content_tbody td span img{
+  
+  .content_tbody td span img {
     vertical-align: middle;
     position: relative;
     top: 50%;
     transform: translateY(-50%);
   }
-  .content_tbody td:first-child{
+  
+  .content_tbody td:first-child {
     text-align: left;
     padding-left: 46px;
     cursor: pointer;
   }
+  
   tbody tr:first-child {
     border-top: 1px solid #d2d2d2;
   }
+  
   tbody tr:last-child {
     border-bottom: none;
   }
+  
   .quick_buy_td button {
     box-sizing: border-box;
     width: 80px;
@@ -232,8 +266,8 @@
     color: #c6351e;
     margin: 0 10px;
   }
-
-  .no_assets_content{
+  
+  .no_assets_content {
     margin-top: 12px;
     width: 1078px;
     height: 542px;
@@ -241,24 +275,28 @@
     border: solid 1px #bfbfbf;
     margin-bottom: 40px;
   }
-  .no_assets_box img{
+  
+  .no_assets_box img {
     float: left;
   }
-  .no_assets_box{
+  
+  .no_assets_box {
     width: 186px;
-    height:70px;
+    height: 70px;
     margin: 0 auto;
     position: relative;
     top: 236px;
   }
-  .no_assets_box p{
+  
+  .no_assets_box p {
     font-size: 18px;
     color: #222222;
-    float:right;
+    float: right;
     padding: 14px 0;
     padding-top: 8px;
   }
-  .to_buy{
+  
+  .to_buy {
     font-size: 18px;
     color: #c6351e;
     margin-left: 12px;
