@@ -60,6 +60,13 @@
     <div class="check_container" v-if="next===1">
       <div class="check_info">
         <h2>使用可信币抵用</h2>
+        <div class="check_title_info">
+          <p v-if="walletAddress===''">未绑定钱包地址
+            <router-link to="/securityCenter" class="to_bind">去绑定 ></router-link>
+          </p>
+          <p v-if="walletAddress!==''">钱包地址：{{walletAddress}}</p>
+          <p>可信币：{{balance}}</p>
+        </div>
       </div>
       <div class="check_code check_confirm">
         <p>可使用元积分币，进行等价交易。
@@ -85,7 +92,7 @@
       <div class="check_code">
         <p>可使用元积分币，进行等价交易。</p><br>
         <p>提示：可用其它钱包地址支付</p>
-        <img class="check_code_img" :src="`data:image/png;base64,${turnInfo.png}`" alt="">
+        <img class="check_code_img" :src="`data:image/png;base64,${turnInfo.png}`" alt="" v-if="walletAddress!==''">
       </div>
     </div>
     
@@ -117,6 +124,7 @@
   import axios from "axios";
   import {baseURL, cardURL} from '@/common/js/public.js';
   import myTopSearch from "../topSearch/topSearch"
+  import {BigNumber} from 'bignumber.js';
   
   export default {
     name: "checkOrder",
@@ -131,7 +139,7 @@
         assetId: "",
         id: "",
         walletAddress: "",
-        balance: "",
+        balance: 0,
         buyInfoObj: {},
         buyInfo: {},
         turnInfo: {},
@@ -139,6 +147,8 @@
         facilityDetails: {},
         next: 1,
         mallId: "5b18e49ea4cc0d14ed0a3a1c",
+        timer:"",
+        phone:""
       }
     },
     mounted() {
@@ -148,26 +158,39 @@
         if (JSON.parse(sessionStorage.getItem("buyInfoObj"))) {
           this.buyInfoObj = JSON.parse(sessionStorage.getItem("buyInfoObj"));
           this.buyInfo = this.buyInfoObj.buyInfo;
-          this.assetId = this.buyInfo.Assetid
           this.turnInfo = this.buyInfoObj.turnInfo;
-          console.log(this.buyInfoObj)
-          /*if(this.buyInfo.Apikey==='5a6be74a55aaf50001a5e250'){
-            this.acquireCaseDetails()
-          }else if(this.buyInfo.Apikey==='5ae04522cff7cb000194f2f4'){
-            this.acquireFacilityDetails()
-          }*/
+          this.assetId = this.buyInfo.Assetid;
         }
-        this.acquireUserInfo()
+        this.acquireUserInfo();
       }
-      console.log(this.next)
+    },
+    beforeRouteLeave(to,from,next){
+      clearTimeout(this.timer);
+      this.next=1
+      next();
     },
     methods: {
+      open() {
+        this.$confirm('此操作需要先绑定钱包地址, 是否绑定?', '提示', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          window.location.href="#/securityCenter"
+        }).catch(() => {
+        });
+      },
       notarize() {
         this.next = 2;
-        var that = this;
-        /*var timer = window.setInterval(function () {
-          that.acquireOrderStatus()
-        }, 5000);*/
+        if(this.walletAddress){
+          var that = this;
+          this.timer = window.setTimeout(function () {
+            that.acquireOrderStatus()
+          }, 5000);
+        }else{
+          this.open()
+        }
       },
       acquireOrderStatus() {
         axios({
@@ -177,14 +200,16 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          console.log(res);
-          /*if (res.data.status === 1) {
-            window.clearInterval(timer);
-            this.next = 3
-          } else if (this.next === 2) {
-            window.clearInterval(timer);
-            this.next = 3
-          }*/
+          if (res.data.status === 1||res.data.status === 0) {
+            clearTimeout(this.timer);
+            this.notarize()
+          } else if (res.data.status === 2) {
+            clearTimeout(this.timer);
+            this.next=3
+          }
+          console.log(res.data.status);
+          console.log(res.data);
+          console.log(this.timer)
         }).catch((err) => {
           console.log(err);
         });
@@ -198,11 +223,11 @@
           }
         }).then((res) => {
           this.phone = res.data.phone.substr(3, 3) + "***" + res.data.phone.substr(10, 4);
-          this.walletAddress = res.data.wallet_address;
+          this.walletAddress =res.data.wallet_address;
           if (this.walletAddress) {
             this.acquireBalance()
           } else {
-            this.balance = ""
+            this.balance = 0
           }
         }).catch((err) => {
           console.log(err);
@@ -222,7 +247,11 @@
             "id": 1
           },
         }).then((res) => {
-          this.balance = res.data.result;
+          if(res.data.error){
+            this.balance=0
+          }else{
+            this.balance=new BigNumber(Number(res.data.result)).dividedBy(1e+18).toFormat(2);
+          }
         }).catch((err) => {
           console.log(err);
         });
@@ -237,7 +266,6 @@
             }
           }).then((res) => {
             this.buyInfo = res.data;
-            console.log(res)
           }).catch((err) => {
             console.log(err);
           })

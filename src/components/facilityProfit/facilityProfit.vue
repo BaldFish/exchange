@@ -1,88 +1,91 @@
 <template>
-  <div class="facilityProfit">
-    <my-topSearch></my-topSearch>
-    <div class="site_box">
-      <div class="site">
-        <ul>
-          <li>当前位置 ：</li>
-          <li>首页></li>
-          <li>维修案例></li>
-          <li>共享设备详情</li>
-        </ul>
-      </div>
-    </div>
-    <div class="details">
-      <div class="clearfix details_top">
-        <div class="fl facility_img">
-          <img src="./images/01.png" alt="">
+  <div>
+    <div class="facilityProfit">
+      <my-topSearch></my-topSearch>
+      <div class="site_box">
+        <div class="site">
+          <ul>
+            <li>当前位置 ：</li>
+            <li>首页></li>
+            <li>维修案例></li>
+            <li>共享设备详情</li>
+          </ul>
         </div>
-        <div class="fr facility_intro">
-          <h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4>
-          <div class="attestation">
-            <span class="person">认证个人</span>
-            <span class="trust">高可信</span>
+      </div>
+      <div class="details">
+        <div class="clearfix details_top">
+          <div class="fl facility_img">
+            <img src="./images/01.png" alt="">
           </div>
-          <div class="dislike">收藏</div>
-          <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
-          <div class="intro_list">
-            <ul>
-              <li>
-                <span>资产所属人</span>
-                <span class="holder">：0X32345674342....1234567890</span>
-              </li>
-              <li>
-                <span>权益</span>
-                <span>：查阅权</span>
-              </li>
-              <li>
-                <span>每份价格</span>
-                <span>：139.00</span>
-              </li>
-              <li>
-                <span>拆分剩余份数</span>
-                <span>：30/234</span>
-              </li>
-              <li>
-                <span>拆分截止时间</span>
-                <span>：2018.03.06</span>
-              </li>
-            </ul>
-          </div>
-          <div class="intro_list intro_list_right">
-            <ul>
-              <li>
-                <span>收益起止时间</span>
-                <span class="holder">：2018年6月1日~2018年12月30日</span>
-              </li>
-              <li>
-                <span>收益方式</span>
-                <span>：月结息</span>
-              </li>
-              <li>
-                <span>设备ID</span>
-                <span>：String123456</span>
-              </li>
-              <li>
-                <span>发布时间</span>
-                <span>：2005.03.04</span>
-              </li>
-              <li>
-                <span>认购份数</span>
-                <span class="input-number">：
+          <div class="fr facility_intro">
+            <h4>奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可奔驰E20456785676540发动机怠速时抖动严重发动机严重动严严重发动重发动机有音可动机有音可</h4>
+            <div class="attestation">
+              <span class="person">认证个人</span>
+              <span class="trust">高可信</span>
+            </div>
+            <div class="dislike">收藏</div>
+            <a href="#/facilitySource"><p class="tracing">可信溯源</p></a>
+            <div class="intro_list">
+              <ul>
+                <li>
+                  <span>资产所属人</span>
+                  <span class="holder">：0X32345674342....1234567890</span>
+                </li>
+                <li>
+                  <span>权益</span>
+                  <span>：查阅权</span>
+                </li>
+                <li>
+                  <span>每份价格</span>
+                  <span>：139.00</span>
+                </li>
+                <li>
+                  <span>拆分剩余份数</span>
+                  <span>：30/234</span>
+                </li>
+                <li>
+                  <span>拆分截止时间</span>
+                  <span>：2018.03.06</span>
+                </li>
+              </ul>
+            </div>
+            <div class="intro_list intro_list_right">
+              <ul>
+                <li>
+                  <span>收益起止时间</span>
+                  <span class="holder">：2018年6月1日~2018年12月30日</span>
+                </li>
+                <li>
+                  <span>收益方式</span>
+                  <span>：月结息</span>
+                </li>
+                <li>
+                  <span>设备ID</span>
+                  <span>：String123456</span>
+                </li>
+                <li>
+                  <span>发布时间</span>
+                  <span>：2005.03.04</span>
+                </li>
+                <li>
+                  <span>认购份数</span>
+                  <span class="input-number">：
                   <el-input-number size="mini" v-model="num" :min="1" ></el-input-number>
                 </span>
-              </li>
-            </ul>
-            <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
+                </li>
+              </ul>
+              <a href="javascript:void(0)"><p class="buy">一键购买</p></a>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="intro_text">
-        <span>设备简介</span>
-        <p>容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内</p>
+        <div class="intro_text">
+          <span>设备简介</span>
+          <p>容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内容我也不知道啥内容也不知道啥内容我也不知道啥内</p>
+        </div>
       </div>
     </div>
   </div>
+  
 </template>
 
 <script>

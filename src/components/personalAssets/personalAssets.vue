@@ -73,8 +73,10 @@
 
 <script>
   import axios from "axios";
+  import _ from "lodash";
   import "../../common/stylus/paging.styl";
   import {baseURL, cardURL} from '@/common/js/public.js';
+  import {BigNumber} from 'bignumber.js';
   export default{
     name: "personalAssets",
     components: {},
@@ -88,7 +90,7 @@
         token:"",
         phone:"",
         walletAddress:"",
-        balance:"",
+        balance:0,
       }
     },
     computed:{
@@ -110,12 +112,24 @@
         this.acquireUserInfo();
         this.acquireAssetList();
       }else{
-        alert("请先登录")
+        //this.open()
       }
     },
     methods:{
+      open() {
+        this.$confirm('此操作需要先登录, 是否登录?', '提示', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          window.location.href="#/login"
+        }).catch(() => {
+        });
+      },
       handleCurrentChange(val){
         this.currentPage = val;
+        this.acquireAssetList();
       },
       acquireUserInfo(){
           axios({
@@ -127,11 +141,10 @@
           }).then((res) => {
             this.phone=res.data.phone.substr(3,3)+"***"+res.data.phone.substr(10,4);
             this.walletAddress=res.data.wallet_address;
-            console.log(this.walletAddress);
             if(this.walletAddress){
               this.acquireBalance()
             }else{
-              this.balance=""
+              this.balance=0
             }
           }).catch((err) => {
             console.log(err);
@@ -151,7 +164,11 @@
             "id":1
           },
         }).then((res) => {
-          this.balance=res.data.result;
+          if(res.data.error){
+            this.balance=0
+          }else{
+            this.balance=new BigNumber(Number(res.data.result)).dividedBy(1e+18).toFormat(2);
+          }
         }).catch((err) => {
           console.log(err);
         });
@@ -159,13 +176,17 @@
       acquireAssetList() {
         axios({
           method: "GET",
-          url: `${baseURL}/v1/order/list/${this.userId}?page=${this.currentPage}&limit=${this.pageSize}`,
+          url: `${baseURL}/v1/order/list/pay/${this.userId}?page=${this.currentPage}&limit=${this.pageSize}`,
           headers: {
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          this.total = res.count;
+          console.log(res.data.data);
+          this.total = res.data.count;
           this.assetList = res.data.data;
+          /*this.assetList = res.data.data.filter(function (o) {
+            return o.orderStatus===2
+          });*/
         }).catch((err) => {
           console.log(err);
         });

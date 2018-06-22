@@ -3,8 +3,19 @@
     <div class="head-wrap">
       <div class="head">
         <a href="/">欢迎来到 可信链 ！</a>
-        <a href="#/login">请登录</a>
-        <a href="#/register">免费注册</a>
+        <div class="no_login" v-if="!isLogin">
+          <a href="#/login">请登录</a>
+          <a href="#/register">免费注册</a>
+        </div>
+        <div class="login" v-if="isLogin"  @mouseleave="leaveUl">
+          <div @click.capture="toggle">{{userName}} <img src="./down.png" alt=""></div>
+          <ul v-if="switchover">
+            <li><a href="#/personalAssets">个人中心</a></li>
+            <li><a href="#/securityCenter">安全中心</a></li>
+            <li @click="dropOut">退出</li>
+          </ul>
+        </div>
+        
       </div>
     </div>
     <div class="main_wrap">
@@ -47,26 +58,71 @@
 
 <script>
   import "./common/stylus/index.styl";
-
+  import {baseURL, cardURL} from '@/common/js/public.js';
+  import axios from "axios";
+  
   export default {
     name: 'App',
-    provide(){
+    provide() {
       return {
-        reload:this.reload
+        reload: this.reload
       }
     },
-    data(){
-      return{
-        isRouterAlive:true
+    data() {
+      return {
+        isRouterAlive: true,
+        switchover:false,
+        isLogin:false,
+        userName:"",
       }
     },
-    methods:{
-      reload(){
+    beforeMount(){
+      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+        this.isLogin=true;
+        this.userName=JSON.parse(sessionStorage.getItem("userName")).phone
+      }else{
+        this.isLogin=false
+      }
+    },
+    beforeUpdate(){
+      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+        this.isLogin=true;
+        this.userName=JSON.parse(sessionStorage.getItem("userName")).phone
+      }else{
+        this.isLogin=false
+      }
+    },
+    methods: {
+      /*turnCentre(event){
+        if(event.target.innerText==="个人中心"){
+          if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+            window.location.href="#/personalAssets"
+          }else{
+            alert("请先登录")
+          }
+        }else if(event.target.innerText==="安全中心"){
+          if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+            window.location.href="#/securityCenter"
+          }else{
+            alert("请先登录")
+          }
+        }
+      },*/
+      reload() {
         this.isRouterAlive = false;
-        this.$nextTick( ()=>{
+        this.$nextTick(() => {
           this.isRouterAlive = true
         })
-      }
+      },
+      dropOut(command){
+        sessionStorage.removeItem('loginInfo');
+        sessionStorage.removeItem('userInfo');
+        sessionStorage.removeItem('userName');
+        this.switchover=false;
+        location.reload()
+      },
+      toggle(){this.switchover=!this.switchover},
+      leaveUl(){this.switchover=false},
     }
   }
 </script>
@@ -77,12 +133,13 @@
     display: flex;
     flex-direction: column;
   }
-
+  
   .head-wrap {
     width: 100%;
     min-width 1212px
     height: 34px;
     background-color: #e5e5e5;
+    z-index:9999;
     .head {
       box-sizing: border-box
       width: 1212px;
@@ -90,12 +147,40 @@
       text-align right
       line-height 34px
       a {
-        margin-left 30px
         color: #666666;
+      }
+      .no_login{
+        display inline-block
+        width 160px
+        a{
+          margin-left 28px
+          color: #666666;
+        }
+      }
+      .login{
+        display inline-block
+        cursor pointer
+        width 160px
+        position relative
+        ul{
+          background-color #ffffff
+          position absolute
+          top 34
+          right 0
+          text-align center
+          width 86px
+          color #666666
+          li:hover{
+            color #c6351e
+            a{
+              color #c6351e
+            }
+          }
+        }
       }
     }
   }
-
+  
   .main_wrap {
     flex: 1;
     box-sizing: border-box;
@@ -104,6 +189,7 @@
     min-width 1212px
     background-color #f3f3f3
   }
+  
   .footer-wrap {
     width 100%
     min-width 1212px

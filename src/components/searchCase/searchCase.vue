@@ -93,6 +93,17 @@
       }
     },
     methods: {
+      open() {
+        this.$confirm('此操作需要先登录, 是否登录?', '提示', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          window.location.href="#/login"
+        }).catch(() => {
+        });
+      },
       toggleLike(val){
         if(sessionStorage.getItem("loginInfo")){
           let likeInfo=_.find(this.searchCaseList,function (o) {
@@ -132,7 +143,7 @@
             });
           }
         }else {
-          alert("请先登录")
+          this.open()
         }
       },
       //获取搜索案例列表
@@ -209,7 +220,7 @@
             console.log(err);
           })
         }else{
-          alert("请先登录")
+          this.open()
         }
       },
       getBuy(val){
