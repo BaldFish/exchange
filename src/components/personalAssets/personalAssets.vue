@@ -176,17 +176,17 @@
       acquireAssetList() {
         axios({
           method: "GET",
-          url: `${baseURL}/v1/order/list/${this.userId}?page=${this.currentPage}&limit=${this.pageSize}`,
+          url: `${baseURL}/v1/order/list/pay/${this.userId}?page=${this.currentPage}&limit=${this.pageSize}`,
           headers: {
             "Content-Type": "application/json",
           }
         }).then((res) => {
           console.log(res.data.data);
           this.total = res.data.count;
-          //this.assetList = res.data.data;
-          this.assetList = res.data.data.filter(function (o) {
+          this.assetList = res.data.data;
+          /*this.assetList = res.data.data.filter(function (o) {
             return o.orderStatus===2
-          });
+          });*/
         }).catch((err) => {
           console.log(err);
         });
