@@ -31,6 +31,7 @@ const dictionary = {
       mobile: '手机号',
       mobileRight: '手机号',
       captcha_number:'图形验证码',
+      captcha_number_right:'图形验证码',
       code:'手机验证码',
       password:'密码',
       repassword:'重复密码',

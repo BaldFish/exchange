@@ -25,72 +25,6 @@
       </tr>
     </table>
 
-    <!-- <div class="nav_content_table">
-      <table>
-        <thead>
-        <tr class="no_img_thead">
-          <th>支付钱包地址：0X32480328*****47483279fa</th>
-          <th colspan="4" class="order_amount">
-            订单金额：
-            <span>￥309.00</span>
-          </th>
-        </tr>
-        <tr class="th_classify">
-          <th>维修案例
-            <span>订单号： 752642823580</span>
-          </th>
-          <th colspan="4">下单日期：2018-04-01 12:12:56</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr class="no_img_tbody">
-          <td>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功率德国车载吸尘你充电强力大功率</td>
-          <td>所有权</td>
-          <td>9</td>
-          <td>23456</td>
-          <td class="no_img_lastTd">
-            <p>未完成</p>
-            <router-link to="">去支付 ></router-link>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>-->
-
-    <!--<div class="nav_content_table">
-      <table>
-        <thead>
-        <tr class="img_thead">
-          <th>支付钱包地址：0X32480328*****47483279fa</th>
-          <th colspan="5" class="order_amount">
-            订单金额：
-            <span>￥309.00</span>
-          </th>
-        </tr>
-        <tr class="th_classify">
-          <th>维修设备
-            <span>订单号： 752642823580</span>
-          </th>
-          <th colspan="4">下单日期：2018-04-01 12:12:56</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr class="img_tbody">
-          <td>
-            <img src="item.asseturl" alt="">
-            <p>德国车载吸尘器无线12V汽车用小型家用手持式迷你充电强力大功率德国车载吸尘你充电强力大功率</p>
-          </td>
-          <td>所有权</td>
-          <td>9</td>
-          <td>23456</td>
-          <td class="img_lastTd">
-            <p>已完成</p>
-            <router-link to=""><p>查阅</p></router-link>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>-->
 
     <div class="nav_content_table" v-for="(item,index) in dataList">
       <table>
@@ -120,7 +54,10 @@
           </td>
           <td>{{item.sell_type}}</td>
           <td>{{item.split_count}}</td>
-          <td>￥{{item.price}}</td>
+          <td>
+            <img src="./images/currency.png" alt="" class="icon_currency">
+            {{item.price}}
+          </td>
           <td class="img_lastTd" v-if="item.orderStatus == 2">
             <p>已完成</p>
             <router-link to=""><p>查阅</p></router-link>
@@ -176,7 +113,7 @@
         total: 10,//总页数
         limit: 1,//每页显示多少条
         currentPage: 1,//当前页数
-        begin: "",//开始时间
+        begin: this.get3MonthBefor(),//开始时间
         end: "",//结束时间
       }
     },
@@ -443,6 +380,12 @@
   .no_img_p{
     padding-left: 46px;
     float: none !important;
+  }
+  .icon_currency{
+    position: relative;
+    top: 4px;
+    width: 13px;
+    height: 18px;
   }
 </style>
 <style>

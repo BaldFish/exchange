@@ -11,6 +11,7 @@ import myFacilitySource from '@/components/facilitySource/facilitySource'
 import myLogin from '@/components/login/login'
 import myForgetPassword from '@/components/forgetPassword/forgetPassword'
 import myRegister from '@/components/register/register'
+import myContract from '@/components/register/contract'
 import myTabs from '@/components/tabs/tabs'
 import myFavorite from '@/components/favorite/favorite'
 import myPersonalAssets from '@/components/personalAssets/personalAssets'
@@ -82,6 +83,11 @@ export default new Router({
       path: '/register',
       name: 'register',
       component: myRegister
+    },
+    {
+      path: '/contract',
+      name: 'contract',
+      component: myContract
     },
     {
       path: '/tabs',

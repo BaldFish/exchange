@@ -13,7 +13,7 @@
           <td><img src="./images/adopt.png" alt=""></td>
           <td>登录密码</td>
           <td>互联网账号存在被盗风险，建议您定期更改密码以保护账户安全</td>
-          <td @click="modifyPassword = true">修改</td>
+          <td @click="openModalPwd">修改</td>
         </tr>
         <tr>
           <td><img src="./images/adopt.png" alt=""></td>
@@ -28,19 +28,19 @@
           <td>实名认证</td>
           <td>用于提升账号的安全性和信任级别</td>
           <td v-if="userInfo.authentication == 2">已认证</td>
-          <td v-else @click="realNameAuthentication = true" class="red_set">设置</td>
+          <td v-else @click="openModalRealNameAuth" class="red_set">设置</td>
         </tr>
         <tr v-if="!userInfo.wallet_address">
           <td><img src="./images/not.png" alt=""></td>
           <td>钱包地址</td>
           <td>绑定您的钱包地址后，可信币才能显示出来</td>
-          <td class="red_set" @click="dialogFormVisible = true">设置</td>
+          <td class="red_set" @click="openModalBindWallet">设置</td>
         </tr>
         <tr v-else>
           <td><img src="./images/adopt.png" alt=""></td>
           <td>钱包地址</td>
           <td>钱包地址：{{userInfo.wallet_address}}</td>
-          <td @click="dialogFormVisible2 = true">修改</td>
+          <td @click="openModalModifyWallet">修改</td>
         </tr>
         </tbody>
       </table>
@@ -49,14 +49,14 @@
     <div class="safe_dialog">
 
       <el-dialog title="修改登录密码" :visible.sync="modifyPassword">
-        <el-form :model="formPwd">
-          <el-form-item label="旧密码" :label-width="formLabelWidth">
+        <el-form :model="formPwd" :rules="rules" ref="formPwd">
+          <el-form-item label="旧密码" :label-width="formLabelWidth" prop="old">
             <el-input v-model="formPwd.old" auto-complete="off" type="password"></el-input>
           </el-form-item>
-          <el-form-item label="新密码" :label-width="formLabelWidth">
+          <el-form-item label="新密码" :label-width="formLabelWidth" prop="new">
             <el-input v-model="formPwd.new" auto-complete="off" type="password"></el-input>
           </el-form-item>
-          <el-form-item label="重复密码" :label-width="formLabelWidth">
+          <el-form-item label="重复密码" :label-width="formLabelWidth" prop="renew">
             <el-input v-model="formPwd.renew" auto-complete="off" type="password"></el-input>
           </el-form-item>
         </el-form>
@@ -75,14 +75,14 @@
           <p class="title_p2">认证后，可提升账号安全等级，进行账号申诉等操作</p>
         </div>
         <div style="clear: both"></div>
-        <el-form :model="formAuth">
+        <el-form :model="formAuth" :rules="rules" ref="formAuth">
           <el-form-item label="证件类型：" :label-width="formLabelWidth" class="first_label">
             <span>身份证</span>
           </el-form-item>
-          <el-form-item label="真实姓名" :label-width="formLabelWidth">
+          <el-form-item label="真实姓名" :label-width="formLabelWidth" prop="realname">
             <el-input v-model="formAuth.realname" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="身份证号" :label-width="formLabelWidth">
+          <el-form-item label="身份证号" :label-width="formLabelWidth" prop="idcard" :error="errorMsg">
             <el-input v-model="formAuth.idcard" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
@@ -92,35 +92,37 @@
       </el-dialog>
 
       <el-dialog title="修改绑定手机" :visible.sync="phoneVerification">
-        <el-form :model="formPhone">
-          <div v-if="bindPhone">
+        <el-form :model="formPhone" :rules="rules" ref="formPhone">
+          <div v-show="bindPhone">
             <el-form-item label="绑定手机：" :label-width="formLabelWidth" class="first_label">
               <span>{{phone}}</span>
             </el-form-item>
-            <el-form-item label="图形验证码" :label-width="formLabelWidth">
-              <el-input auto-complete="off"></el-input>
+            <el-form-item label="图形验证码" :label-width="formLabelWidth" prop="captcha_number_next" :error="errorMsgCaptcha">
+              <el-input v-model="formPhone.captcha_number_next" auto-complete="off"></el-input>
               <img :src="captcha" @click="getCaptcha" alt="">
             </el-form-item>
-            <el-form-item label="短信验证码" :label-width="formLabelWidth">
+            <el-form-item label="短信验证码" :label-width="formLabelWidth" prop="code" :error="errorMsgCode">
               <el-input v-model="formPhone.code" auto-complete="off"></el-input>
-              <button type="button" @click="getCode(1)" class="send_btn">发送</button>
+              <button type="button" @click="getCode(1)" class="send_btn" v-if="codeValue">发送</button>
+              <div class="second_count" v-else>倒计时&nbsp;({{second}})</div>
             </el-form-item>
 
             <div slot="footer" class="dialog-footer padding_phone">
               <button @click="nextStep">下一步</button>
             </div>
           </div>
-          <div v-else>
-            <el-form-item label="新手机号" :label-width="formLabelWidth">
-              <el-input v-model="inputPhone" auto-complete="off"></el-input>
+          <div v-show="!bindPhone">
+            <el-form-item label="新手机号" :label-width="formLabelWidth" prop="inputPhone">
+              <el-input v-model="formPhone.inputPhone" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="图形验证码" :label-width="formLabelWidth">
+            <el-form-item label="图形验证码" :label-width="formLabelWidth" prop="captcha_number" :error="errorMsgCaptcha">
               <el-input v-model="formPhone.captcha_number" auto-complete="off"></el-input>
               <img :src="captcha" @click="getCaptcha" alt="">
             </el-form-item>
-            <el-form-item label="短信验证码" :label-width="formLabelWidth">
+            <el-form-item label="短信验证码" :label-width="formLabelWidth" prop="new_code" :error="errorMsgCode">
               <el-input v-model="formPhone.new_code" auto-complete="off"></el-input>
-              <button type="button" @click="getCode(2)" class="send_btn">发送</button>
+              <button type="button" @click="getCode(2)" class="send_btn" v-if="codeValue2">发送</button>
+              <div class="second_count" v-else>倒计时&nbsp;({{second2}})</div>
             </el-form-item>
 
             <div slot="footer" class="dialog-footer padding_phone">
@@ -131,11 +133,11 @@
       </el-dialog>
 
       <el-dialog title="绑定钱包地址" :visible.sync="dialogFormVisible">
-        <el-form :model="formBindWallet">
-          <el-form-item label="请输入钱包地址" :label-width="formLabelWidth">
+        <el-form :model="formBindWallet" :rules="rules" ref="formBindWallet" class="bindWallet">
+          <el-form-item label="请输入钱包地址" :label-width="formLabelWidth" prop="wallet_address">
             <el-input v-model="formBindWallet.wallet_address" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="验证码" :label-width="formLabelWidth">
+          <el-form-item label="验证码" :label-width="formLabelWidth" prop="captcha_number" :error="errorMsg">
             <el-input v-model="formBindWallet.captcha_number" auto-complete="off"></el-input>
             <img :src="captcha" @click="getCaptcha" alt="">
           </el-form-item>
@@ -147,18 +149,18 @@
       </el-dialog>
 
       <el-dialog title="修改钱包地址" :visible.sync="dialogFormVisible2">
-        <el-form :model="formBindWallet">
-          <el-form-item label="请输入钱包地址" :label-width="formLabelWidth">
-            <el-input v-model="formBindWallet.wallet_address" auto-complete="off"></el-input>
+        <el-form :model="formModifyWallet" :rules="rules" ref="formModifyWallet" class="bindWallet">
+          <el-form-item label="请输入钱包地址" :label-width="formLabelWidth" prop="wallet_address">
+            <el-input v-model="formModifyWallet.wallet_address" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="验证码" :label-width="formLabelWidth">
-            <el-input v-model="formBindWallet.captcha_number" auto-complete="off"></el-input>
+          <el-form-item label="验证码" :label-width="formLabelWidth" prop="captcha_number" :error="errorMsg">
+            <el-input v-model="formModifyWallet.captcha_number" auto-complete="off"></el-input>
             <img :src="captcha" @click="getCaptcha" alt="">
           </el-form-item>
         </el-form>
 
         <div slot="footer" class="dialog-footer">
-          <button @click="sunmitInputWallet">提交</button>
+          <button @click="sunmitModifyWallet">提交</button>
         </div>
       </el-dialog>
     </div>
@@ -177,6 +179,16 @@
     inject:['reload'],
     name: "securityCenter",
     data(){
+      //Element-ui自定义校验
+      var validateRenew = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入重复密码'));
+        } else if (value !== this.formPwd.new) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
       return {
         dialogFormVisible: false,
         dialogFormVisible2: false,
@@ -186,8 +198,14 @@
         bindPhone:true,
         captcha:"./images/code.png", //图形验证码--图片
         phone:'',
-        inputPhone:'',
         userInfo:'',
+        errorMsg:'',
+        errorMsgCaptcha:'',//图形验证码
+        errorMsgCode:'',//短信验证码
+        codeValue:true,//倒计时value
+        codeValue2:true,//倒计时value
+        second:60,// 发送验证码倒计时
+        second2:60,// 发送验证码倒计时
         formPwd: {
           old:'',
           new:'',
@@ -204,19 +222,56 @@
           new_phone:'',
           new_code:'',
           captcha_id:'',
-          captcha_number:''
+          captcha_number:'',
+          inputPhone:'', //新手机号
+          captcha_number_next:'',//手机验证，下一步modal，图形验证码输入的值
         },
         formBindWallet: {
           wallet_address:'',
           captcha_id:'',
           captcha_number:''
         },
-        formInputWallet: {
+        formModifyWallet: {
           wallet_address:'',
           captcha_id:'',
           captcha_number:''
         },
         formLabelWidth: '120px',
+        rules: {
+          old: [
+            { required: true, message: '请输入旧密码', trigger: 'blur' }
+          ],
+          new: [
+            { required: true, message: '请输入新密码', trigger: 'blur' }
+          ],
+          renew: [
+            { validator: validateRenew, trigger: 'blur' }
+          ],
+          wallet_address: [
+            { required: true, message: '请输入钱包地址', trigger: 'blur' }
+          ],
+          captcha_number: [
+            { required: true, message: '请输入图形验证码', trigger: 'blur' }
+          ],
+          captcha_number_next: [
+            { required: true, message: '请输入图形验证码', trigger: 'blur' }
+          ],
+          realname: [
+            { required: true, message: '请输入真实姓名', trigger: 'blur' }
+          ],
+          idcard: [
+            { required: true, message: '请输入身份证号', trigger: 'blur' }
+          ],
+          code: [
+            { required: true, message: '请输入短信验证码', trigger: 'blur' }
+          ],
+          new_code: [
+            { required: true, message: '请输入短信验证码', trigger: 'blur' }
+          ],
+          inputPhone: [
+            { required: true, message: '请输入新手机号', trigger: 'blur' }
+          ]
+        }
       }
     },
     mounted: function() {
@@ -233,32 +288,85 @@
       });
     },
     methods: {
+      //清除modal旧数据
+      openModalPwd(){
+        this.modifyPassword = true;
+        this.$refs.formPwd.resetFields();
+        this.formPwd ={
+          old:'',
+          new:'',
+          renew:''
+        }
+      },
+      openModalModifyWallet(){
+        this.dialogFormVisible2 = true;
+        this.$refs.formModifyWallet.resetFields();
+        this.getCaptcha();
+        this.formModifyWallet = {
+          wallet_address:'',
+          captcha_id:'',
+          captcha_number:''
+        }
+      },
+      openModalBindWallet(){
+        this.dialogFormVisible = true;
+        this.$refs.formBindWallet.resetFields();
+        this.getCaptcha();
+        this.formBindWallet = {
+          wallet_address:'',
+          captcha_id:'',
+          captcha_number:''
+        }
+      },
+      openModalRealNameAuth(){
+        this.realNameAuthentication = true;
+        this.$refs.formAuth.resetFields();
+        this.formAuth = {
+          type:1,
+          realname: '',
+          idcard:''
+        }
+      },
       //修改密码
       submitPwd(){
-        axios({
-          method: 'put',
-          url: `${baseURL}/v1/users/${this.userInfo._id}/password`,
-          data: querystring.stringify(this.formPwd)
-        }).then(res => {
-          console.log(res);
-          this.modifyPassword = false
-        }).catch(error => {
-          console.log(error);
-        });
+        this.$refs.formPwd.validate((valid) => {
+          if (valid) {
+            axios({
+              method: 'put',
+              url: `${baseURL}/v1/users/${this.userInfo._id}/password`,
+              data: querystring.stringify(this.formPwd)
+            }).then(res => {
+              console.log(res);
+              this.modifyPassword = false
+            }).catch(error => {
+              console.log(error);
+            })
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        })
       },
       //用户认证
       submitAuth(){
-        axios({
-          method: 'post',
-          url: `${baseURL}/v1/users/${this.userInfo._id}/authentication`,
-          data: querystring.stringify(this.formAuth)
-        }).then(res => {
-          console.log(res);
-          this.userInfo.authentication = 2;
-          this.realNameAuthentication = false
-        }).catch(error => {
-          console.log(error);
-        });
+        this.$refs.formAuth.validate((valid) => {
+          if (valid) {
+            //errorMsg修改成一样的值，vue没触发响应，每次清空
+            this.errorMsg = "";
+            axios({
+              method: 'post',
+              url: `${baseURL}/v1/users/${this.userInfo._id}/authentication`,
+              data: querystring.stringify(this.formAuth)
+            }).then(res => {
+              console.log(res);
+              this.userInfo.authentication = 2;
+              this.realNameAuthentication = false
+            }).catch(error => {
+              console.log(error);
+              this.errorMsg = "姓名身份证号不匹配";
+            })
+          }
+        })
       },
       //获取图片验证码--图片
       getCaptcha(){
@@ -269,6 +377,8 @@
         }).then(res => {
           this.captcha = `data:image/png;base64,${res.data.png}`;
           this.formPhone.captcha_id =res.data.captcha_id;
+          this.formBindWallet.captcha_id =res.data.captcha_id;
+          this.formModifyWallet.captcha_id =res.data.captcha_id;
         }).catch(error => {
           console.log(error);
         });
@@ -277,9 +387,31 @@
       getCode(id) {
         let phoneNum ="";
         if(id == 1){
+          //倒计时
+          let me = this;
+          me.codeValue = false;
+          let interval = window.setInterval(function() {
+            if ((me.second--) <= 0) {
+              me.second = 60;
+              me.codeValue = true;
+              window.clearInterval(interval);
+            }
+          }, 1000);
           phoneNum = this.userInfo.phone
         }else{
-          phoneNum = '+86'+this.inputPhone
+          if (this.formPhone.inputPhone){
+            //倒计时
+            let me = this;
+            me.codeValue2 = false;
+            let interval = window.setInterval(function() {
+              if ((me.second2--) <= 0) {
+                me.second2 = 60;
+                me.codeValue2 = true;
+                window.clearInterval(interval);
+              }
+            }, 1000);
+            phoneNum = '+86'+this.formPhone.inputPhone
+          }
         }
         axios({
           method: 'post',
@@ -294,67 +426,194 @@
           console.log(error);
         })
       },
-      //修改绑定手机
+      //修改绑定手机,清除modal旧数据
       openPhoneModal(){
         this.phoneVerification = true;
         this.bindPhone =  true;
-        this.getCaptcha()
+        this.getCaptcha();
+        this.$refs.formPhone.resetFields();
+        this.formPhone = {
+          phone: '',
+          code:'',
+          new_phone:'',
+          new_code:'',
+          captcha_id:'',
+          captcha_number:'',
+          captcha_number_next:'',
+          inputPhone:''
+        };
+        //倒计时初始化
+        this.codeValue = true;
+        this.codeValue2 = true;
+        this.second = 60;
+        this.second2 = 60;
       },
       nextStep(){
-        this.bindPhone =false;
+        //校验图形验证码input存在
+        this.$refs.formPhone.validateField('captcha_number_next',(captcha_number_next) => {
+          if (!captcha_number_next) {
+            //校验短信验证码input存在
+            this.$refs.formPhone.validateField('code',(code) => {
+              if (!code) {
+                //校验图形验证码正确
+                this.errorMsgCaptcha = '';
+                axios({
+                  method: 'get',
+                  url: `${baseURL}/v1/captcha/${this.formPhone.captcha_id}/code/${this.formPhone.captcha_number_next}`
+                }).then(res => {
+                  console.log(res);
+                  //校验短信验证码正确
+                  this.errorMsgCode = '';
+                  axios({
+                    method: 'get',
+                    url: `${baseURL}/v1/sms/${this.userInfo.phone}/code/${this.formPhone.code}`
+                  }).then(res => {
+                    console.log(res);
+
+                    this.bindPhone =false;
+
+                  }).catch(error => {
+                    console.log(error);
+                    this.errorMsgCode = '短信验证码错误'
+                  })
+                }).catch(error => {
+                  console.log(error);
+                  this.errorMsgCaptcha = '图形验证码错误'
+                })
+              } else {
+                console.log('error code!!');
+                return false;
+              }
+            })
+          } else {
+            console.log('error captcha_number_next!!');
+            return false;
+          }
+        })
+
+
+
       },
       submitPhone(){
         this.formPhone.phone = this.userInfo.phone;
-        this.formPhone.new_phone = '+86'+this.inputPhone;
+        this.formPhone.new_phone = '+86'+this.formPhone.inputPhone;
 
-        console.log(this.formPhone)
+        this.$refs.formPhone.validate((valid) => {
+          if (valid) {
+            //校验图形验证码正确
+            this.errorMsgCaptcha = '';
+            axios({
+              method: 'get',
+              url: `${baseURL}/v1/captcha/${this.formPhone.captcha_id}/code/${this.formPhone.captcha_number}`
+            }).then(res => {
+              console.log(res);
+              //校验短信验证码正确
+              this.errorMsgCode = '';
+              axios({
+                method: 'get',
+                url: `${baseURL}/v1/sms/+86${this.formPhone.inputPhone}/code/${this.formPhone.new_code}`
+              }).then(res => {
+                console.log(res);
 
-        axios({
-          method: 'post',
-          url: `${baseURL}/v1/users/${this.userInfo._id}/phone`,
-          data: querystring.stringify(this.formPhone)
-        }).then(res => {
-          console.log(res);
-          this.phoneVerification = false;
-          ///location.reload();
-          this.reload()
-        }).catch(error => {
-          console.log(error);
+                axios({
+                  method: 'post',
+                  url: `${baseURL}/v1/users/${this.userInfo._id}/phone`,
+                  data: querystring.stringify(this.formPhone)
+                }).then(res => {
+                  console.log(res);
+                  this.phoneVerification = false;
+                  ///location.reload();
+                  this.reload()
+                }).catch(error => {
+                  console.log(error);
+                })
+
+
+              }).catch(error => {
+                console.log(error);
+                this.errorMsgCode = '短信验证码错误'
+              })
+            }).catch(error => {
+              console.log(error);
+              this.errorMsgCaptcha = '图形验证码错误'
+            })
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
         })
+
       },
 
       //绑定钱包地址
       sunmitBindWallet(){
-
-        axios({
-          method: 'post',
-          url: `${baseURL}/v1/users/${this.userInfo._id}/wallet_address/${this.formBindWallet.wallet_address}`,
-          data: querystring.stringify(this.formBindWallet)
-        }).then(res => {
-          console.log(res);
-          this.dialogFormVisible = false;
-          this.reload()
-        }).catch(error => {
-          console.log(error);
+        //校验input是否有值
+        this.$refs.formBindWallet.validate((valid) => {
+          if (valid) {
+            //校验图形验证码
+            //errorMsg修改成一样的值，vue没触发响应，每次清空
+            this.errorMsg = "";
+            axios({
+              method: 'get',
+              url: `${baseURL}/v1/captcha/${this.formBindWallet.captcha_id}/code/${this.formBindWallet.captcha_number}`
+            }).then(res => {
+              console.log(res);
+              axios({
+                method: 'post',
+                url: `${baseURL}/v1/users/${this.userInfo._id}/wallet_address/${this.formBindWallet.wallet_address}`,
+                data: querystring.stringify(this.formBindWallet)
+              }).then(res => {
+                console.log(res);
+                this.dialogFormVisible = false;
+                this.reload()
+              }).catch(error => {
+                console.log(error);
+              })
+            }).catch(error => {
+              console.log(error);
+              this.errorMsg = "图形验证码错误";
+              //this.$refs.formBindWallet.fields[1].error="图形验证码错误"
+            });
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
         })
-
       },
       //修改钱包地址
-      sunmitInputWallet(){
-
-       axios({
-         method: 'post',
-         url: `${baseURL}/v1/users/${this.userInfo._id}/wallet_address/${this.formBindWallet.wallet_address}`,
-         data: querystring.stringify(this.formBindWallet)
-       }).then(res => {
-         console.log(res);
-         this.dialogFormVisible2 = false;
-         this.reload()
-       }).catch(error => {
-        console.log(error);
-       })
-
-
+      sunmitModifyWallet(){
+        //校验input是否有值
+        this.$refs.formModifyWallet.validate((valid) => {
+          if (valid) {
+            //校验图形验证码
+            //errorMsg修改成一样的值，vue没触发响应，每次清空
+            this.errorMsg = "";
+            axios({
+              method: 'get',
+              url: `${baseURL}/v1/captcha/${this.formModifyWallet.captcha_id}/code/${this.formModifyWallet.captcha_number}`
+            }).then(res => {
+              console.log(res);
+              axios({
+                method: 'post',
+                url: `${baseURL}/v1/users/${this.userInfo._id}/wallet_address/${this.formModifyWallet.wallet_address}`,
+                data: querystring.stringify(this.formModifyWallet)
+              }).then(res => {
+                console.log(res);
+                this.dialogFormVisible2 = false;
+                this.reload()
+              }).catch(error => {
+                console.log(error);
+              })
+            }).catch(error => {
+              console.log(error);
+              this.errorMsg = "图形验证码错误";
+              //this.$refs.formModifyWallet.fields[1].error="图形验证码错误"
+            });
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        })
       }
 
 
@@ -463,7 +722,7 @@
     color: #c9402a;
   }
   .safe_dialog .el-form-item{
-    margin-bottom: 2px;
+    margin-bottom: 14px;
   }
   .safe_dialog .el-dialog__footer{
     padding: 20px;
@@ -560,5 +819,21 @@
     height: 34px;
     background: url("./images/not.png") no-repeat center;
     background-size: 100% 100%;
+  }
+  .bindWallet .el-form-item__label{
+    width: 122px !important;
+  }
+  .second_count{
+    background-color: #7d7d7d;
+    font-size: 14px;
+    color: #ffffff;
+    text-align: center;
+    line-height: 23px;
+    width: 78px;
+    height: 23px;
+    position: relative;
+    left: -80px;
+    top: 1px;
+    display: inline-block;
   }
 </style>

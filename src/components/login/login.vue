@@ -45,14 +45,14 @@
                       </li>
                       <li>
                         <i></i>
-                        <input type="text" placeholder="请输入验证码" v-model="captcha_number" v-validate="'required'" name='captcha_number' @blur="captchaError">
+                        <input type="text" placeholder="请输入验证码" v-model="captcha_number_right" v-validate="'required'" name='captcha_number_right' @blur="captchaErrorRight">
                         <img class="img_change_img" @click="getCaptcha" :src="captcha">
-                        <span v-show="errors.has('captcha_number')" class="error error_top">{{errors.first('captcha_number')}}</span>
-                        <span v-show="captchaNotice" class="error error_top">图形验证码错误</span>
+                        <span v-show="errors.has('captcha_number_right')" class="error error_top">{{errors.first('captcha_number_right')}}</span>
+                        <span v-show="captchaNoticeRight" class="error error_top">图形验证码错误</span>
                       </li>
                       <li>
                         <i></i>
-                        <input type="text" placeholder="请输入手机验证码" v-model="code" v-validate="'required'" name='code' @blur="codeError">
+                        <input type="text" placeholder="请输入手机验证码" v-model="code" v-validate="'required'" name='code' @blur="codeError" :disabled="isDisabled">
                         <div class="img_change_img get_code" @click="getCode" v-if="codeValue">获取验证码</div>
                         <div class="img_change_img count_down" v-else>倒计时（{{second}}）</div>
                         <span v-show="errors.has('code')" class="error">{{errors.first('code')}}</span>
@@ -84,13 +84,15 @@
           return {
             loginWay: true,
             codeValue:true,
+            isDisabled:true,
             captchaNotice:false,//校验图形码是否正确
+            captchaNoticeRight:false,//校验图形码是否正确
             codeNotice:false,//校验短信码是否正确
             second:60,// 发送验证码倒计时
             phoneLeft:"", //手机号
             phoneRight:"", //手机号
-            phone:"", //手机号
             captcha_number:"", //图形验证码
+            captcha_number_right:"", //图形验证码
             captcha_id:"", //图形验证码--ID
             captcha:"./images/code.png", //图形验证码--图片
             code:"", //短信验证码
@@ -136,37 +138,56 @@
               this.captcha_id =res.data.captcha_id;
               //校验图形验证码
               this.captchaError();
+              this.captchaErrorRight();
             }).catch(error => {
               console.log(error);
             });
           },
           //获取短信验证码
           getCode() {
-            if(this.phoneRight){
-              //倒计时
-              let me = this;
-              me.codeValue = false;
-              let interval = window.setInterval(function() {
-                if ((me.second--) <= 0) {
-                  me.second = 60;
-                  me.codeValue = true;
-                  window.clearInterval(interval);
+            this.$validator.validateAll({
+              mobileRight:this.phoneRight,
+              captcha_number_right:this.captcha_number_right,
+            }).then((result)=>{
+              //校验是否正确：图形验证码
+              if (this.captchaNoticeRight){
+                this.isDisabled = true;
+                return false
+              }else{
+                //校验input输入值
+                if(result){
+                  this.isDisabled = false;
+
+                  //倒计时
+                  let me = this;
+                  me.codeValue = false;
+                  let interval = window.setInterval(function() {
+                    if ((me.second--) <= 0) {
+                      me.second = 60;
+                      me.codeValue = true;
+                      window.clearInterval(interval);
+                    }
+                  }, 1000);
+                  //get短信验证码
+                  axios({
+                    method: 'post',
+                    url: `${baseURL}/v1/sms/code`,
+                    data: querystring.stringify({
+                      phone:"+86"+this.phoneRight, //手机号
+                      type:3 //1-注册，2-修改密码, 3-登录
+                    })
+                  }).then(res => {
+                    console.log(res)
+                  }).catch(error => {
+                    console.log(error);
+                  })
+
+                }else {
+                  this.isDisabled = true;
                 }
-              }, 1000);
-              //get短信验证码
-              axios({
-                method: 'post',
-                url: `${baseURL}/v1/sms/code`,
-                data: querystring.stringify({
-                  phone:"+86"+this.phoneRight, //手机号
-                  type:3 //1-注册，2-修改密码, 3-登录
-                })
-              }).then(res => {
-                console.log(res)
-              }).catch(error => {
-                console.log(error);
-              })
-            }
+              }
+            })
+
           },
           //校验图形验证码
           captchaError(){
@@ -183,6 +204,22 @@
               });
             }else{
               this.captchaNotice = false
+            }
+          },
+          captchaErrorRight(){
+            if(this.captcha_number_right){
+              axios({
+                method: 'get',
+                url: `${baseURL}/v1/captcha/${this.captcha_id}/code/${this.captcha_number_right}`
+              }).then(res => {
+                console.log(res);
+                this.captchaNoticeRight = false
+              }).catch(error => {
+                console.log(error);
+                this.captchaNoticeRight = true
+              });
+            }else{
+              this.captchaNoticeRight = false
             }
           },
           //校验短信验证码
@@ -213,9 +250,9 @@
                 captcha_number:this.captcha_number //图片验证码--图片
               };
               this.$validator.validateAll({
-                //mobile:this.phone,
-                //password:this.password,
-                //captcha_number:this.captcha_number
+                mobile:this.phoneLeft,
+                password:this.password,
+                captcha_number:this.captcha_number
               }).then((result)=>{
                 //校验是否正确：图形验证码
                 if (this.captchaNotice){
@@ -245,31 +282,16 @@
                 platform:1,
                 code:this.code, //短信验证码
                 captcha_id:this.captcha_id, //图片验证码ID
-                captcha_number:this.captcha_number //图片验证码--图片
+                captcha_number:this.captcha_number_right //图片验证码--图片
               };
 
-           /*   console.log(this.$validator.validate('mobile',this.phone))
-
-              this.$validator.validate('mobile',this.phone).then((result)=>{
-                console.log(result)
-              })
-
               this.$validator.validateAll({
-                phone   :this.phone,
-                password:this.password,
-                captcha_number:this.captcha_number
-                }).then((result)=>{
-                console.log(result)
-              })*/
-
-
-              this.$validator.validateAll({
-                //mobileRight:this.phone,
-                //password:this.password,
-                //captcha_number:this.captcha_number
+                mobileRight:this.phoneRight,
+                captcha_number_right:this.captcha_number_right,
+                code:this.code
               }).then((result)=>{
                 //校验是否正确：图形验证码、短信验证码
-                if (this.captchaNotice || this.codeNotice){
+                if (this.captchaNoticeRight || this.codeNotice){
                   return false
                 }else{
                   //校验input输入值
@@ -294,7 +316,7 @@
 
           }
 
-        },
+        }
 
 
     }
@@ -385,13 +407,14 @@
   .account-login li input{
     background-color: #f3f3f3;
     height: 24px;
-    width: 235px;
+    width: 328px;
     outline: none;
     position: relative;
     bottom: 17px;
+    -webkit-box-shadow: 0 0 0px 1000px #f3f3f3 inset !important;
   }
   .account-login li:nth-child(3) input{
-    width:150px;
+    width:210px;
   }
   .account-login li:nth-child(2) input{
     bottom: 15px;
@@ -476,7 +499,7 @@
     bottom: 17px;
   }
   .phone-login li:nth-child(2) input{
-    width:150px;
+    width:210px;
     bottom: 10px;
   }
   .get_code{

@@ -352,14 +352,16 @@
   .sec_input li input{
     background-color: #f3f3f3;
     height: 24px;
-    width: 150px;
+    width: 210px;
     outline: none;
     position: relative;
     bottom: 17px;
+    -webkit-box-shadow: 0 0 0px 1000px #f3f3f3 inset !important;
   }
   .sec_input li:nth-child(1) input{
     position: relative;
     top: -16px;
+    width:328px;
   }
   .sec_input li:nth-child(1) i{
     width: 19px;
@@ -445,6 +447,7 @@
   }
   .step_two input{
     top: -14px !important;
+    width:328px !important;
   }
   .step_three {
     margin-top: 60px;
@@ -475,8 +478,8 @@
   }
   .error_password{
     position: relative;
-    bottom: 14px;
-    left: 194px;
+    bottom: 33px;
+    left: 390px;
     color: #c6351e;
     display: inline-block;
   }

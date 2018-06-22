@@ -53,7 +53,9 @@
           <div class="contract">
             <input type="radio" @click="radioChange" :checked="isChecked">
             <i></i>
-            <span>我已阅读并同意《服务协议》</span>
+            <span>我已阅读并同意
+              <router-link to="/contract" target="_blank" class="contract_a">《服务协议》</router-link>
+            </span>
             <span v-show="showNotice" class="error error-contract">请勾选已阅读并同意服务协议</span>
           </div>
           <div :class="{ 'next_btn_top': showNotice, 'next_btn': !showNotice}" @click="nextStep(2)"><span>下一步</span></div>
@@ -442,14 +444,16 @@
   .sec_input li input{
     background-color: #f3f3f3;
     height: 24px;
-    width: 150px;
+    width: 210px;
     outline: none;
     position: relative;
     bottom: 17px;
+    -webkit-box-shadow: 0 0 0px 1000px #f3f3f3 inset !important;
   }
   .sec_input li:nth-child(1) input{
     position: relative;
     top: -16px;
+    width:328px;
   }
   .sec_input li:nth-child(1) i{
     width: 19px;
@@ -535,6 +539,7 @@
   }
   .step_two input{
     top: -14px !important;
+    width: 328px !important;
   }
   .step_three p{
     font-size: 22px;
@@ -601,6 +606,7 @@
   }
   .step_three_icon li:nth-child(2) input{
     top: -13px;
+    width:328px;
   }
   .skip_btn{
     width: 380px;
@@ -634,8 +640,8 @@
   }
   .error_password{
     position: relative;
-    bottom: 14px;
-    left: 194px;
+    bottom: 33px;
+    left: 390px;
     color: #c6351e;
     display: inline-block;
   }
@@ -658,9 +664,12 @@
   }
   .error_auth{
     position: relative;
-    bottom: 12px;
-    left: 194px;
+    bottom: 32px;
+    left: 390px;
     color: #c6351e;
     display: inline-block;
+  }
+  .contract_a{
+    color: #c7361e;
   }
 </style>
