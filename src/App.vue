@@ -24,7 +24,9 @@
     <div class="footer-wrap">
       <div class="footer">
         <div class="ft-box">
-          <img class="ft_logo" src="./common/images/logo_footer.png" alt="log">
+          <a href="/">
+            <p>Trusted Assets Blockchain</p>
+          </a>
         </div>
         <div class="ft-box">
           <span>资产服务</span>
@@ -206,9 +208,6 @@
         font-size 16px
         vertical-align top
         margin-right 66px
-        .ft_logo {
-          margin-top 38px
-        }
         span {
           padding-top 45px
           display block
@@ -249,6 +248,26 @@
       }
       .ft-box:last-child {
         margin-right -16px
+      }
+      .ft-box:first-child{
+        margin-right 42px
+        a{
+          display inline-block
+          color #d92000
+          font-size 10px
+          margin-top 38px
+          background-image: url('./common/images/logo_footer.png');
+          background-position: top left;
+          background-repeat: no-repeat;
+          width 240px
+          height 82px
+          position relative
+          p{
+            position absolute
+            right 0
+            bottom 0
+          }
+        }
       }
     }
   }
