@@ -74,6 +74,7 @@
   import axios from "axios";
   import myTopSearch from "../topSearch/topSearch"
   import {baseURL, cardURL} from '@/common/js/public.js';
+  const querystring = require('querystring');
   
   export default {
     name: "facilitySource",
@@ -231,22 +232,48 @@
           let buyInfo=this.facilityDetails;
           this.apiKey=buyInfo.Apikey;
           this.assetId=buyInfo.Assetid;
-          axios({
-            method: "POST",
-            url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
-            headers: {
-              "Content-Type": "application/json",
-              "X-Access-Token":this.token,
-            }
-          }).then((res) => {
-            let buyInfoObj={};
-            buyInfoObj.buyInfo=buyInfo;
-            buyInfoObj.turnInfo=res.data;
-            this.getBuy(buyInfoObj);
-            window.location.href="#/checkOrder"
-          }).catch((err) => {
-            console.log(err);
-          })
+          var data={};
+          if(this.facilityDetails.SellType==="收益权"){
+            data.nums=1;
+            axios({
+              method: "POST",
+              url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
+              data:querystring.stringify(data),
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token,
+              }
+            }).then((res) => {
+              let buyInfoObj={};
+              buyInfoObj.buyInfo=buyInfo;
+              buyInfoObj.buyInfo.Count=1;
+              buyInfoObj.turnInfo=res.data;
+              this.getBuy(buyInfoObj);
+              window.location.href="#/checkOrder"
+            }).catch((err) => {
+              console.log(err);
+            })
+          }else{
+            data.nums=1;
+            axios({
+              method: "POST",
+              url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
+              data:querystring.stringify(data),
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token,
+              }
+            }).then((res) => {
+              let buyInfoObj={};
+              buyInfoObj.buyInfo=buyInfo;
+              buyInfoObj.buyInfo.Count=1;
+              buyInfoObj.turnInfo=res.data;
+              this.getBuy(buyInfoObj);
+              window.location.href="#/checkOrder"
+            }).catch((err) => {
+              console.log(err);
+            })
+          }
         }else{
           this.open()
         }

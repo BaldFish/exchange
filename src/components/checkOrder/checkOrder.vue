@@ -48,14 +48,14 @@
           <td><img src="" alt=""></td>
           <td>{{buyInfo.Assetname}}</td>
           <td>{{buyInfo.SellType}}</td>
-          <td>1</td>
-          <td>{{buyInfo.Price}}</td>
+          <td>{{buyInfo.Count}}</td>
+          <td>{{total}}</td>
         </tr>
         </tbody>
       </table>
     </div>
     
-    <p class="order_amount">订单金额：<span>{{buyInfo.Price}}</span></p>
+    <p class="order_amount">订单金额：<span>{{total}}</span></p>
     
     <div class="check_container" v-if="next===1">
       <div class="check_info">
@@ -166,8 +166,13 @@
     },
     beforeRouteLeave(to,from,next){
       clearTimeout(this.timer);
-      this.next=1
+      this.next=1;
       next();
+    },
+    computed:{
+      total:function () {
+        return this.buyInfo.Price*this.buyInfo.Count
+      }
     },
     methods: {
       open() {
@@ -207,9 +212,6 @@
             clearTimeout(this.timer);
             this.next=3
           }
-          console.log(res.data.status);
-          console.log(res.data);
-          console.log(this.timer)
         }).catch((err) => {
           console.log(err);
         });
@@ -255,60 +257,6 @@
         }).catch((err) => {
           console.log(err);
         });
-      },
-      acquireCaseDetails() {
-        if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
-          axios({
-            method: "GET",
-            url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail?userid=${this.userId}`,
-            headers: {
-              "Content-Type": "application/json",
-            }
-          }).then((res) => {
-            this.buyInfo = res.data;
-          }).catch((err) => {
-            console.log(err);
-          })
-        } else {
-          axios({
-            method: "GET",
-            url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
-            headers: {
-              "Content-Type": "application/json",
-            }
-          }).then((res) => {
-            this.buyInfo = res.data;
-          }).catch((err) => {
-            console.log(err);
-          })
-        }
-      },
-      acquireFacilityDetails() {
-        if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
-          axios({
-            method: "GET",
-            url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail?userid=${this.userId}`,
-            headers: {
-              "Content-Type": "application/json",
-            }
-          }).then((res) => {
-            this.buyInfo = res.data
-          }).catch((err) => {
-            console.log(err);
-          })
-        } else {
-          axios({
-            method: "GET",
-            url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
-            headers: {
-              "Content-Type": "application/json",
-            }
-          }).then((res) => {
-            this.buyInfo = res.data
-          }).catch((err) => {
-            console.log(err);
-          })
-        }
       },
     },
   }

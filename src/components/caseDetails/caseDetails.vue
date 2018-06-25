@@ -57,6 +57,8 @@
   import axios from "axios";
   import myTopSearch from "../topSearch/topSearch"
   import {baseURL,cardURL} from '@/common/js/public.js';
+  const querystring = require('querystring');
+  
   export default {
     name: "caseDetails",
     data() {
@@ -172,16 +174,20 @@
           let buyInfo=this.caseDetails
           this.apiKey=buyInfo.Apikey;
           this.assetId=buyInfo.Assetid;
+          var data={};
+          data.nums=1;
           axios({
             method: "POST",
             url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
             headers: {
-              "Content-Type": "application/json",
+              "Content-Type": "application/x-www-form-urlencoded",
               "X-Access-Token":this.token,
-            }
+            },
+            data:querystring.stringify(data),
           }).then((res) => {
             let buyInfoObj={};
             buyInfoObj.buyInfo=buyInfo;
+            buyInfoObj.buyInfo.Count=1;
             buyInfoObj.turnInfo=res.data;
             this.getBuy(buyInfoObj);
             window.location.href="#/checkOrder"

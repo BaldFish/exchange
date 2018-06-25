@@ -29,7 +29,7 @@
         <tr class="content_tbody" v-for="(item,index) of caseList" :key="item._id">
           <td>{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
-          <td>1</td>
+          <td>{{item.count}}</td>
           <td>{{item.price}}</td>
           <td class="quick_buy_td">
             <button>查看</button>
@@ -41,7 +41,7 @@
         <tr class="content_tbody" v-for="(item,index) of facilityList" :key="item._id">
           <td><span><img src="" alt=""></span>{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
-          <td>1</td>
+          <td>{{item.count}}</td>
           <td>{{item.price}}</td>
           <td class="quick_buy_td">
             <button>查看</button>
@@ -111,8 +111,6 @@
         this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
         this.acquireUserInfo();
         this.acquireAssetList();
-      }else{
-        //this.open()
       }
     },
     methods:{
@@ -181,12 +179,8 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          console.log(res.data.data);
           this.total = res.data.count;
           this.assetList = res.data.data;
-          /*this.assetList = res.data.data.filter(function (o) {
-            return o.orderStatus===2
-          });*/
         }).catch((err) => {
           console.log(err);
         });

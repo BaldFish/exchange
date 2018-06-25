@@ -101,7 +101,7 @@
                 </li>
                 <li>
                   <span>拆分剩余份数</span>
-                  <span>：{{30}}/{{facilityDetails.SplitCount}}</span>
+                  <span>：{{restCount}}/{{splitCount}}</span>
                 </li>
                 <li>
                   <span>拆分截止时间</span>
@@ -152,6 +152,7 @@
   import axios from "axios";
   import myTopSearch from "../topSearch/topSearch"
   import {baseURL,cardURL} from '@/common/js/public.js';
+  const querystring = require('querystring');
   export default {
     name: "facilityDetails",
     data() {
@@ -165,7 +166,9 @@
         equities:"查阅权",
         num:1,
         min:1,
-        max:1
+        max:1,
+        restCount:1,
+        splitCount:1
       }
     },
     mounted() {
@@ -239,6 +242,11 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
+            if(res.data.SellType==="收益权"){
+              this.splitCount=res.data.SplitCount;
+              this.restCount=res.data.RestCount;
+              this.max=res.data.RestCount;
+            }
             res.data.Assetowner=res.data.Assetowner.substr(0,13)+"..."+res.data.Assetowner.substr(res.data.Assetowner.length-14,13);
             this.equities=res.data.SellType;
             this.facilityDetails=res.data;
@@ -275,22 +283,48 @@
           let buyInfo=this.facilityDetails;
           this.apiKey=buyInfo.Apikey;
           this.assetId=buyInfo.Assetid;
-          axios({
-            method: "POST",
-            url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
-            headers: {
-              "Content-Type": "application/json",
-              "X-Access-Token":this.token,
-            }
-          }).then((res) => {
-            let buyInfoObj={};
-            buyInfoObj.buyInfo=buyInfo;
-            buyInfoObj.turnInfo=res.data;
-            this.getBuy(buyInfoObj);
-            window.location.href="#/checkOrder"
-          }).catch((err) => {
-            console.log(err);
-          })
+          var data={};
+          if(this.facilityDetails.SellType==="收益权"){
+            data.nums=this.num;
+            axios({
+              method: "POST",
+              url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
+              data:querystring.stringify(data),
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token,
+              }
+            }).then((res) => {
+              let buyInfoObj={};
+              buyInfoObj.buyInfo=buyInfo;
+              buyInfoObj.buyInfo.Count=this.num;
+              buyInfoObj.turnInfo=res.data;
+              this.getBuy(buyInfoObj);
+              window.location.href="#/checkOrder"
+            }).catch((err) => {
+              console.log(err);
+            })
+          }else{
+            data.nums=1;
+            axios({
+              method: "POST",
+              url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token":this.token,
+              },
+              data:querystring.stringify(data),
+            }).then((res) => {
+              let buyInfoObj={};
+              buyInfoObj.buyInfo=buyInfo;
+              buyInfoObj.buyInfo.Count=1;
+              buyInfoObj.turnInfo=res.data;
+              this.getBuy(buyInfoObj);
+              window.location.href="#/checkOrder"
+            }).catch((err) => {
+              console.log(err);
+            })
+          }
         }else{
           this.open()
         }
