@@ -139,7 +139,6 @@
           method: 'get',
           url: `${baseURL}/v1/order/list/${loginInfo.user_id}?page=${this.currentPage}&limit=${this.limit}&begin=${this.begin}&end=${this.end}`,
         }).then(res => {
-          console.log(res)
           this.dataList = res.data.data;
           this.total = res.data.count;
         }).catch(error => {

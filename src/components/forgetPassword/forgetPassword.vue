@@ -184,7 +184,7 @@
               type:2 //1-注册，2-修改密码, 3-登录
             })
           }).then(res => {
-            console.log(res)
+
           }).catch(error => {
             console.log(error);
           })
@@ -197,7 +197,6 @@
             method: 'get',
             url: `${baseURL}/v1/captcha/${this.captcha_id}/code/${this.captcha_number}`
           }).then(res => {
-            console.log(res);
             this.captchaNotice = false
           }).catch(error => {
             console.log(error);
@@ -214,7 +213,6 @@
             method: 'get',
             url: `${baseURL}/v1/sms/+86${this.phone}/code/${this.code}`
           }).then(res => {
-            console.log(res);
             this.codeNotice = false
           }).catch(error => {
             console.log(error);
@@ -255,7 +253,6 @@
                 url: `${baseURL}/v1/phones/${loginFormData.phone}/password`,
                 data: querystring.stringify(loginFormData)
               }).then(res => {
-                console.log(res);
                 //进入下一步
                 this.stepTwo = false;
                 this.stepThree = true;

@@ -336,13 +336,11 @@
               url: `${baseURL}/v1/users/${this.userInfo._id}/password`,
               data: querystring.stringify(this.formPwd)
             }).then(res => {
-              console.log(res);
               this.modifyPassword = false
             }).catch(error => {
               console.log(error);
             })
           } else {
-            console.log('error submit!!');
             return false;
           }
         })
@@ -358,7 +356,6 @@
               url: `${baseURL}/v1/users/${this.userInfo._id}/authentication`,
               data: querystring.stringify(this.formAuth)
             }).then(res => {
-              console.log(res);
               this.userInfo.authentication = 2;
               this.realNameAuthentication = false
             }).catch(error => {
@@ -461,14 +458,13 @@
                   method: 'get',
                   url: `${baseURL}/v1/captcha/${this.formPhone.captcha_id}/code/${this.formPhone.captcha_number_next}`
                 }).then(res => {
-                  console.log(res);
                   //校验短信验证码正确
                   this.errorMsgCode = '';
                   axios({
                     method: 'get',
                     url: `${baseURL}/v1/sms/${this.userInfo.phone}/code/${this.formPhone.code}`
                   }).then(res => {
-                    console.log(res);
+
 
                     this.bindPhone =false;
 
@@ -506,23 +502,19 @@
               method: 'get',
               url: `${baseURL}/v1/captcha/${this.formPhone.captcha_id}/code/${this.formPhone.captcha_number}`
             }).then(res => {
-              console.log(res);
               //校验短信验证码正确
               this.errorMsgCode = '';
               axios({
                 method: 'get',
                 url: `${baseURL}/v1/sms/+86${this.formPhone.inputPhone}/code/${this.formPhone.new_code}`
               }).then(res => {
-                console.log(res);
 
                 axios({
                   method: 'post',
                   url: `${baseURL}/v1/users/${this.userInfo._id}/phone`,
                   data: querystring.stringify(this.formPhone)
                 }).then(res => {
-                  console.log(res);
                   this.phoneVerification = false;
-                  ///location.reload();
                   this.reload()
                 }).catch(error => {
                   console.log(error);
@@ -557,13 +549,11 @@
               method: 'get',
               url: `${baseURL}/v1/captcha/${this.formBindWallet.captcha_id}/code/${this.formBindWallet.captcha_number}`
             }).then(res => {
-              console.log(res);
               axios({
                 method: 'post',
                 url: `${baseURL}/v1/users/${this.userInfo._id}/wallet_address/${this.formBindWallet.wallet_address}`,
                 data: querystring.stringify(this.formBindWallet)
               }).then(res => {
-                console.log(res);
                 this.dialogFormVisible = false;
                 this.reload()
               }).catch(error => {
@@ -592,13 +582,11 @@
               method: 'get',
               url: `${baseURL}/v1/captcha/${this.formModifyWallet.captcha_id}/code/${this.formModifyWallet.captcha_number}`
             }).then(res => {
-              console.log(res);
               axios({
                 method: 'post',
                 url: `${baseURL}/v1/users/${this.userInfo._id}/wallet_address/${this.formModifyWallet.wallet_address}`,
                 data: querystring.stringify(this.formModifyWallet)
               }).then(res => {
-                console.log(res);
                 this.dialogFormVisible2 = false;
                 this.reload()
               }).catch(error => {
