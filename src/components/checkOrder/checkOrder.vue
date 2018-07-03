@@ -147,8 +147,8 @@
         facilityDetails: {},
         next: 1,
         mallId: "5b18e49ea4cc0d14ed0a3a1c",
-        timer:"",
-        phone:""
+        timer: "",
+        phone: ""
       }
     },
     mounted() {
@@ -164,14 +164,14 @@
         this.acquireUserInfo();
       }
     },
-    beforeRouteLeave(to,from,next){
+    beforeRouteLeave(to, from, next) {
       clearTimeout(this.timer);
-      this.next=1;
+      this.next = 1;
       next();
     },
-    computed:{
-      total:function () {
-        return this.buyInfo.Price*this.buyInfo.Count
+    computed: {
+      total: function () {
+        return this.buyInfo.Price * this.buyInfo.Count
       }
     },
     methods: {
@@ -182,18 +182,18 @@
           type: 'warning',
           center: true
         }).then(() => {
-          window.location.href="#/securityCenter"
+          window.location.href = "#/securityCenter"
         }).catch(() => {
         });
       },
       notarize() {
         this.next = 2;
-        if(this.walletAddress){
+        if (this.walletAddress) {
           var that = this;
           this.timer = window.setTimeout(function () {
             that.acquireOrderStatus()
           }, 5000);
-        }else{
+        } else {
           this.open()
         }
       },
@@ -205,12 +205,13 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          if (res.data.status === 1||res.data.status === 0) {
+          console.log(res.data.status)
+          if (res.data.status === 1 || res.data.status === 0) {
             clearTimeout(this.timer);
             this.notarize()
           } else if (res.data.status === 2) {
             clearTimeout(this.timer);
-            this.next=3
+            this.next = 3
           }
         }).catch((err) => {
           console.log(err);
@@ -225,7 +226,7 @@
           }
         }).then((res) => {
           this.phone = res.data.phone.substr(3, 3) + "***" + res.data.phone.substr(10, 4);
-          this.walletAddress =res.data.wallet_address;
+          this.walletAddress = res.data.wallet_address;
           if (this.walletAddress) {
             this.acquireBalance()
           } else {
@@ -249,10 +250,10 @@
             "id": 1
           },
         }).then((res) => {
-          if(res.data.error){
-            this.balance=0
-          }else{
-            this.balance=new BigNumber(Number(res.data.result)).dividedBy(1e+18).toFormat(2);
+          if (res.data.error) {
+            this.balance = 0
+          } else {
+            this.balance = new BigNumber(Number(res.data.result)).dividedBy(1e+18).toFormat(2);
           }
         }).catch((err) => {
           console.log(err);
@@ -431,8 +432,8 @@
   }
   
   .check_code_img {
-    width: 100px;
-    height: 100px;
+    width: 280px;
+    height: 280px;
     border: 1px solid #cccccc;
     display: inline-block;
     margin-top: 18px;

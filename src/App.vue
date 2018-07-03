@@ -7,7 +7,7 @@
           <a href="#/login">请登录</a>
           <a href="#/register">免费注册</a>
         </div>
-        <div class="login" v-if="isLogin"  @mouseleave="leaveUl">
+        <div class="login" v-if="isLogin" @mouseleave="leaveUl">
           <div @click.capture="toggle">{{userName}} <img src="./down.png" alt=""></div>
           <ul v-if="switchover">
             <li><a href="#/personalAssets">个人中心</a></li>
@@ -15,7 +15,6 @@
             <li @click="dropOut">退出</li>
           </ul>
         </div>
-        
       </div>
     </div>
     <div class="main_wrap">
@@ -73,58 +72,47 @@
     data() {
       return {
         isRouterAlive: true,
-        switchover:false,
-        isLogin:false,
-        userName:"",
+        switchover: false,
+        isLogin: false,
+        userName: "",
       }
     },
-    beforeMount(){
-      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-        this.isLogin=true;
-        this.userName=JSON.parse(sessionStorage.getItem("userName")).phone
-      }else{
-        this.isLogin=false
+    beforeMount() {
+      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+        this.isLogin = true;
+        this.userName = JSON.parse(sessionStorage.getItem("userName")).phone
+      } else {
+        this.isLogin = false
       }
     },
-    beforeUpdate(){
-      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-        this.isLogin=true;
-        this.userName=JSON.parse(sessionStorage.getItem("userName")).phone
-      }else{
-        this.isLogin=false
+    beforeUpdate() {
+      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+        this.isLogin = true;
+        this.userName = JSON.parse(sessionStorage.getItem("userName")).phone
+      } else {
+        this.isLogin = false
       }
     },
     methods: {
-      /*turnCentre(event){
-        if(event.target.innerText==="个人中心"){
-          if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-            window.location.href="#/personalAssets"
-          }else{
-            alert("请先登录")
-          }
-        }else if(event.target.innerText==="安全中心"){
-          if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-            window.location.href="#/securityCenter"
-          }else{
-            alert("请先登录")
-          }
-        }
-      },*/
       reload() {
         this.isRouterAlive = false;
         this.$nextTick(() => {
           this.isRouterAlive = true
         })
       },
-      dropOut(command){
+      dropOut(command) {
         sessionStorage.removeItem('loginInfo');
         sessionStorage.removeItem('userInfo');
         sessionStorage.removeItem('userName');
-        this.switchover=false;
+        this.switchover = false;
         location.reload()
       },
-      toggle(){this.switchover=!this.switchover},
-      leaveUl(){this.switchover=false},
+      toggle() {
+        this.switchover = !this.switchover
+      },
+      leaveUl() {
+        this.switchover = false
+      },
     }
   }
 </script>
@@ -141,7 +129,7 @@
     min-width 1212px
     height: 34px;
     background-color: #e5e5e5;
-    z-index:9999;
+    z-index: 9999;
     .head {
       box-sizing: border-box
       width: 1212px;
@@ -151,20 +139,20 @@
       a {
         color: #666666;
       }
-      .no_login{
+      .no_login {
         display inline-block
         width 160px
-        a{
+        a {
           margin-left 28px
           color: #666666;
         }
       }
-      .login{
+      .login {
         display inline-block
         cursor pointer
         width 160px
         position relative
-        ul{
+        ul {
           background-color #ffffff
           position absolute
           top 34
@@ -172,9 +160,9 @@
           text-align center
           width 86px
           color #666666
-          li:hover{
+          li:hover {
             color #c6351e
-            a{
+            a {
               color #c6351e
             }
           }
@@ -249,9 +237,9 @@
       .ft-box:last-child {
         margin-right -16px
       }
-      .ft-box:first-child{
+      .ft-box:first-child {
         margin-right 42px
-        a{
+        a {
           display inline-block
           color #d92000
           font-size 10px
@@ -262,7 +250,7 @@
           width 240px
           height 82px
           position relative
-          p{
+          p {
             position absolute
             right 0
             bottom 0
