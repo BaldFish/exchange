@@ -70,7 +70,6 @@
       </div>
       <div class="check_code check_confirm">
         <p>可使用元积分币，进行等价交易。
-          <router-link to="/securityCenter" class="to_bind">去绑定 ></router-link>
         </p>
         <br>
         <p>提示：可用其它钱包地址支付</p>
@@ -432,8 +431,8 @@
   }
   
   .check_code_img {
-    width: 280px;
-    height: 280px;
+    width: 100px;
+    height: 100px;
     border: 1px solid #cccccc;
     display: inline-block;
     margin-top: 18px;

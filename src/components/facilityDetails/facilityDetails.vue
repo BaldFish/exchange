@@ -130,7 +130,7 @@
                 <li>
                   <span>认购份数</span>
                   <span class="input-number">：
-                  <el-input-number size="mini" v-model="num" :min="min" :max="max"></el-input-number>
+                  <el-input-number size="mini" v-model="num" :min="min" :max="restCount"></el-input-number>
                 </span>
                 </li>
               </ul>
@@ -166,7 +166,6 @@
         equities:"查阅权",
         num:1,
         min:1,
-        max:1,
         restCount:1,
         splitCount:1
       }
@@ -243,10 +242,12 @@
             }
           }).then((res) => {
             if(res.data.SellType==="收益权"){
+              console.log(res.data)
               this.splitCount=res.data.SplitCount;
               this.restCount=res.data.RestCount;
               this.max=res.data.RestCount;
             }
+            console.log(res.data)
             res.data.Assetowner=res.data.Assetowner.substr(0,13)+"..."+res.data.Assetowner.substr(res.data.Assetowner.length-14,13);
             this.equities=res.data.SellType;
             this.facilityDetails=res.data;
