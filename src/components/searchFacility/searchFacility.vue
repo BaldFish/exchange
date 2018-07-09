@@ -5,8 +5,8 @@
       <div class="site">
         <ul>
           <li>当前位置 ：</li>
-          <li>首页></li>
-          <li>维修设备</li>
+          <li><a href="#/">首页></a></li>
+          <li><a href="#/moreFacility">维修设备></a></li>
         </ul>
       </div>
     </div>
@@ -152,6 +152,9 @@
             vertical-align top
             display inline-block
             font-size 20px
+            a{
+              color #ffffff
+            }
           }
         }
       }

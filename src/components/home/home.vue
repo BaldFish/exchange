@@ -19,6 +19,11 @@
             <a class="time" href="#/caseDetails" @click="getCaseDetails(item.Id)"><span>上架时间：</span>{{item.SellAt}}</a>
             <a class="equity" href="#/caseDetails" @click="getCaseDetails(item.Id)"><span>权益：</span>{{item.SellType}}</a>
           </div>
+          <div class="person">
+            <a href="#/caseDetails" @click="getCaseDetails(item.Id)">
+              <span>所属人：</span>{{item.Assetowner}}
+            </a>
+          </div>
           <div class="fault">
             <p>
               <a href="#/caseDetails" @click="getCaseDetails(item.Id)">
@@ -40,6 +45,11 @@
         <div class="fr fr_facility">
           <div class="fl facility_info" v-for="(item,index) of facilityList" :key="item.Id">
             <a href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><h4>{{item.Assetname}}</h4></a>
+            <div class="person">
+              <a href="#/caseDetails" @click="getFacilityDetails(item.Id)">
+                <span>所属人：</span>{{item.Assetowner}}
+              </a>
+            </div>
             <div class="putaway">
               <a class="time" href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><span>上架时间：</span>{{item.SellAt}}</a>
               <a class="equity" href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><span>权益：</span>{{item.SellType}}</a>
@@ -123,6 +133,7 @@
           }
         }).then((res) => {
           this.caseList=res.data.data
+          console.log(res.data)
         }).catch((err) => {
           console.log(err)
         })
@@ -281,6 +292,7 @@
             margin-right 43px
             background-repeat: no-repeat;
             background-position: top left;
+            line-height 22px
             span {
               color #222222;
               font-size 16px
@@ -293,24 +305,41 @@
             background-image: url('./images/Profit.png');
           }
         }
+        .person{
+          a{
+            display block
+            line-height 22px
+            padding-left 26px
+            background-image: url('./images/person.png');
+            background-repeat: no-repeat;
+            background-position: top left;
+            color #666666;
+            font-size 14px;
+            span{
+              color #222222;
+              font-size 16px
+            }
+          }
+        }
         .fault {
           p {
-            padding-top 10px
+            padding-top 4px
             width 562px
-            height 70px
+            height 54px
             line-height 18px
             a {
               color #666666;
               font-size 14px
+              display block
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 3;
+              overflow: hidden;
               span {
                 font-size 16px
                 color #222222;
               }
             }
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 4;
-            overflow: hidden;
           }
         }
         .price_box {
@@ -360,8 +389,28 @@
             -webkit-line-clamp: 2;
             overflow: hidden;
           }
+          .person{
+            a{
+              width 210px
+              display block
+              text-overflow:ellipsis;
+              white-space:nowrap;
+              overflow:hidden;
+              line-height 22px
+              padding-left 26px
+              background-image: url('./images/person.png');
+              background-repeat: no-repeat;
+              background-position: top left;
+              color #666666;
+              font-size 14px;
+              span{
+                color #222222;
+                font-size 16px
+              }
+            }
+          }
           .putaway {
-            margin-top 32px
+            margin-top 12px
             a {
               display block
               padding-left 26px
