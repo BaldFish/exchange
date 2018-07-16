@@ -132,8 +132,7 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          this.caseList=res.data.data
-          console.log(res.data)
+          this.caseList=res.data.data;
         }).catch((err) => {
           console.log(err)
         })
