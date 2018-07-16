@@ -19,7 +19,7 @@
             <a class="time" href="#/caseDetails" @click="getCaseDetails(item.Id)"><span>上架时间：</span>{{item.SellAt}}</a>
             <a class="equity" href="#/caseDetails" @click="getCaseDetails(item.Id)"><span>权益：</span>{{item.SellType}}</a>
           </div>
-          <div class="person">
+          <div class="belong">
             <a href="#/caseDetails" @click="getCaseDetails(item.Id)">
               <span>所属人：</span>{{item.Assetowner}}
             </a>
@@ -45,8 +45,8 @@
         <div class="fr fr_facility">
           <div class="fl facility_info" v-for="(item,index) of facilityList" :key="item.Id">
             <a href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><h4>{{item.Assetname}}</h4></a>
-            <div class="person">
-              <a href="#/caseDetails" @click="getFacilityDetails(item.Id)">
+            <div class="belong">
+              <a href="#/facilityDetails" @click="getFacilityDetails(item.Id)">
                 <span>所属人：</span>{{item.Assetowner}}
               </a>
             </div>
@@ -305,7 +305,7 @@
             background-image: url('./images/Profit.png');
           }
         }
-        .person{
+        .belong{
           a{
             display block
             line-height 22px
@@ -389,7 +389,7 @@
             -webkit-line-clamp: 2;
             overflow: hidden;
           }
-          .person{
+          .belong{
             a{
               width 210px
               display block

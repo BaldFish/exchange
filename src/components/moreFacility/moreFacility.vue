@@ -13,6 +13,11 @@
     <div class="facility_list">
       <div class="fl facility_info" v-for="(item,index) of facilityList" :key="item.Id">
         <a href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><h4>{{item.Assetname}}</h4></a>
+        <div class="belong">
+          <a href="#/facilityDetails" @click="getFacilityDetails(item.Id)">
+            <span>所属人：</span>{{item.Assetowner}}
+          </a>
+        </div>
         <div class="putaway">
           <a class="time" href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><span>上架时间：</span>{{item.SellAt}}</a>
           <a class="equity" href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><span>权益：</span>{{item.SellType}}</a>
@@ -171,8 +176,28 @@
           -webkit-line-clamp: 2;
           overflow: hidden;
         }
+        .belong{
+          a{
+            width 210px
+            display block
+            text-overflow:ellipsis;
+            white-space:nowrap;
+            overflow:hidden;
+            line-height 22px
+            padding-left 26px
+            background-image: url('./images/person.png');
+            background-repeat: no-repeat;
+            background-position: top left;
+            color #666666;
+            font-size 14px;
+            span{
+              color #222222;
+              font-size 16px
+            }
+          }
+        }
         .putaway {
-          margin-top 32px
+          margin-top 12px
           a {
             display block
             padding-left 26px

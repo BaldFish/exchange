@@ -22,6 +22,11 @@
           <a class="time" href="#/caseDetails" @click="getCaseDetails(item.Id)"><span>上架时间：</span>{{item.SellAt}}</a>
           <a class="equity" href="#/caseDetails" @click="getCaseDetails(item.Id)"><span>权益：</span>{{item.SellType}}</a>
         </div>
+        <div class="belong">
+          <a href="#/caseDetails" @click="getCaseDetails(item.Id)">
+            <span>所属人：</span>{{item.Assetowner}}
+          </a>
+        </div>
         <div class="fault">
           <p>
             <a href="#/caseDetails" @click="getCaseDetails(item.Id)">
@@ -321,6 +326,7 @@
             margin-right 43px
             background-repeat: no-repeat;
             background-position: top left;
+            line-height 22px
             span {
               color #222222;
               font-size 16px
@@ -333,24 +339,41 @@
             background-image: url('./images/Profit.png');
           }
         }
+        .belong{
+          a{
+            display block
+            line-height 22px
+            padding-left 26px
+            background-image: url('./images/person.png');
+            background-repeat: no-repeat;
+            background-position: top left;
+            color #666666;
+            font-size 14px;
+            span{
+              color #222222;
+              font-size 16px
+            }
+          }
+        }
         .fault {
           p {
-            padding-top 10px
-            width 878px
-            height 70px
+            padding-top 4px
+            width 562px
+            height 54px
             line-height 18px
             a {
               color #666666;
               font-size 14px
+              display block
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 3;
+              overflow: hidden;
               span {
                 font-size 16px
                 color #222222;
               }
             }
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 4;
-            overflow: hidden;
           }
         }
         .dislike {
