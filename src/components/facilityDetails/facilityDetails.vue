@@ -87,7 +87,7 @@
             <a href="#/facilitySource"  @click="getFacilitySource"><p class="tracing">可信溯源</p></a>
             <div class="intro_list">
               <ul>
-                <li style=''>
+                <li>
                   <span>资产所属人</span>
                   <span class="holder">：{{facilityDetails.Assetowner}}</span>
                 </li>
@@ -100,17 +100,25 @@
                   <span>：{{facilityDetails.Price}}</span>
                 </li>
                 <li>
-                  <span>拆分剩余份数</span>
+                  <span>已购份数</span>
                   <span>：{{restCount}}/{{splitCount}}</span>
                 </li>
                 <li>
-                  <span>拆分截止时间</span>
-                  <span>：{{facilityDetails.SplitExpire}}</span>
+                  <span>设备ID</span>
+                  <span>：{{facilityDetails.Id}}</span>
                 </li>
               </ul>
             </div>
             <div class="intro_list intro_list_right">
               <ul>
+                <li>
+                  <span>发布时间</span>
+                  <span>：{{facilityDetails.SellAt}}</span>
+                </li>
+                <li>
+                  <span>拆分截止时间</span>
+                  <span>：{{facilityDetails.SplitExpire}}</span>
+                </li>
                 <li>
                   <span>收益起止时间</span>
                   <span class="holder">：{{facilityDetails.ProfitStart}}~{{facilityDetails.ProfitEnd}}</span>
@@ -120,17 +128,9 @@
                   <span>：{{facilityDetails.PayMethod}}</span>
                 </li>
                 <li>
-                  <span>设备ID</span>
-                  <span>：{{facilityDetails.Id}}</span>
-                </li>
-                <li>
-                  <span>发布时间</span>
-                  <span>：{{facilityDetails.SellAt}}</span>
-                </li>
-                <li>
                   <span>认购份数</span>
                   <span class="input-number">：
-                  <el-input-number size="mini" v-model="num" :min="min" :max="restCount"></el-input-number>
+                  <el-input-number size="mini" v-model="num" :min="min" :max="splitCount-restCount"></el-input-number>
                 </span>
                 </li>
               </ul>
@@ -242,12 +242,9 @@
             }
           }).then((res) => {
             if(res.data.SellType==="收益权"){
-              console.log(res.data)
               this.splitCount=res.data.SplitCount;
               this.restCount=res.data.RestCount;
-              this.max=res.data.RestCount;
             }
-            console.log(res.data)
             res.data.Assetowner=res.data.Assetowner.substr(0,13)+"..."+res.data.Assetowner.substr(res.data.Assetowner.length-14,13);
             this.equities=res.data.SellType;
             this.facilityDetails=res.data;
@@ -682,12 +679,17 @@
                 vertical-align top
               }
               span:first-child{
-                width 100px
+                width 80px
               }
             }
           }
           .intro_list_right{
             float right
+            li{
+              span:first-child{
+                width 100px
+              }
+            }
           }
         }
       }
