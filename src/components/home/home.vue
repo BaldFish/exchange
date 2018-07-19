@@ -1,7 +1,9 @@
 <template>
   <div class="home">
     <my-topSearch></my-topSearch>
-    <div class="banner"></div>
+    <a href="#/publicityPage">
+      <div class="banner"></div>
+    </a>
     <div class="list">
       <div class="case clearfix">
         <div class="fl fl_bg">
@@ -103,7 +105,7 @@
   import _ from "lodash";
   import {baseURL,cardURL} from '@/common/js/public.js';
   import myTopSearch from "../topSearch/topSearch"
-  
+
   export default {
     name: "home",
     data() {

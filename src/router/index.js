@@ -20,6 +20,7 @@ import myOrderHistory from '@/components/orderHistory/orderHistory'
 import mySecurityCenter from '@/components/securityCenter/securityCenter'
 import mySearchCase from '@/components/searchCase/searchCase'
 import mySearchFacility from '@/components/searchFacility/searchFacility'
+import myPublicityPage from '@/components/publicityPage/publicityPage'
 Vue.use(Router);
 
 export default new Router({
@@ -132,6 +133,11 @@ export default new Router({
       path: '/searchFacility',
       name: 'searchFacility',
       component: mySearchFacility
+    },
+    {
+      path: '/publicityPage',
+      name: 'publicityPage',
+      component: myPublicityPage
     }
   ]
 })
