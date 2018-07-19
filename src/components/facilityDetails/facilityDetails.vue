@@ -101,7 +101,7 @@
                 </li>
                 <li>
                   <span>已购份数</span>
-                  <span>：{{restCount}}/{{splitCount}}</span>
+                  <span>：{{purchasedCount}}/{{splitCount}}</span>
                 </li>
                 <li>
                   <span>设备ID</span>
@@ -130,7 +130,7 @@
                 <li>
                   <span>认购份数</span>
                   <span class="input-number">：
-                  <el-input-number size="mini" v-model="num" :min="min" :max="splitCount-restCount"></el-input-number>
+                  <el-input-number size="mini" v-model="num" :min="min" :max="restCount"></el-input-number>
                 </span>
                 </li>
               </ul>
@@ -164,8 +164,9 @@
         assetId:"",
         id:"",
         equities:"查阅权",
-        num:1,
-        min:1,
+        num:0,
+        min:0,
+        purchasedCount:0,
         restCount:1,
         splitCount:1
       }
@@ -189,6 +190,16 @@
           center: true
         }).then(() => {
           window.location.href="#/login"
+        }).catch(() => {
+        });
+      },
+      openLimited(){
+        this.$confirm('所购资产数超出限制或购买资产为0', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
         }).catch(() => {
         });
       },
@@ -242,6 +253,7 @@
             }
           }).then((res) => {
             if(res.data.SellType==="收益权"){
+              this.purchasedCount=res.data.PurchasedCount;
               this.splitCount=res.data.SplitCount;
               this.restCount=res.data.RestCount;
             }
@@ -259,6 +271,11 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
+            if(res.data.SellType==="收益权"){
+              this.purchasedCount=res.data.PurchasedCount;
+              this.splitCount=res.data.SplitCount;
+              this.restCount=res.data.RestCount;
+            }
             res.data.Assetowner=res.data.Assetowner.substr(0,13)+"..."+res.data.Assetowner.substr(res.data.Assetowner.length-14,13);
             this.equities=res.data.SellType;
             this.facilityDetails=res.data
@@ -283,6 +300,10 @@
           this.assetId=buyInfo.Assetid;
           var data={};
           if(this.facilityDetails.SellType==="收益权"){
+            if(this.num===0){
+              this.openLimited()
+              return
+            }
             data.nums=this.num;
             axios({
               method: "POST",
