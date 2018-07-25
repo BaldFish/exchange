@@ -1,9 +1,20 @@
 <template>
   <div class="home">
     <my-topSearch></my-topSearch>
-    <a href="#/publicityPage">
+  <!--  <a href="#/publicityPage">
       <div class="banner"></div>
-    </a>
+    </a>-->
+
+    <template>
+      <el-carousel :interval="3000" arrow="always" height="600px">
+        <el-carousel-item v-for="item in bannerList">
+          <a :href="item.url">
+            <img :src="item.img" alt="">
+          </a>
+        </el-carousel-item>
+      </el-carousel>
+    </template>
+
     <div class="list">
       <div class="case clearfix">
         <div class="fl fl_bg">
@@ -118,6 +129,11 @@
         facilityList:[],
         userId:"",
         token:"",
+        //用webpack搭建的项目不能直接使用绝对路径，要用require，如果不使用这个，必须是线上图片。http类型的
+        bannerList:[
+          {url:'javascript:void(0)',img:require('./images/banner.png')},
+          {url:'#/publicityPage',img:require('./images/banner_002.png')}
+        ],
       }
     },
     mounted() {
@@ -531,5 +547,18 @@
         }
       }
     }
+  }
+</style>
+<style>
+  .el-carousel__arrow{
+    width:50px;
+    height: 50px;
+    font-size: 30px;
+  }
+  .el-carousel__button{
+    width:36px;
+  }
+  .el-carousel__indicator {
+    padding: 20px 6px;
   }
 </style>
