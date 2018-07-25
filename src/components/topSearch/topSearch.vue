@@ -137,7 +137,7 @@
     .logo {
       margin-top 30px
       margin-left 8px
-      margin-right 50px
+      margin-right 40px
       a{
         display inline-block
         color #d92000
@@ -145,12 +145,12 @@
         background-image: url('./images/logo.png');
         background-position: top left;
         background-repeat: no-repeat;
-        width 216px
+        width 226px
         height 58px
         position relative
         p{
           position absolute
-          right 0
+          left 68px
           bottom 0
         }
       }

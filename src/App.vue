@@ -252,7 +252,7 @@
           position relative
           p {
             position absolute
-            right 0
+            left 90px
             bottom 0
           }
         }
