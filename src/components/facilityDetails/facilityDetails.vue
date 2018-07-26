@@ -410,6 +410,8 @@
             position: relative;
             top: 50%;
             transform: translateY(-50%);
+            max-width 250px
+            max-height 250px
           }
         }
         .facility_intro{
@@ -591,6 +593,8 @@
             position: relative;
             top: 50%;
             transform: translateY(-50%);
+            max-width 250px
+            max-height 250px
           }
         }
         .facility_intro{

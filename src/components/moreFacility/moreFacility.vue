@@ -256,6 +256,8 @@
             position: relative;
             top: 50%;
             transform: translateY(-50%);
+            max-width 90px
+            max-height 90px
           }
           a {
             display block

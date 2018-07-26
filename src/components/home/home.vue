@@ -7,7 +7,7 @@
 
     <template>
       <el-carousel :interval="3000" arrow="always" height="600px">
-        <el-carousel-item v-for="item in bannerList">
+        <el-carousel-item v-for="item in bannerList" :key="item.url">
           <a :href="item.url">
             <img :src="item.img" alt="">
           </a>
@@ -486,6 +486,8 @@
               position: relative;
               top: 50%;
               transform: translateY(-50%);
+              max-width 90px
+              max-height 90px
             }
             a {
               display block
