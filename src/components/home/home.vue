@@ -7,10 +7,11 @@
 
     <div class="carousel">
       <el-carousel :interval="3000" arrow="always">
+        <!--<el-carousel-item v-for="item in bannerList" :key="item.url">
+          <a :href="item.url"><img :src="item.img" alt=""></a>
+        </el-carousel-item>-->
         <el-carousel-item v-for="item in bannerList" :key="item.url">
-          <a :href="item.url">
-            <img :src="item.img" alt="">
-          </a>
+          <a :href="item.url"><img :src="item.img" alt=""></a>
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -553,9 +554,9 @@
 </style>
 <style lang="stylus">
   .carousel{
-    height 600px
     max-width 1920px
     //min-width 1212px
+    height 600px
     margin 0 auto
     .el-carousel{
       width 100%
@@ -574,8 +575,9 @@
           text-align center
           a{
             img{
-              width 100%
-              height 100%
+              width:1920px;
+              height 600px
+              margin:0 calc(50% - 1212px);
             }
           }
         }
