@@ -394,7 +394,7 @@
         .price_box {
           position absolute
           top 78px
-          right 40px
+          left 1000px
           .price {
             min-width 18px
             height 24px

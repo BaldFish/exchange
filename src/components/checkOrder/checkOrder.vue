@@ -69,9 +69,7 @@
         </div>
       </div>
       <div class="check_code check_confirm">
-        <p>可使用元积分币，进行等价交易。
-        </p>
-        <br>
+        <p>可使用可信币，进行等价交易。</p><br>
         <p>提示：可用其它钱包地址支付</p>
         <button @click="notarize">确认支付</button>
       </div>
@@ -89,7 +87,7 @@
         </div>
       </div>
       <div class="check_code">
-        <p>可使用元积分币，进行等价交易。</p><br>
+        <p>可使用可信币，进行等价交易。</p><br>
         <p>提示：可用其它钱包地址支付</p>
         <img class="check_code_img" :src="`data:image/png;base64,${turnInfo.png}`" alt="" v-if="walletAddress!==''">
       </div>
@@ -107,12 +105,12 @@
         </div>
       </div>
       <div class="check_code">
-        <p>可使用元积分币，进行等价交易。</p><br>
+        <p>可使用可信币，进行等价交易。</p><br>
         <p>提示：可用其它钱包地址支付</p>
         <div class="check_success">
           <img src="./images/payment.png" alt="">
           <p>支付成功！</p>
-          <router-link to="/home" class="to_home">返回首页</router-link>
+          <router-link to="/home" class="to_home">返回主页</router-link>
         </div>
       </div>
     </div>
@@ -204,11 +202,10 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          console.log(res.data.status)
-          if (res.data.status === 1 || res.data.status === 0) {
+          if (res.data.status === 0) {
             clearTimeout(this.timer);
             this.notarize()
-          } else if (res.data.status === 2) {
+          } else if (res.data.status === 1) {
             clearTimeout(this.timer);
             this.next = 3
           }
@@ -451,7 +448,7 @@
   }
   
   .to_home {
-    width: 100px;
+    width: 130px;
     height: 30px;
     display: inline-block;
     background-color: #c6351e;

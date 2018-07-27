@@ -5,16 +5,16 @@
       <div class="banner"></div>
     </a>-->
 
-    <template>
-      <el-carousel :interval="3000" arrow="always" height="600px">
+    <div class="carousel">
+      <el-carousel :interval="3000" arrow="always">
         <el-carousel-item v-for="item in bannerList" :key="item.url">
           <a :href="item.url">
             <img :src="item.img" alt="">
           </a>
         </el-carousel-item>
       </el-carousel>
-    </template>
-
+    </div>
+    
     <div class="list">
       <div class="case clearfix">
         <div class="fl fl_bg">
@@ -362,7 +362,7 @@
         .price_box {
           position absolute
           top 78px
-          right 84px
+          left 700px
           .price {
             min-width 18px
             height 24px
@@ -551,16 +551,43 @@
     }
   }
 </style>
-<style>
-  .el-carousel__arrow{
-    width:50px;
-    height: 50px;
-    font-size: 30px;
-  }
-  .el-carousel__button{
-    width:36px;
-  }
-  .el-carousel__indicator {
-    padding: 20px 6px;
+<style lang="stylus">
+  .carousel{
+    height 600px
+    max-width 1920px
+    //min-width 1212px
+    margin 0 auto
+    .el-carousel{
+      width 100%
+      height 100%
+      .el-carousel__container{
+        width 100%
+        height 100%
+        .el-carousel__arrow{
+          width:50px;
+          height: 50px;
+          font-size: 30px;
+        }
+        .el-carousel__item{
+          width 100%
+          height 100%
+          text-align center
+          a{
+            img{
+              width 100%
+              height 100%
+            }
+          }
+        }
+      }
+      .el-carousel__indicators{
+        .el-carousel__indicator{
+          padding: 20px 6px;
+          .el-carousel__button{
+            width:36px;
+          }
+        }
+      }
+    }
   }
 </style>
