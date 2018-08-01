@@ -45,7 +45,7 @@
         </thead>
         <tbody>
         <tr class="img_tbody">
-          <td><img src="" alt=""></td>
+          <td><img :src="buyInfo.Asseturl" alt=""></td>
           <td>{{buyInfo.Assetname}}</td>
           <td>{{buyInfo.SellType}}</td>
           <td>{{buyInfo.Count}}</td>
@@ -110,7 +110,7 @@
         <div class="check_success">
           <img src="./images/payment.png" alt="">
           <p>支付成功！</p>
-          <router-link to="/home" class="to_home">返回主页</router-link>
+          <router-link to="/orderHistory" class="to_home">返回主页</router-link>
         </div>
       </div>
     </div>

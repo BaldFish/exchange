@@ -53,7 +53,7 @@
             <p class="no_img_p">{{item.assetname}}</p>
           </td>
           <td>{{item.sell_type}}</td>
-          <td>{{item.split_count}}</td>
+          <td>{{item.count}}</td>
           <td>
             <img src="./images/currency.png" alt="" class="icon_currency">
             {{item.price}}
@@ -212,7 +212,6 @@
           this.currentPage = 1;
           this.getData()
         }
-
       }
     },
 

@@ -133,7 +133,7 @@
         //用webpack搭建的项目不能直接使用绝对路径，要用require，如果不使用这个，必须是线上图片。http类型的
         bannerList:[
           {url:'javascript:void(0)',img:require('./images/banner.png')},
-          {url:'#/publicityPage',img:require('./images/banner_002.png')}
+          {url:'#/publicityPage',img:require('./images/banner_002.png')},
         ],
       }
     },
@@ -577,6 +577,11 @@
             img{
               width:1920px;
               height 600px
+              /*Firefox*/
+              margin:0 -moz-calc(50% - 1212px);
+              /*chrome safari*/
+              margin:0 -webkit-calc(50% - 1212px);
+              /*Standard */
               margin:0 calc(50% - 1212px);
             }
           }

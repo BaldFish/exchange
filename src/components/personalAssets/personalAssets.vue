@@ -39,7 +39,7 @@
           <td colspan="5">维修设备</td>
         </tr>
         <tr class="content_tbody" v-for="(item,index) of facilityList" :key="item._id">
-          <td><span><img src="" alt=""></span>{{item.assetname}}</td>
+          <td><span><img :src="item.Asseturl" alt=""></span>{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
           <td>{{item.count}}</td>
           <td>{{item.price}}</td>
