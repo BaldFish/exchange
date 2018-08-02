@@ -40,7 +40,7 @@
           <th>{{item.apiname}}
             <span>订单号： {{item.orderNum}}</span>
           </th>
-          <th colspan="4">下单日期：2018-04-01 12:12:56</th>
+          <th colspan="4">下单日期：{{item.created_at}}</th>
         </tr>
         </thead>
         <tbody>
@@ -89,6 +89,7 @@
   import "../../common/stylus/paging.styl";
   import axios from "axios";
   import {baseURL} from '@/common/js/public.js';
+  import formatDate from "@/common/js/formatDate.js";
   const querystring = require('querystring');
 
   export default{
@@ -139,6 +140,10 @@
           method: 'get',
           url: `${baseURL}/v1/order/list/${loginInfo.user_id}?page=${this.currentPage}&limit=${this.limit}&begin=${this.begin}&end=${this.end}`,
         }).then(res => {
+          for(let v of res.data.data){
+            v.created_at=formatDate(new Date(v.created_at), "yyyy-MM-dd hh:mm:ss");
+            v.updated_at=formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
+          }
           this.dataList = res.data.data;
           this.total = res.data.count;
         }).catch(error => {

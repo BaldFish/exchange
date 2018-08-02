@@ -4,12 +4,8 @@
   <!--  <a href="#/publicityPage">
       <div class="banner"></div>
     </a>-->
-
     <div class="carousel">
       <el-carousel :interval="3000" arrow="always">
-        <!--<el-carousel-item v-for="item in bannerList" :key="item.url">
-          <a :href="item.url"><img :src="item.img" alt=""></a>
-        </el-carousel-item>-->
         <el-carousel-item v-for="item in bannerList" :key="item.url">
           <a :href="item.url"><img :src="item.img" alt=""></a>
         </el-carousel-item>
@@ -22,32 +18,32 @@
           <h3>维修案例</h3>
           <a href="#/moreCase">查看更多</a>
         </div>
-        <div class="fr fr_case" v-for="(item,index) of caseList" :key="item.Id">
-          <h4><a href="#/caseDetails" @click="getCaseDetails(item.Id)">{{item.Assetname}}</a></h4>
+        <div class="fr fr_case" v-for="(item,index) of caseList" :key="item.id">
+          <h4><a href="#/caseDetails" @click="getCaseDetails(item.id)">{{item.assetname}}</a></h4>
           <div class="attestation">
-            <span class="merchant" v-if="item.AuthType==='认证商家'">{{item.AuthType}}</span>
-            <span class="person" v-if="item.AuthType==='认证个人'">{{item.AuthType}}</span>
-            <span class="trust" v-if="item.CreditLevel!=='未认证'">{{item.CreditLevel}}</span>
+            <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
+            <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
+            <span class="trust" v-if="item.creditlevel!=='未认证'">{{item.creditlevel}}</span>
           </div>
           <div class="putaway">
-            <a class="time" href="#/caseDetails" @click="getCaseDetails(item.Id)"><span>上架时间：</span>{{item.SellAt}}</a>
-            <a class="equity" href="#/caseDetails" @click="getCaseDetails(item.Id)"><span>权益：</span>{{item.SellType}}</a>
+            <a class="time" href="#/caseDetails" @click="getCaseDetails(item.id)"><span>上架时间：</span>{{item.sell_at}}</a>
+            <a class="equity" href="#/caseDetails" @click="getCaseDetails(item.id)"><span>权益：</span>{{item.sell_type}}</a>
           </div>
           <div class="belong">
-            <a href="#/caseDetails" @click="getCaseDetails(item.Id)">
-              <span>所属人：</span>{{item.Assetowner}}
+            <a href="#/caseDetails" @click="getCaseDetails(item.id)">
+              <span>所属人：</span>{{item.assetowner}}
             </a>
           </div>
           <div class="fault">
             <p>
-              <a href="#/caseDetails" @click="getCaseDetails(item.Id)">
-                <span>故障现象：</span>{{item.AssetContent}}
+              <a href="#/caseDetails" @click="getCaseDetails(item.id)">
+                <span>故障现象：</span>{{item.assetcontent}}
               </a>
             </p>
           </div>
           <div class="price_box">
-            <a href="#/caseDetails" @click="getCaseDetails(item.Id)"><p class="price">{{item.Price}}</p></a>
-            <a href="#/caseSource" @click="getCaseSource(item.Id)"><p class="tracing">可信溯源</p></a>
+            <a href="#/caseDetails" @click="getCaseDetails(item.id)"><p class="price">{{item.price}}</p></a>
+            <a href="#/caseSource" @click="getCaseSource(item.id)"><p class="tracing">可信溯源</p></a>
           </div>
         </div>
       </div>
@@ -57,28 +53,28 @@
           <a href="#/moreFacility">查看更多</a>
         </div>
         <div class="fr fr_facility">
-          <div class="fl facility_info" v-for="(item,index) of facilityList" :key="item.Id">
-            <a href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><h4>{{item.Assetname}}</h4></a>
+          <div class="fl facility_info" v-for="(item,index) of facilityList" :key="item.id">
+            <a href="#/facilityDetails" @click="getFacilityDetails(item.id)"><h4>{{item.assetname}}</h4></a>
             <div class="belong">
-              <a href="#/facilityDetails" @click="getFacilityDetails(item.Id)">
-                <span>所属人：</span>{{item.Assetowner}}
+              <a href="#/facilityDetails" @click="getFacilityDetails(item.id)">
+                <span>所属人：</span>{{item.assetowner}}
               </a>
             </div>
             <div class="putaway">
-              <a class="time" href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><span>上架时间：</span>{{item.SellAt}}</a>
-              <a class="equity" href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><span>权益：</span>{{item.SellType}}</a>
+              <a class="time" href="#/facilityDetails" @click="getFacilityDetails(item.id)"><span>上架时间：</span>{{item.sell_at}}</a>
+              <a class="equity" href="#/facilityDetails" @click="getFacilityDetails(item.id)"><span>权益：</span>{{item.sell_type}}</a>
             </div>
             <div class="fl price_box">
-              <a href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><p class="price">{{item.Price}}</p></a>
-              <a href="#/facilitySource" @click="getFacilitySource(item.Id)"><p class="tracing">可信溯源</p></a>
+              <a href="#/facilityDetails" @click="getFacilityDetails(item.id)"><p class="price">{{item.price}}</p></a>
+              <a href="#/facilitySource" @click="getFacilitySource(item.id)"><p class="tracing">可信溯源</p></a>
             </div>
             <div class="fr facility_img">
-              <a href="#/facilityDetails" @click="getFacilityDetails(item.Id)"><img :src="item.Asseturl" alt=""></a>
+              <a href="#/facilityDetails" @click="getFacilityDetails(item.id)"><img :src="item.asseturl" alt=""></a>
             </div>
             <div class="attestation clearfix">
-              <span class="merchant" v-if="item.AuthType==='认证商家'">{{item.AuthType}}</span>
-              <span class="person" v-if="item.AuthType==='认证个人'">{{item.AuthType}}</span>
-              <span class="trust" v-if="item.CreditLevel!=='未认证'">{{item.CreditLevel}}</span>
+              <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
+              <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
+              <span class="trust" v-if="item.creditlevel!=='未认证'">{{item.creditlevel}}</span>
             </div>
           </div>
         </div>
@@ -116,6 +112,7 @@
   import axios from "axios";
   import _ from "lodash";
   import {baseURL,cardURL} from '@/common/js/public.js';
+  import formatDate from "@/common/js/formatDate.js";
   import myTopSearch from "../topSearch/topSearch"
 
   export default {
@@ -151,6 +148,9 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
+          for(let v of res.data.data){
+            v.sell_at=formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+          }
           this.caseList=res.data.data;
         }).catch((err) => {
           console.log(err)
@@ -165,29 +165,31 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
+          for(let v of res.data.data){
+            v.sell_at=formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+          }
           this.facilityList=res.data.data
         }).catch((err) => {
-          console.log(err)
         })
       },
       getCaseDetails(val) {
         this.$store.commit("changeCaseDetails",_.find(this.caseList,function (o) {
-          return o.Id===val
+          return o.id===val
         }));
       },
       getCaseSource(val) {
         this.$store.commit("changeCaseSource",_.find(this.caseList,function (o) {
-          return o.Id===val
+          return o.id===val
         }));
       },
       getFacilityDetails(val) {
         this.$store.commit("changeFacilityDetails",_.find(this.facilityList,function (o) {
-          return o.Id===val
+          return o.id===val
         }));
       },
       getFacilitySource(val) {
         this.$store.commit("changeFacilitySource",_.find(this.facilityList,function (o) {
-          return o.Id===val
+          return o.id===val
         }));
       },
     },

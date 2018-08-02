@@ -27,7 +27,7 @@
           <td colspan="5">维修设备</td>
         </tr>
         <tr class="content_tbody" v-for="(item,index) of facilityList" :key="item._id">
-          <td @click="turnDetails(item.Apikey,item.Assetid)"><span><img src="" alt=""></span>{{item.Assetname}}</td>
+          <td @click="turnDetails(item.Apikey,item.Assetid)"><span><img :src="item.Asseturl" alt=""></span>{{item.Assetname}}</td>
           <td>{{item.SellType}}</td>
           <td class="quick_buy_td" @click="cancel(item._id)">
             <button>取消收藏</button>
@@ -59,6 +59,7 @@
   import axios from "axios";
   import "../../common/stylus/paging.styl";
   import {baseURL, cardURL} from '@/common/js/public.js';
+  import formatDate from "@/common/js/formatDate.js";
   
   export default {
     name: "favorite",
@@ -109,6 +110,7 @@
           }).then((res) => {
             this.total = res.data.count;
             this.favoriteList = res.data.data;
+            console.log(this.favoriteList)
           }).catch((err) => {
             console.log(err);
           });

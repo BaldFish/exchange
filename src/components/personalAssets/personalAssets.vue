@@ -39,7 +39,7 @@
           <td colspan="5">维修设备</td>
         </tr>
         <tr class="content_tbody" v-for="(item,index) of facilityList" :key="item._id">
-          <td><span><img :src="item.Asseturl" alt=""></span>{{item.assetname}}</td>
+          <td><span><img :src="item.asseturl" alt=""></span>{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
           <td>{{item.count}}</td>
           <td>{{item.price}}</td>
@@ -77,6 +77,7 @@
   import "../../common/stylus/paging.styl";
   import {baseURL, cardURL} from '@/common/js/public.js';
   import {BigNumber} from 'bignumber.js';
+  import formatDate from "@/common/js/formatDate.js";
   export default{
     name: "personalAssets",
     components: {},
@@ -181,6 +182,7 @@
         }).then((res) => {
           this.total = res.data.count;
           this.assetList = res.data.data;
+          console.log(this.assetList)
         }).catch((err) => {
           console.log(err);
         });

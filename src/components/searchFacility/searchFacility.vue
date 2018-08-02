@@ -54,6 +54,7 @@
   import axios from "axios";
   import _ from "lodash";
   import {baseURL,cardURL} from '@/common/js/public.js';
+  import formatDate from "@/common/js/formatDate.js";
   import myTopSearch from "../topSearch/topSearch"
   
   export default {
