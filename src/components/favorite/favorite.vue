@@ -17,8 +17,8 @@
           <td colspan="5">维修案例</td>
         </tr>
         <tr class="content_tbody" v-for="(item,index) of caseList" :key="item._id">
-          <td @click="turnDetails(item.Apikey,item.Assetid)">{{item.Assetname}}</td>
-          <td>{{item.SellType}}</td>
+          <td @click="turnDetails(item.apikey,item.assetid)">{{item.assetname}}</td>
+          <td>{{item.sell_type}}</td>
           <td class="quick_buy_td" @click="cancel(item._id)">
             <button>取消收藏</button>
           </td>
@@ -27,8 +27,8 @@
           <td colspan="5">维修设备</td>
         </tr>
         <tr class="content_tbody" v-for="(item,index) of facilityList" :key="item._id">
-          <td @click="turnDetails(item.Apikey,item.Assetid)"><span><img :src="item.Asseturl" alt=""></span>{{item.Assetname}}</td>
-          <td>{{item.SellType}}</td>
+          <td @click="turnDetails(item.apikey,item.assetid)"><span><img :src="item.asseturl" alt=""></span>{{item.assetname}}</td>
+          <td>{{item.sell_type}}</td>
           <td class="quick_buy_td" @click="cancel(item._id)">
             <button>取消收藏</button>
           </td>
@@ -78,12 +78,12 @@
     computed: {
       caseList: function () {
         return this.favoriteList.filter(function (value, index, array) {
-          return value.Apikey === "5a6be74a55aaf50001a5e250"
+          return value.apikey === "5a6be74a55aaf50001a5e250"
         })
       },
       facilityList: function () {
         return this.favoriteList.filter(function (value, index, array) {
-          return value.Apikey === "5ae04522cff7cb000194f2f4"
+          return value.apikey === "5ae04522cff7cb000194f2f4"
         })
       },
     },
@@ -109,8 +109,11 @@
             }
           }).then((res) => {
             this.total = res.data.count;
+            for(let v of res.data.data){
+              v.created_at=formatDate(new Date(v.created_at), "yyyy-MM-dd hh:mm:ss");
+              v.updated_at=formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
+            }
             this.favoriteList = res.data.data;
-            console.log(this.favoriteList)
           }).catch((err) => {
             console.log(err);
           });
@@ -148,12 +151,12 @@
       },
       getCaseDetails(val) {
         this.$store.commit("changeCaseDetails", _.find(this.favoriteList, function (o) {
-          return o.Assetid === val
+          return o.assetid === val
         }));
       },
       getFacilityDetails(val) {
         this.$store.commit("changeFacilityDetails", _.find(this.favoriteList, function (o) {
-          return o.Assetid === val
+          return o.assetid === val
         }));
       },
     }
@@ -239,6 +242,8 @@
     position: relative;
     top: 50%;
     transform: translateY(-50%);
+    max-width: 52px;
+    max-height: 52px;
   }
   
   .content_tbody td:first-child {

@@ -27,7 +27,7 @@
           <td colspan="5">维修案例</td>
         </tr>
         <tr class="content_tbody" v-for="(item,index) of caseList" :key="item._id">
-          <td>{{item.assetname}}</td>
+          <td @click="turnDetails(item.apikey,item.assetid)">{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
           <td>{{item.count}}</td>
           <td>{{item.price}}</td>
@@ -39,7 +39,7 @@
           <td colspan="5">维修设备</td>
         </tr>
         <tr class="content_tbody" v-for="(item,index) of facilityList" :key="item._id">
-          <td><span><img :src="item.asseturl" alt=""></span>{{item.assetname}}</td>
+          <td @click="turnDetails(item.apikey,item.assetid)"><span><img :src="item.asseturl" alt=""></span>{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
           <td>{{item.count}}</td>
           <td>{{item.price}}</td>
@@ -181,11 +181,33 @@
           }
         }).then((res) => {
           this.total = res.data.count;
+          for(let v of res.data.data){
+            v.created_at=formatDate(new Date(v.created_at), "yyyy-MM-dd hh:mm:ss");
+            v.updated_at=formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
+          }
           this.assetList = res.data.data;
-          console.log(this.assetList)
         }).catch((err) => {
           console.log(err);
         });
+      },
+      turnDetails(apiKey, assetId) {
+        if (apiKey === "5a6be74a55aaf50001a5e250") {
+          this.getCaseDetails(assetId);
+          window.location.href = "#/caseDetails"
+        } else if (apiKey === "5ae04522cff7cb000194f2f4") {
+          this.getFacilityDetails(assetId);
+          window.location.href = "#/facilityDetails"
+        }
+      },
+      getCaseDetails(val) {
+        this.$store.commit("changeCaseDetails", _.find(this.assetList, function (o) {
+          return o.assetid === val
+        }));
+      },
+      getFacilityDetails(val) {
+        this.$store.commit("changeFacilityDetails", _.find(this.assetList, function (o) {
+          return o.assetid === val
+        }));
       },
     },
   }
@@ -285,6 +307,8 @@
     position: relative;
     top: 50%;
     transform: translateY(-50%);
+    max-width: 52px;
+    max-height: 52px;
   }
   .content_tbody td:first-child{
     text-align: left;

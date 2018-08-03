@@ -326,6 +326,7 @@
               buyInfoObj.buyInfo=buyInfo;
               buyInfoObj.buyInfo.count=this.num;
               buyInfoObj.turnInfo=res.data;
+              console.log(buyInfoObj)
               this.getBuy(buyInfoObj);
               window.location.href="#/checkOrder"
             }).catch((err) => {
