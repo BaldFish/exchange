@@ -215,13 +215,7 @@
             },
             data:querystring.stringify(data),
           }).then((res) => {
-            /*let buyInfoObj={};
-            buyInfoObj.buyInfo=buyInfo;
-            buyInfoObj.buyInfo.count=1;
-            buyInfoObj.turnInfo=res.data;
-            this.getBuy(buyInfoObj);*/
             buyInfoObj=res.data;
-            console.log(buyInfoObj)
             this.getBuy(buyInfoObj);
             window.location.href="#/checkOrder"
           }).catch((err) => {

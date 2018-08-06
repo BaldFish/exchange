@@ -89,7 +89,7 @@
       <div class="check_code">
         <p>可使用可信币，进行等价交易。</p><br>
         <p>提示：可用其它钱包地址支付</p>
-        <img class="check_code_img"alt="" v-if="walletAddress!==''">
+        <img class="check_code_img":src="paymentInfo.png" alt="" v-if="walletAddress!==''">
       </div>
     </div>
     
@@ -131,18 +131,14 @@
     },
     data() {
       return {
-        integralInfo:{},
+        paymentInfo:{},
         orderNum:"",
         userId: "",
         token: "",
-        apiKey: "",
-        assetId: "",
         id: "",
         walletAddress: "",
         balance: 0,
         buyInfoObj: {},
-        /*buyInfo: {},
-        turnInfo: {},*/
         caseDetails: {},
         facilityDetails: {},
         next: 1,
@@ -157,10 +153,6 @@
         this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
         if (JSON.parse(sessionStorage.getItem("buyInfoObj"))) {
           this.orderNum=JSON.parse(sessionStorage.getItem("buyInfoObj")).orderNum
-          /*this.buyInfoObj = JSON.parse(sessionStorage.getItem("buyInfoObj"));
-          this.buyInfo = this.buyInfoObj.buyInfo;
-          this.turnInfo = this.buyInfoObj.turnInfo;
-          this.assetId = this.buyInfoObj.assetid;*/
         }
         this.acquireOrderInfo();
         this.acquireUserInfo();
@@ -208,8 +200,8 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          this.integralInfo=res.data;
-          console.log(this.integralInfo)
+          this.paymentInfo=res.data;
+          console.log(this.paymentInfo)
         }).catch((err) => {
           console.log(err);
         });
