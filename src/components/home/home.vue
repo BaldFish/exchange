@@ -7,15 +7,12 @@
 
     <div class="carousel">
       <el-carousel :interval="3000" arrow="always">
-        <!--<el-carousel-item v-for="item in bannerList" :key="item.url">
-          <a :href="item.url"><img :src="item.img" alt=""></a>
-        </el-carousel-item>-->
-        <el-carousel-item v-for="item in bannerList" :key="item.url">
-          <a :href="item.url"><img :src="item.img" alt=""></a>
+        <el-carousel-item v-for="item in bannerList" :key="item.link_url">
+          <a :href="item.link_url"><img :src="item.picture_url" alt=""></a>
         </el-carousel-item>
       </el-carousel>
     </div>
-    
+
     <div class="list">
       <div class="case clearfix">
         <div class="fl fl_bg">
@@ -132,14 +129,23 @@
         token:"",
         //用webpack搭建的项目不能直接使用绝对路径，要用require，如果不使用这个，必须是线上图片。http类型的
         bannerList:[
-          {url:'javascript:void(0)',img:require('./images/banner.png')},
-          {url:'#/publicityPage',img:require('./images/banner_002.png')},
+          {link_url:'javascript:void(0)',picture_url:require('./images/banner.png')},
+          {link_url:'#/publicityPage',picture_url:require('./images/banner_002.png')},
         ],
       }
     },
     mounted() {
       this.acquireCaseList();
       this.acquireFacilityList();
+      //获取banner图
+      axios({
+        method: 'get',
+        url: `${cardURL}/v1/broadcast/s?type_id=5b572fa8a4cc0d6ea8ba5484`
+      }).then(res => {
+        this.bannerList = res.data
+      }).catch(error => {
+        console.log(error)
+      });
     },
     methods: {
       //获取维修案例列表
