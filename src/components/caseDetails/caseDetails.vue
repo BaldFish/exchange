@@ -7,47 +7,47 @@
           <li>当前位置 ：</li>
           <li><a href="#/">首页></a></li>
           <li><a href="#/moreCase">维修案例></a></li>
-          <li>{{caseDetails.Assetname}}</li>
+          <li>{{caseDetails.assetname}}</li>
         </ul>
       </div>
     </div>
     <div class="details">
-      <h4>{{caseDetails.Assetname}}</h4>
+      <h4>{{caseDetails.assetname}}</h4>
       <div class="attestation">
-        <span class="merchant" v-if="caseDetails.AuthType==='认证商家'">{{caseDetails.AuthType}}</span>
-        <span class="person" v-if="caseDetails.AuthType==='认证个人'">{{caseDetails.AuthType}}</span>
-        <span class="trust" v-if="caseDetails.CreditLevel!=='未认证'">{{caseDetails.CreditLevel}}</span>
+        <span class="merchant" v-if="caseDetails.authtype==='认证商家'">{{caseDetails.authtype}}</span>
+        <span class="person" v-if="caseDetails.authtype==='认证个人'">{{caseDetails.authtype}}</span>
+        <span class="trust" v-if="caseDetails.creditlevel!=='未认证'">{{caseDetails.creditlevel}}</span>
       </div>
-      <div :class="caseDetails.ShopCartId?'like':'dislike'" @click="toggleLike(caseDetails.Id)">收藏</div>
+      <div :class="caseDetails.shopcart_id?'like':'dislike'" @click="toggleLike(caseDetails.id)">收藏</div>
       <a href="#/caseSource" @click="getCaseSource"><p class="tracing">可信溯源</p></a>
       <div class="intro_list">
         <ul>
           <li>
             <span>资产所属人</span>
-            <span class="holder">：{{caseDetails.Assetowner}}</span>
+            <span class="holder">：{{caseDetails.assetowner}}</span>
           </li>
           <li>
             <span>权益</span>
-            <span>：{{caseDetails.SellType}}</span>
+            <span>：{{caseDetails.sell_type}}</span>
           </li>
           <li>
             <span>价格</span>
-            <span>：{{caseDetails.Price}}</span>
+            <span>：{{caseDetails.price}}</span>
           </li>
           <li>
             <span>案例ID</span>
-            <span>：{{caseDetails.Id}}</span>
+            <span>：{{caseDetails.id}}</span>
           </li>
           <li>
             <span>上架时间</span>
-            <span>：{{caseDetails.SellAt}}</span>
+            <span>：{{caseDetails.sell_at}}</span>
           </li>
         </ul>
-        <a href="javascript:void(0)" @click="buy(caseDetails.Id)"><p class="buy">一键购买</p></a>
+        <a href="javascript:void(0)" @click="buy(caseDetails.id)"><p class="buy">一键购买</p></a>
       </div>
       <div class="intro_text">
         <span>案例简介</span>
-        <p style="line-height: 18px">{{caseDetails.AssetContent}}</p>
+        <p style="line-height: 18px">{{caseDetails.assetcontent}}</p>
       </div>
     </div>
   </div>
@@ -57,6 +57,7 @@
   import axios from "axios";
   import myTopSearch from "../topSearch/topSearch"
   import {baseURL,cardURL} from '@/common/js/public.js';
+  import formatDate from "@/common/js/formatDate.js";
   const querystring = require('querystring');
   
   export default {
@@ -76,9 +77,8 @@
         this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
         this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
       }
-      this.caseDetails=JSON.parse(sessionStorage.getItem("caseDetails"));
-      this.apiKey=this.caseDetails.Apikey;
-      this.assetId=this.caseDetails.Assetid;
+      this.apiKey=JSON.parse(sessionStorage.getItem("caseDetails")).apikey;
+      this.assetId=JSON.parse(sessionStorage.getItem("caseDetails")).assetid;
       this.acquireCaseDetails()
     },
     methods: {
@@ -96,10 +96,10 @@
       toggleLike(val){
         if(sessionStorage.getItem("loginInfo")){
           let likeInfo=this.caseDetails;
-          this.apiKey=likeInfo.Apikey;
-          this.assetId=likeInfo.Assetid;
-          this.id=likeInfo.ShopCartId;
-          if(likeInfo.ShopCartId===""){
+          this.apiKey=likeInfo.apikey;
+          this.assetId=likeInfo.assetid;
+          this.id=likeInfo.shopcart_id;
+          if(likeInfo.shopcart_id===""){
             axios({
               method: "POST",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
@@ -109,12 +109,12 @@
               }
             }).then((res) => {
               this.id=res.data._id;
-              likeInfo.ShopCartId=this.id
+              likeInfo.shopcart_id=this.id
               this.addCollection()
             }).catch((err) => {
               console.log(err);
             });
-          }else if(likeInfo.ShopCartId!==""){
+          }else if(likeInfo.shopcart_id!==""){
             axios({
               method: "DELETE",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
@@ -123,7 +123,7 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              likeInfo.ShopCartId="";
+              likeInfo.shopcart_id="";
               this.subtractCollection()
             }).catch((err) => {
               console.log(err);
@@ -142,6 +142,7 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
+            res.data.sell_at=formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
             this.caseDetails=res.data;
           }).catch((err) => {
             console.log(err);
@@ -154,6 +155,7 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
+            res.data.sell_at=formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
             this.caseDetails=res.data;
           }).catch((err) => {
             console.log(err);
@@ -172,8 +174,8 @@
       buy(val){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
           let buyInfo=this.caseDetails
-          this.apiKey=buyInfo.Apikey;
-          this.assetId=buyInfo.Assetid;
+          this.apiKey=buyInfo.apikey;
+          this.assetId=buyInfo.assetid;
           var data={};
           data.nums=1;
           axios({
@@ -187,7 +189,7 @@
           }).then((res) => {
             let buyInfoObj={};
             buyInfoObj.buyInfo=buyInfo;
-            buyInfoObj.buyInfo.Count=1;
+            buyInfoObj.buyInfo.count=1;
             buyInfoObj.turnInfo=res.data;
             this.getBuy(buyInfoObj);
             window.location.href="#/checkOrder"

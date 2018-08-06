@@ -7,13 +7,13 @@
           <li>当前位置 ：</li>
           <li><a href="#/">首页></a></li>
           <li><a href="#/moreCase">维修案例></a></li>
-          <li>{{caseSourceTitle}}</li>
+          <li>{{caseDetails.assetname}}</li>
         </ul>
       </div>
     </div>
     <div class="details">
-      <h4>{{caseSourceTitle}}</h4>
-      <div :class="caseDetails.ShopCartId?'like':'dislike'"  @click="toggleLike(caseDetails.Id)">收藏</div>
+      <h4>{{caseDetails.assetname}}</h4>
+      <div :class="caseDetails.shopcart_id?'like':'dislike'"  @click="toggleLike(caseDetails.id)">收藏</div>
       <div class="transfer_record">
         <span>资产转让记录</span>
         <ul v-for="(item,index) of caseSource" :key="item.id">
@@ -35,7 +35,7 @@
           </li>
         </ul>
         <a href="#/caseDetails" @click="getCaseDetails"><p class="asset_details">案例详情</p></a>
-        <a href="javascript:void(0)" @click="buy(caseDetails.Id)"><p class="buy">一键购买</p></a>
+        <a href="javascript:void(0)" @click="buy(caseDetails.id)"><p class="buy">一键购买</p></a>
       </div>
     </div>
   </div>
@@ -45,13 +45,13 @@
   import myTopSearch from "../topSearch/topSearch"
   import {baseURL, cardURL} from '@/common/js/public.js';
   import axios from "axios";
+  import formatDate from "@/common/js/formatDate.js";
   const querystring = require('querystring');
   
   export default {
     name: "trustedSource",
     data() {
       return {
-        caseSourceTitle: "",
         caseSource: [],
         caseDetails:{},
         userId:"",
@@ -66,10 +66,8 @@
         this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
         this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
       }
-      this.caseSourceTitle = JSON.parse(sessionStorage.getItem("caseSource")).Assetname;
-      this.assetId = JSON.parse(sessionStorage.getItem("caseSource")).Assetid;
-      this.apiKey = JSON.parse(sessionStorage.getItem("caseSource")).Apikey;
-      this.caseDetails=JSON.parse(sessionStorage.getItem("caseSource"));
+      this.assetId = JSON.parse(sessionStorage.getItem("caseSource")).assetid;
+      this.apiKey = JSON.parse(sessionStorage.getItem("caseSource")).apikey;
       this.acquireCaseSource();
       this.acquireCaseDetails();
     },
@@ -88,10 +86,10 @@
       toggleLike(val){
         if(sessionStorage.getItem("loginInfo")){
           let likeInfo=this.caseDetails;
-          this.apiKey=likeInfo.Apikey;
-          this.assetId=likeInfo.Assetid;
-          this.id=likeInfo.ShopCartId;
-          if(likeInfo.ShopCartId===""){
+          this.apiKey=likeInfo.apikey;
+          this.assetId=likeInfo.assetid;
+          this.id=likeInfo.shopcart_id;
+          if(likeInfo.shopcart_id===""){
             axios({
               method: "POST",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
@@ -101,12 +99,12 @@
               }
             }).then((res) => {
               this.id=res.data._id;
-              likeInfo.ShopCartId=this.id;
+              likeInfo.shopcart_id=this.id;
               this.addCollection()
             }).catch((err) => {
               console.log(err);
             });
-          }else if(likeInfo.ShopCartId!==""){
+          }else if(likeInfo.shopcart_id!==""){
             axios({
               method: "DELETE",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
@@ -115,7 +113,7 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              likeInfo.ShopCartId="";
+              likeInfo.shopcart_id="";
               this.subtractCollection()
             }).catch((err) => {
               console.log(err);
@@ -134,6 +132,9 @@
           }
         }).then((res) => {
           if (res.data.data != null) {
+            for(let v of res.data.data){
+              v.updated_at=formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
+            }
             this.caseSource = res.data.data
           }else{
             this.caseSource =[]
@@ -151,6 +152,7 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
+            res.data.sell_at=formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
             this.caseDetails=res.data;
           }).catch((err) => {
             console.log(err);
@@ -163,6 +165,7 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
+            res.data.sell_at=formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
             this.caseDetails=res.data
           }).catch((err) => {
             console.log(err);
@@ -181,8 +184,8 @@
       buy(val){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
           let buyInfo=this.caseDetails;
-          this.apiKey=buyInfo.Apikey;
-          this.assetId=buyInfo.Assetid;
+          this.apiKey=buyInfo.apikey;
+          this.assetId=buyInfo.assetid;
           var data={};
           data.nums=1;
           axios({
@@ -196,7 +199,7 @@
           }).then((res) => {
             let buyInfoObj={};
             buyInfoObj.buyInfo=buyInfo;
-            buyInfoObj.buyInfo.Count=1;
+            buyInfoObj.buyInfo.count=1;
             buyInfoObj.turnInfo=res.data;
             this.getBuy(buyInfoObj);
             window.location.href="#/checkOrder"

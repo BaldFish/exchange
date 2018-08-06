@@ -8,54 +8,54 @@
             <li>当前位置 ：</li>
             <li><a href="#/">首页></a></li>
             <li><a href="#/moreFacility">维修设备></a></li>
-            <li>{{facilityDetails.Assetname}}</li>
+            <li>{{facilityDetails.assetname}}</li>
           </ul>
         </div>
       </div>
       <div class="details">
         <div class="clearfix details_top">
           <div class="fl facility_img">
-            <img :src="facilityDetails.Asseturl" alt="">
+            <img :src="facilityDetails.asseturl" alt="">
           </div>
           <div class="fr facility_intro">
-            <h4>{{facilityDetails.Assetname}}</h4>
+            <h4>{{facilityDetails.assetname}}</h4>
             <div class="attestation">
-              <span class="merchant" v-if="facilityDetails.AuthType==='认证商家'">{{facilityDetails.AuthType}}</span>
-              <span class="person" v-if="facilityDetails.AuthType==='认证个人'">{{facilityDetails.AuthType}}</span>
-              <span class="trust" v-if="facilityDetails.CreditLevel!=='未认证'">{{facilityDetails.CreditLevel}}</span>
+              <span class="merchant" v-if="facilityDetails.authtype==='认证商家'">{{facilityDetails.authtype}}</span>
+              <span class="person" v-if="facilityDetails.authtype==='认证个人'">{{facilityDetails.authtype}}</span>
+              <span class="trust" v-if="facilityDetails.creditlevel!=='未认证'">{{facilityDetails.creditlevel}}</span>
             </div>
-            <div :class="facilityDetails.ShopCartId?'like':'dislike'" @click="toggleLike(facilityDetails.Id)">收藏</div>
+            <div :class="facilityDetails.shopcart_id?'like':'dislike'" @click="toggleLike(facilityDetails.id)">收藏</div>
             <a href="#/facilitySource" @click="getFacilitySource"><p class="tracing">可信溯源</p></a>
             <div class="intro_list">
               <ul>
                 <li>
                   <span>资产所属人</span>
-                  <span class="holder">：{{facilityDetails.Assetowner}}</span>
+                  <span class="holder">：{{facilityDetails.assetowner}}</span>
                 </li>
                 <li>
                   <span>权益</span>
-                  <span>：{{facilityDetails.SellType}}</span>
+                  <span>：{{facilityDetails.sell_type}}</span>
                 </li>
                 <li>
                   <span>价格</span>
-                  <span>：{{facilityDetails.Price}}</span>
+                  <span>：{{facilityDetails.price}}</span>
                 </li>
                 <li>
                   <span>案例ID</span>
-                  <span>：{{facilityDetails.Id}}</span>
+                  <span>：{{facilityDetails.id}}</span>
                 </li>
                 <li>
                   <span>上架时间</span>
-                  <span>：{{facilityDetails.SellAt}}</span>
+                  <span>：{{facilityDetails.sell_at}}</span>
                 </li>
               </ul>
-              <a href="javascript:void(0)" @click="buy(facilityDetails.Id)"><p class="buy">一键购买</p></a>
+              <a href="javascript:void(0)" @click="buy(facilityDetails.id)"><p class="buy">一键购买</p></a>
             </div>
           </div>
         </div>
         <div class="intro_text">
           <span>设备简介</span>
-          <p style="line-height: 18px">{{facilityDetails.AssetContent}}</p>
+          <p style="line-height: 18px">{{facilityDetails.assetcontent}}</p>
         </div>
       </div>
     </div>
@@ -67,37 +67,37 @@
             <li>当前位置 ：</li>
             <li><a href="#/">首页></a></li>
             <li><a href="#/moreFacility">维修设备></a></li>
-            <li>{{facilityDetails.Assetname}}</li>
+            <li>{{facilityDetails.assetname}}</li>
           </ul>
         </div>
       </div>
       <div class="details">
         <div class="clearfix details_top">
           <div class="fl facility_img">
-            <img :src="facilityDetails.Asseturl" alt="">
+            <img :src="facilityDetails.asseturl" alt="">
           </div>
           <div class="fr facility_intro">
-            <h4>{{facilityDetails.Assetname}}</h4>
+            <h4>{{facilityDetails.assetname}}</h4>
             <div class="attestation">
-              <span class="merchant" v-if="facilityDetails.AuthType==='认证商家'">{{facilityDetails.AuthType}}</span>
-              <span class="person" v-if="facilityDetails.AuthType==='认证个人'">{{facilityDetails.AuthType}}</span>
-              <span class="trust" v-if="facilityDetails.CreditLevel!=='未认证'">{{facilityDetails.CreditLevel}}</span>
+              <span class="merchant" v-if="facilityDetails.authtype==='认证商家'">{{facilityDetails.authtype}}</span>
+              <span class="person" v-if="facilityDetails.authtype==='认证个人'">{{facilityDetails.authtype}}</span>
+              <span class="trust" v-if="facilityDetails.creditlevel!=='未认证'">{{facilityDetails.creditlevel}}</span>
             </div>
-            <div :class="facilityDetails.ShopCartId?'like':'dislike'" @click="toggleLike(facilityDetails.Id)">收藏</div>
+            <div :class="facilityDetails.shopcart_id?'like':'dislike'" @click="toggleLike(facilityDetails.id)">收藏</div>
             <a href="#/facilitySource"  @click="getFacilitySource"><p class="tracing">可信溯源</p></a>
             <div class="intro_list">
               <ul>
                 <li>
                   <span>资产所属人</span>
-                  <span class="holder">：{{facilityDetails.Assetowner}}</span>
+                  <span class="holder">：{{facilityDetails.assetowner}}</span>
                 </li>
                 <li>
                   <span>权益</span>
-                  <span>：{{facilityDetails.SellType}}</span>
+                  <span>：{{facilityDetails.sell_type}}</span>
                 </li>
                 <li>
                   <span>每份价格</span>
-                  <span>：{{facilityDetails.Price}}</span>
+                  <span>：{{facilityDetails.price}}</span>
                 </li>
                 <li>
                   <span>已购份数</span>
@@ -105,7 +105,7 @@
                 </li>
                 <li>
                   <span>设备ID</span>
-                  <span>：{{facilityDetails.Id}}</span>
+                  <span>：{{facilityDetails.id}}</span>
                 </li>
               </ul>
             </div>
@@ -113,19 +113,19 @@
               <ul>
                 <li>
                   <span>发布时间</span>
-                  <span>：{{facilityDetails.SellAt}}</span>
+                  <span>：{{facilityDetails.sell_at}}</span>
                 </li>
                 <li>
                   <span>拆分截止时间</span>
-                  <span>：{{facilityDetails.SplitExpire}}</span>
+                  <span>：{{facilityDetails.split_expire}}</span>
                 </li>
                 <li>
                   <span>收益起止时间</span>
-                  <span class="holder">：{{facilityDetails.ProfitStart}}~{{facilityDetails.ProfitEnd}}</span>
+                  <span class="holder">：{{facilityDetails.profit_start}}~{{facilityDetails.profit_end}}</span>
                 </li>
                 <li>
                   <span>收益方式</span>
-                  <span>：{{facilityDetails.PayMethod}}</span>
+                  <span>：{{facilityDetails.pay_method}}</span>
                 </li>
                 <li>
                   <span>认购份数</span>
@@ -134,13 +134,13 @@
                 </span>
                 </li>
               </ul>
-              <a href="javascript:void(0)" @click="buy(facilityDetails.Id)"><p class="buy">一键购买</p></a>
+              <a href="javascript:void(0)" @click="buy(facilityDetails.id)"><p class="buy">一键购买</p></a>
             </div>
           </div>
         </div>
         <div class="intro_text">
           <span>设备简介</span>
-          <p style="line-height: 18px">{{facilityDetails.AssetContent}}</p>
+          <p style="line-height: 18px">{{facilityDetails.assetcontent}}</p>
         </div>
       </div>
     </div>
@@ -152,6 +152,7 @@
   import axios from "axios";
   import myTopSearch from "../topSearch/topSearch"
   import {baseURL,cardURL} from '@/common/js/public.js';
+  import formatDate from "@/common/js/formatDate.js";
   const querystring = require('querystring');
   export default {
     name: "facilityDetails",
@@ -176,9 +177,8 @@
         this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
         this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
       }
-      this.facilityDetails=JSON.parse(sessionStorage.getItem("facilityDetails"));
-      this.apiKey=this.facilityDetails.Apikey;
-      this.assetId=this.facilityDetails.Assetid;
+      this.apiKey=JSON.parse(sessionStorage.getItem("facilityDetails")).apikey;
+      this.assetId=JSON.parse(sessionStorage.getItem("facilityDetails")).assetid;
       this.acquireFacilityDetails()
     },
     methods: {
@@ -206,10 +206,10 @@
       toggleLike(val){
         if(sessionStorage.getItem("loginInfo")){
           let likeInfo=this.facilityDetails;
-          this.apiKey=likeInfo.Apikey;
-          this.assetId=likeInfo.Assetid;
-          this.id=likeInfo.ShopCartId;
-          if(likeInfo.ShopCartId===""){
+          this.apiKey=likeInfo.apikey;
+          this.assetId=likeInfo.assetid;
+          this.id=likeInfo.shopcart_id;
+          if(likeInfo.shopcart_id===""){
             axios({
               method: "POST",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
@@ -219,12 +219,12 @@
               }
             }).then((res) => {
               this.id=res.data._id;
-              likeInfo.ShopCartId=this.id;
+              likeInfo.shopcart_id=this.id;
               this.addCollection();
             }).catch((err) => {
               console.log(err);
             });
-          }else if(likeInfo.ShopCartId!==""){
+          }else if(likeInfo.shopcart_id!==""){
             axios({
               method: "DELETE",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
@@ -233,7 +233,7 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              likeInfo.ShopCartId="";
+              likeInfo.shopcart_id="";
               this.subtractCollection();
             }).catch((err) => {
               console.log(err);
@@ -252,13 +252,17 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
-            if(res.data.SellType==="收益权"){
-              this.purchasedCount=res.data.PurchasedCount;
-              this.splitCount=res.data.SplitCount;
-              this.restCount=res.data.RestCount;
+            res.data.sell_at=formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
+            if(res.data.sell_type==="收益权"){
+              res.data.split_expire=formatDate(new Date(res.data.split_expire), "yyyy-MM-dd");
+              res.data.profit_start=formatDate(new Date(res.data.profit_start), "yyyy-MM-dd");
+              res.data.profit_end=formatDate(new Date(res.data.profit_end), "yyyy-MM-dd");
+              this.purchasedCount=res.data.purchased_count;
+              this.splitCount=res.data.split_count;
+              this.restCount=res.data.rest_count;
             }
-            res.data.Assetowner=res.data.Assetowner.substr(0,13)+"..."+res.data.Assetowner.substr(res.data.Assetowner.length-14,13);
-            this.equities=res.data.SellType;
+            res.data.assetowner=res.data.assetowner.substr(0,13)+"..."+res.data.assetowner.substr(res.data.assetowner.length-14,13);
+            this.equities=res.data.sell_type;
             this.facilityDetails=res.data;
           }).catch((err) => {
             console.log(err);
@@ -271,13 +275,17 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
-            if(res.data.SellType==="收益权"){
-              this.purchasedCount=res.data.PurchasedCount;
-              this.splitCount=res.data.SplitCount;
-              this.restCount=res.data.RestCount;
+            res.data.sell_at=formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
+            if(res.data.sell_type==="收益权"){
+              res.data.split_expire=formatDate(new Date(res.data.split_expire), "yyyy-MM-dd");
+              res.data.profit_start=formatDate(new Date(res.data.profit_start), "yyyy-MM-dd");
+              res.data.profit_end=formatDate(new Date(res.data.profit_end), "yyyy-MM-dd");
+              this.purchasedCount=res.data.purchased_count;
+              this.splitCount=res.data.split_count;
+              this.restCount=res.data.rest_count;
             }
-            res.data.Assetowner=res.data.Assetowner.substr(0,13)+"..."+res.data.Assetowner.substr(res.data.Assetowner.length-14,13);
-            this.equities=res.data.SellType;
+            res.data.assetowner=res.data.assetowner.substr(0,13)+"..."+res.data.assetowner.substr(res.data.assetowner.length-14,13);
+            this.equities=res.data.sell_type;
             this.facilityDetails=res.data
           }).catch((err) => {
             console.log(err);
@@ -296,10 +304,10 @@
       buy(val){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
           let buyInfo=this.facilityDetails;
-          this.apiKey=buyInfo.Apikey;
-          this.assetId=buyInfo.Assetid;
+          this.apiKey=buyInfo.apikey;
+          this.assetId=buyInfo.assetid;
           var data={};
-          if(this.facilityDetails.SellType==="收益权"){
+          if(this.facilityDetails.sell_type==="收益权"){
             if(this.num===0){
               this.openLimited()
               return
@@ -316,8 +324,9 @@
             }).then((res) => {
               let buyInfoObj={};
               buyInfoObj.buyInfo=buyInfo;
-              buyInfoObj.buyInfo.Count=this.num;
+              buyInfoObj.buyInfo.count=this.num;
               buyInfoObj.turnInfo=res.data;
+              console.log(buyInfoObj)
               this.getBuy(buyInfoObj);
               window.location.href="#/checkOrder"
             }).catch((err) => {
@@ -336,7 +345,7 @@
             }).then((res) => {
               let buyInfoObj={};
               buyInfoObj.buyInfo=buyInfo;
-              buyInfoObj.buyInfo.Count=1;
+              buyInfoObj.buyInfo.count=1;
               buyInfoObj.turnInfo=res.data;
               this.getBuy(buyInfoObj);
               window.location.href="#/checkOrder"

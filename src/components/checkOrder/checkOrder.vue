@@ -5,7 +5,7 @@
       <span>核对订单信息</span>
     </div>
     
-    <div class="nav_content_table" v-if="buyInfo.Apikey==='5a6be74a55aaf50001a5e250'">
+    <div class="nav_content_table" v-if="buyInfoObj.apikey==='5a6be74a55aaf50001a5e250'">
       <table>
         <thead>
         <tr class="no_img_thead">
@@ -20,16 +20,16 @@
         </thead>
         <tbody>
         <tr class="no_img_tbody">
-          <td>{{buyInfo.Assetname}}</td>
-          <td>{{buyInfo.SellType}}</td>
-          <td>1</td>
-          <td>{{buyInfo.Price}}</td>
+          <td>{{buyInfoObj.assetname}}</td>
+          <td>{{buyInfoObj.sell_type}}</td>
+          <td>{{buyInfoObj.count}}</td>
+          <td>{{buyInfoObj.price}}</td>
         </tr>
         </tbody>
       </table>
     </div>
     
-    <div class="nav_content_table" v-if="buyInfo.Apikey==='5ae04522cff7cb000194f2f4'">
+    <div class="nav_content_table" v-if="buyInfoObj.apikey==='5ae04522cff7cb000194f2f4'">
       <table>
         <thead>
         <tr class="img_thead">
@@ -45,10 +45,10 @@
         </thead>
         <tbody>
         <tr class="img_tbody">
-          <td><img :src="buyInfo.Asseturl" alt=""></td>
-          <td>{{buyInfo.Assetname}}</td>
-          <td>{{buyInfo.SellType}}</td>
-          <td>{{buyInfo.Count}}</td>
+          <td><img :src="buyInfoObj.asseturl" alt=""></td>
+          <td>{{buyInfoObj.assetname}}</td>
+          <td>{{buyInfoObj.sell_type}}</td>
+          <td>{{buyInfoObj.count}}</td>
           <td>{{total}}</td>
         </tr>
         </tbody>
@@ -89,7 +89,7 @@
       <div class="check_code">
         <p>可使用可信币，进行等价交易。</p><br>
         <p>提示：可用其它钱包地址支付</p>
-        <img class="check_code_img" :src="`data:image/png;base64,${turnInfo.png}`" alt="" v-if="walletAddress!==''">
+        <img class="check_code_img"alt="" v-if="walletAddress!==''">
       </div>
     </div>
     
@@ -110,7 +110,7 @@
         <div class="check_success">
           <img src="./images/payment.png" alt="">
           <p>支付成功！</p>
-          <router-link to="/orderHistory" class="to_home">返回主页</router-link>
+          <router-link to="/personalAssets" class="to_home">查看资产</router-link>
         </div>
       </div>
     </div>
@@ -122,6 +122,7 @@
   import {baseURL, cardURL} from '@/common/js/public.js';
   import myTopSearch from "../topSearch/topSearch"
   import {BigNumber} from 'bignumber.js';
+  import formatDate from "@/common/js/formatDate.js";
   
   export default {
     name: "checkOrder",
@@ -130,6 +131,8 @@
     },
     data() {
       return {
+        integralInfo:{},
+        orderNum:"",
         userId: "",
         token: "",
         apiKey: "",
@@ -138,8 +141,8 @@
         walletAddress: "",
         balance: 0,
         buyInfoObj: {},
-        buyInfo: {},
-        turnInfo: {},
+        /*buyInfo: {},
+        turnInfo: {},*/
         caseDetails: {},
         facilityDetails: {},
         next: 1,
@@ -153,11 +156,13 @@
         this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
         this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
         if (JSON.parse(sessionStorage.getItem("buyInfoObj"))) {
-          this.buyInfoObj = JSON.parse(sessionStorage.getItem("buyInfoObj"));
+          this.orderNum=JSON.parse(sessionStorage.getItem("buyInfoObj")).orderNum
+          /*this.buyInfoObj = JSON.parse(sessionStorage.getItem("buyInfoObj"));
           this.buyInfo = this.buyInfoObj.buyInfo;
           this.turnInfo = this.buyInfoObj.turnInfo;
-          this.assetId = this.buyInfo.Assetid;
+          this.assetId = this.buyInfoObj.assetid;*/
         }
+        this.acquireOrderInfo();
         this.acquireUserInfo();
       }
     },
@@ -168,7 +173,7 @@
     },
     computed: {
       total: function () {
-        return this.buyInfo.Price * this.buyInfo.Count
+        return this.buyInfoObj.price * this.buyInfoObj.count
       }
     },
     methods: {
@@ -184,6 +189,7 @@
         });
       },
       notarize() {
+        this.acquireIntegralInfo()
         this.next = 2;
         if (this.walletAddress) {
           var that = this;
@@ -194,10 +200,38 @@
           this.open()
         }
       },
+      acquireIntegralInfo(){
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/order/pay/${this.orderNum}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          this.integralInfo=res.data;
+          console.log(this.integralInfo)
+        }).catch((err) => {
+          console.log(err);
+        });
+      },
+      acquireOrderInfo() {
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/order/detail/${this.orderNum}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          this.buyInfoObj =res.data;
+          this.orderNum=this.buyInfoObj.orderNum;
+        }).catch((err) => {
+          console.log(err);
+        });
+      },
       acquireOrderStatus() {
         axios({
           method: "GET",
-          url: `${cardURL}/v1/asset-payment/mall/${this.mallId}/order/${this.turnInfo.id}`,
+          url: `${cardURL}/v1/asset-payment/mall/${this.mallId}/order/${this.orderNum}`,
           headers: {
             "Content-Type": "application/json",
           }

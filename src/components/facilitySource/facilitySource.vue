@@ -7,13 +7,13 @@
           <li>当前位置 ：</li>
           <li><a href="#/">首页></a></li>
           <li><a href="#/moreFacility">维修设备></a></li>
-          <li>{{facilitySourceTitle}}</li>
+          <li>{{facilityDetails.assetname}}</li>
         </ul>
       </div>
     </div>
     <div class="details">
-      <h4>{{facilitySourceTitle}}</h4>
-      <div :class="facilityDetails.ShopCartId?'like':'dislike'" @click="toggleLike(facilityDetails.Id)">收藏</div>
+      <h4>{{facilityDetails.assetname}}</h4>
+      <div :class="facilityDetails.shopcart_id?'like':'dislike'" @click="toggleLike(facilityDetails.id)">收藏</div>
       <div class="transfer_record">
         <span>资产转让记录</span>
         <ul v-for="(item,index) of facilitySource" :key="item.id">
@@ -35,7 +35,7 @@
           </li>
         </ul>
         <a href="#/facilityDetails" @click="getFacilityDetails"><p class="asset_details">案例详情</p></a>
-        <a href="javascript:void(0)" @click="buy(facilityDetails.Id)"><p class="buy">一键购买</p></a>
+        <a href="javascript:void(0)" @click="buy(facilityDetails.id)"><p class="buy">一键购买</p></a>
       </div>
       <div class="use_record">
         <span>资产使用记录</span>
@@ -74,6 +74,7 @@
   import axios from "axios";
   import myTopSearch from "../topSearch/topSearch"
   import {baseURL, cardURL} from '@/common/js/public.js';
+  import formatDate from "@/common/js/formatDate.js";
   const querystring = require('querystring');
   
   export default {
@@ -96,13 +97,11 @@
         this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
         this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
       }
-      this.facilitySourceTitle = JSON.parse(sessionStorage.getItem("facilitySource")).Assetname;
-      this.assetId = JSON.parse(sessionStorage.getItem("facilitySource")).Assetid;
-      this.apiKey = JSON.parse(sessionStorage.getItem("facilitySource")).Apikey;
-      this.facilityDetails = JSON.parse(sessionStorage.getItem("facilitySource"));
+      this.assetId = JSON.parse(sessionStorage.getItem("facilitySource")).assetid;
+      this.apiKey = JSON.parse(sessionStorage.getItem("facilitySource")).apikey;
+      this.acquireFacilityDetails();
       this.acquireFacilitySource();
       this.acquireUsageRecord();
-      this.acquireFacilityDetails();
     },
     methods: {
       open() {
@@ -120,10 +119,10 @@
         if(sessionStorage.getItem("loginInfo")){
           let likeInfo=this.facilityDetails;
           this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-          this.apiKey=likeInfo.Apikey;
-          this.assetId=likeInfo.Assetid;
-          this.id=likeInfo.ShopCartId;
-          if(likeInfo.ShopCartId===""){
+          this.apiKey=likeInfo.apikey;
+          this.assetId=likeInfo.assetid;
+          this.id=likeInfo.shopcart_id;
+          if(likeInfo.shopcart_id===""){
             axios({
               method: "POST",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
@@ -133,12 +132,12 @@
               }
             }).then((res) => {
               this.id=res.data._id;
-              likeInfo.ShopCartId=this.id
+              likeInfo.shopcart_id=this.id
               this.addCollection()
             }).catch((err) => {
               console.log(err);
             });
-          }else if(likeInfo.ShopCartId!==""){
+          }else if(likeInfo.shopcart_id!==""){
             axios({
               method: "DELETE",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
@@ -147,7 +146,7 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              likeInfo.ShopCartId="";
+              likeInfo.shopcart_id="";
               this.subtractCollection()
             }).catch((err) => {
               console.log(err);
@@ -166,6 +165,9 @@
           }
         }).then((res) => {
           if (res.data.data != []) {
+            for(let v of res.data.data){
+              v.updated_at=formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
+            }
             this.facilitySource = res.data.data
           } else {
             this.facilitySource = []
@@ -183,6 +185,9 @@
           }
         }).then((res) => {
           if (res.data.data != null) {
+            for(let v of res.data.data){
+              v.updated_at=formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
+            }
             this.usageRecord = res.data.data
           } else {
             this.usageRecord = []
@@ -200,6 +205,12 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
+            res.data.sell_at=formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
+            if(res.data.sell_type==="收益权"){
+              res.data.split_expire=formatDate(new Date(res.data.split_expire), "yyyy-MM-dd");
+              res.data.profit_start=formatDate(new Date(res.data.profit_start), "yyyy-MM-dd");
+              res.data.profit_end=formatDate(new Date(res.data.profit_end), "yyyy-MM-dd");
+            }
             this.facilityDetails=res.data
           }).catch((err) => {
             console.log(err);
@@ -212,6 +223,12 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
+            res.data.sell_at=formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
+            if(res.data.sell_type==="收益权"){
+              res.data.split_expire=formatDate(new Date(res.data.split_expire), "yyyy-MM-dd");
+              res.data.profit_start=formatDate(new Date(res.data.profit_start), "yyyy-MM-dd");
+              res.data.profit_end=formatDate(new Date(res.data.profit_end), "yyyy-MM-dd");
+            }
             this.facilityDetails=res.data
           }).catch((err) => {
             console.log(err);
@@ -230,10 +247,10 @@
       buy(val){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
           let buyInfo=this.facilityDetails;
-          this.apiKey=buyInfo.Apikey;
-          this.assetId=buyInfo.Assetid;
+          this.apiKey=buyInfo.apikey;
+          this.assetId=buyInfo.assetid;
           var data={};
-          if(this.facilityDetails.SellType==="收益权"){
+          if(this.facilityDetails.sell_type==="收益权"){
             data.nums=1;
             axios({
               method: "POST",
@@ -246,7 +263,7 @@
             }).then((res) => {
               let buyInfoObj={};
               buyInfoObj.buyInfo=buyInfo;
-              buyInfoObj.buyInfo.Count=1;
+              buyInfoObj.buyInfo.count=1;
               buyInfoObj.turnInfo=res.data;
               this.getBuy(buyInfoObj);
               window.location.href="#/checkOrder"
@@ -266,7 +283,7 @@
             }).then((res) => {
               let buyInfoObj={};
               buyInfoObj.buyInfo=buyInfo;
-              buyInfoObj.buyInfo.Count=1;
+              buyInfoObj.buyInfo.count=1;
               buyInfoObj.turnInfo=res.data;
               this.getBuy(buyInfoObj);
               window.location.href="#/checkOrder"
