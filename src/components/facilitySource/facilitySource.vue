@@ -246,12 +246,16 @@
       },
       buy(val){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-          let buyInfo=this.facilityDetails;
-          this.apiKey=buyInfo.apikey;
-          this.assetId=buyInfo.assetid;
+          let buyInfoObj=this.facilityDetails;
+          this.apiKey=buyInfoObj.apikey;
+          this.assetId=buyInfoObj.assetid;
           var data={};
           if(this.facilityDetails.sell_type==="收益权"){
-            data.nums=1;
+            if(this.num===0){
+              this.openLimited()
+              return
+            }
+            data.nums=this.num;
             axios({
               method: "POST",
               url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
@@ -261,10 +265,7 @@
                 "X-Access-Token":this.token,
               }
             }).then((res) => {
-              let buyInfoObj={};
-              buyInfoObj.buyInfo=buyInfo;
-              buyInfoObj.buyInfo.count=1;
-              buyInfoObj.turnInfo=res.data;
+              buyInfoObj=res.data;
               this.getBuy(buyInfoObj);
               window.location.href="#/checkOrder"
             }).catch((err) => {
@@ -275,16 +276,13 @@
             axios({
               method: "POST",
               url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
-              data:querystring.stringify(data),
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "X-Access-Token":this.token,
-              }
+              },
+              data:querystring.stringify(data),
             }).then((res) => {
-              let buyInfoObj={};
-              buyInfoObj.buyInfo=buyInfo;
-              buyInfoObj.buyInfo.count=1;
-              buyInfoObj.turnInfo=res.data;
+              buyInfoObj=res.data;
               this.getBuy(buyInfoObj);
               window.location.href="#/checkOrder"
             }).catch((err) => {

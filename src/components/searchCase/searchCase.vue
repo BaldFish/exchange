@@ -211,11 +211,11 @@
       },
       buy(val){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-          let buyInfo=_.find(this.searchCaseList,function (o) {
+          let buyInfoObj=_.find(this.caseList,function (o) {
             return o.id===val
           });
-          this.apiKey=buyInfo.apikey;
-          this.assetId=buyInfo.assetid;
+          this.apiKey=buyInfoObj.apikey;
+          this.assetId=buyInfoObj.assetid;
           var data={};
           data.nums=1;
           axios({
@@ -227,10 +227,7 @@
             },
             data:querystring.stringify(data),
           }).then((res) => {
-            let buyInfoObj={};
-            buyInfoObj.buyInfo=buyInfo;
-            buyInfoObj.buyInfo.count=1;
-            buyInfoObj.turnInfo=res.data;
+            buyInfoObj=res.data;
             this.getBuy(buyInfoObj);
             window.location.href="#/checkOrder"
           }).catch((err) => {

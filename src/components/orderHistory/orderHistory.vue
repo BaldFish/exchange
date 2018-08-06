@@ -64,7 +64,7 @@
           </td>
           <td class="no_img_lastTd" v-if="item.orderStatus === 1">
             <p>未完成</p>
-            <router-link to="/checkOrder">去支付 ></router-link>
+            <router-link to="" @click.native="pay(item.orderNum)">去支付 ></router-link>
           </td>
         </tr>
         </tbody>
@@ -146,6 +146,7 @@
           }
           this.dataList = res.data.data;
           this.total = res.data.count;
+          console.log(this.dataList)
         }).catch(error => {
           console.log(error);
         });
@@ -217,8 +218,23 @@
           this.currentPage = 1;
           this.getData()
         }
+      },
+      pay(val){
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          let buyInfoObj=_.find(this.dataList,function (o) {
+            return o.orderNum===val
+          });
+          console.log(buyInfoObj)
+          this.getPay(buyInfoObj);
+          window.location.href="#/checkOrder"
+        }
+      },
+      getPay(val){
+        this.$store.commit("changeBuy",val);
       }
     },
+    
+    
 
   }
 </script>

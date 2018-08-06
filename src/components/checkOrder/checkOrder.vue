@@ -89,7 +89,7 @@
       <div class="check_code">
         <p>可使用可信币，进行等价交易。</p><br>
         <p>提示：可用其它钱包地址支付</p>
-        <img class="check_code_img":src="paymentInfo.png" alt="" v-if="walletAddress!==''">
+        <img class="check_code_img":src="`data:image/png;base64,${paymentInfo.png}`" alt="" v-if="walletAddress!==''">
       </div>
     </div>
     
@@ -181,16 +181,7 @@
         });
       },
       notarize() {
-        this.acquireIntegralInfo()
-        this.next = 2;
-        if (this.walletAddress) {
-          var that = this;
-          this.timer = window.setTimeout(function () {
-            that.acquireOrderStatus()
-          }, 5000);
-        } else {
-          this.open()
-        }
+        this.acquireIntegralInfo();
       },
       acquireIntegralInfo(){
         axios({
@@ -200,8 +191,20 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          this.paymentInfo=res.data;
-          console.log(this.paymentInfo)
+          if(this.buyInfoObj.orderStatus===0){
+            return
+          }else if(this.buyInfoObj.orderStatus===1){
+            this.paymentInfo=res.data;
+            this.next = 2;
+            if (this.walletAddress) {
+              let that = this;
+              this.timer = window.setTimeout(function () {
+                that.acquireOrderStatus()
+              }, 5000);
+            } else {
+              this.open()
+            }
+          }
         }).catch((err) => {
           console.log(err);
         });
@@ -216,6 +219,9 @@
         }).then((res) => {
           this.buyInfoObj =res.data;
           this.orderNum=this.buyInfoObj.orderNum;
+          if(this.buyInfoObj.orderStatus===2){
+            this.next=3
+          }
         }).catch((err) => {
           console.log(err);
         });
