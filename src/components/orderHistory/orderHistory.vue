@@ -146,7 +146,6 @@
           }
           this.dataList = res.data.data;
           this.total = res.data.count;
-          console.log(this.dataList)
         }).catch(error => {
           console.log(error);
         });
@@ -224,7 +223,6 @@
           let buyInfoObj=_.find(this.dataList,function (o) {
             return o.orderNum===val
           });
-          console.log(buyInfoObj)
           this.getPay(buyInfoObj);
           window.location.href="#/checkOrder"
         }
