@@ -146,6 +146,7 @@
           }
           this.dataList = res.data.data;
           this.total = res.data.count;
+          console.log(this.dataList)
         }).catch(error => {
           console.log(error);
         });

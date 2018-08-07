@@ -1,9 +1,19 @@
 <template>
   <div class="home">
     <my-topSearch></my-topSearch>
-  <!--  <a href="#/publicityPage">
-      <div class="banner"></div>
-    </a>-->
+    <!--  <a href="#/publicityPage">
+        <div class="banner"></div>
+      </a>-->
+    <div class="nav">
+      <ul>
+        <li>
+          <router-link to="/home">资产平台</router-link>
+        </li>
+        <li>
+          <router-link to="/transferPlatform">转让平台</router-link>
+        </li>
+      </ul>
+    </div>
     <div class="carousel">
       <el-carousel :interval="3000" arrow="always">
         <el-carousel-item v-for="item in bannerList" :key="item.link_url">
@@ -11,7 +21,7 @@
         </el-carousel-item>
       </el-carousel>
     </div>
-
+    
     <div class="list">
       <div class="case clearfix">
         <div class="fl fl_bg">
@@ -111,10 +121,10 @@
 <script>
   import axios from "axios";
   import _ from "lodash";
-  import {baseURL,cardURL} from '@/common/js/public.js';
+  import {baseURL, cardURL} from '@/common/js/public.js';
   import formatDate from "@/common/js/formatDate.js";
   import myTopSearch from "../topSearch/topSearch"
-
+  
   export default {
     name: "home",
     data() {
@@ -123,14 +133,14 @@
         caseLimit: 3,
         facilityPage: 1,
         facilityLimit: 6,
-        caseList:[],
-        facilityList:[],
-        userId:"",
-        token:"",
+        caseList: [],
+        facilityList: [],
+        userId: "",
+        token: "",
         //用webpack搭建的项目不能直接使用绝对路径，要用require，如果不使用这个，必须是线上图片。http类型的
-        bannerList:[
-          {link_url:'javascript:void(0)',picture_url:require('./images/banner.png')},
-          {link_url:'#/publicityPage',picture_url:require('./images/banner_002.png')},
+        bannerList: [
+          {link_url: 'javascript:void(0)', picture_url: require('./images/banner.png')},
+          {link_url: '#/publicityPage', picture_url: require('./images/banner_002.png')},
         ],
       }
     },
@@ -157,10 +167,10 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          for(let v of res.data.data){
-            v.sell_at=formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+          for (let v of res.data.data) {
+            v.sell_at = formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
           }
-          this.caseList=res.data.data;
+          this.caseList = res.data.data;
         }).catch((err) => {
           console.log(err)
         })
@@ -174,31 +184,31 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          for(let v of res.data.data){
-            v.sell_at=formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+          for (let v of res.data.data) {
+            v.sell_at = formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
           }
-          this.facilityList=res.data.data
+          this.facilityList = res.data.data
         }).catch((err) => {
         })
       },
       getCaseDetails(val) {
-        this.$store.commit("changeCaseDetails",_.find(this.caseList,function (o) {
-          return o.id===val
+        this.$store.commit("changeCaseDetails", _.find(this.caseList, function (o) {
+          return o.id === val
         }));
       },
       getCaseSource(val) {
-        this.$store.commit("changeCaseSource",_.find(this.caseList,function (o) {
-          return o.id===val
+        this.$store.commit("changeCaseSource", _.find(this.caseList, function (o) {
+          return o.id === val
         }));
       },
       getFacilityDetails(val) {
-        this.$store.commit("changeFacilityDetails",_.find(this.facilityList,function (o) {
-          return o.id===val
+        this.$store.commit("changeFacilityDetails", _.find(this.facilityList, function (o) {
+          return o.id === val
         }));
       },
       getFacilitySource(val) {
-        this.$store.commit("changeFacilitySource",_.find(this.facilityList,function (o) {
-          return o.id===val
+        this.$store.commit("changeFacilitySource", _.find(this.facilityList, function (o) {
+          return o.id === val
         }));
       },
     },
@@ -222,6 +232,35 @@
       /*background-size:contain;*/
       /*background-size:auto;*/
     }
+    .nav {
+      width 100%
+      height 26px
+      border-bottom 2px solid #d91e01
+      vertical-align top
+      padding-left 34px
+      ul {
+        width 1212px
+        margin 0 auto
+        font-size 0
+        li {
+          font-size: 14px;
+          color: #d91e01;
+          display inline-block
+          margin-right 46px
+          a {
+            font-size: 14px;
+            color: #333333;
+          }
+        }
+        li:nth-child(1) {
+          a {
+            font-size: 14px;
+            color: #d91e01;
+          }
+        }
+      }
+    }
+    
     .list {
       width 1212px
       margin 0 auto
@@ -334,8 +373,8 @@
             background-image: url('./images/Profit.png');
           }
         }
-        .belong{
-          a{
+        .belong {
+          a {
             display block
             line-height 22px
             padding-left 26px
@@ -344,7 +383,7 @@
             background-position: top left;
             color #666666;
             font-size 14px;
-            span{
+            span {
               color #222222;
               font-size 16px
             }
@@ -418,13 +457,13 @@
             -webkit-line-clamp: 2;
             overflow: hidden;
           }
-          .belong{
-            a{
+          .belong {
+            a {
               width 210px
               display block
-              text-overflow:ellipsis;
-              white-space:nowrap;
-              overflow:hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
               line-height 22px
               padding-left 26px
               background-image: url('./images/person.png');
@@ -432,7 +471,7 @@
               background-position: top left;
               color #666666;
               font-size 14px;
-              span{
+              span {
                 color #222222;
                 font-size 16px
               }
@@ -561,48 +600,49 @@
         }
       }
     }
+    
   }
 </style>
 <style lang="stylus">
-  .carousel{
+  .carousel {
     max-width 1920px
     //min-width 1212px
     height 600px
     margin 0 auto
-    .el-carousel{
+    .el-carousel {
       width 100%
       height 100%
-      .el-carousel__container{
+      .el-carousel__container {
         width 100%
         height 100%
-        .el-carousel__arrow{
-          width:50px;
+        .el-carousel__arrow {
+          width: 50px;
           height: 50px;
           font-size: 30px;
         }
-        .el-carousel__item{
+        .el-carousel__item {
           width 100%
           height 100%
           text-align center
-          a{
-            img{
-              width:1920px;
+          a {
+            img {
+              width: 1920px;
               height 600px
               /*Firefox*/
-              margin:0 -moz-calc(50% - 1212px);
+              margin: 0 -moz-calc(50% - 1212px);
               /*chrome safari*/
-              margin:0 -webkit-calc(50% - 1212px);
+              margin: 0 -webkit-calc(50% - 1212px);
               /*Standard */
-              margin:0 calc(50% - 1212px);
+              margin: 0 calc(50% - 1212px);
             }
           }
         }
       }
-      .el-carousel__indicators{
-        .el-carousel__indicator{
+      .el-carousel__indicators {
+        .el-carousel__indicator {
           padding: 20px 6px;
-          .el-carousel__button{
-            width:36px;
+          .el-carousel__button {
+            width: 36px;
           }
         }
       }
