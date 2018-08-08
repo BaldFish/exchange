@@ -22,6 +22,7 @@ import mySearchCase from '@/components/searchCase/searchCase'
 import mySearchFacility from '@/components/searchFacility/searchFacility'
 import myPublicityPage from '@/components/publicityPage/publicityPage'
 import myTransferPlatform from '@/components/transferPlatform/transferPlatform'
+import mySeller from '@/components/seller/seller'
 Vue.use(Router);
 
 export default new Router({
@@ -144,6 +145,11 @@ export default new Router({
       path: '/transferPlatform',
       name: 'transferPlatform',
       component: myTransferPlatform
-    }
+    },
+    {
+      path: '/seller',
+      name: 'seller',
+      component: mySeller
+    },
   ]
 })

@@ -165,7 +165,7 @@
     },
     computed: {
       total: function () {
-        return this.buyInfoObj.price * this.buyInfoObj.count
+        return this.buyInfoObj.price
       }
     },
     methods: {
