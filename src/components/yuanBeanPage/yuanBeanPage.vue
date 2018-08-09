@@ -71,6 +71,7 @@
             <li>贡献汽车行驶数据；</li>
             <li>提供爱车作为共享汽车；</li>
             <li>工作岗位上表现优秀以作为奖励；</li>
+            <li>在“元征学院”里完成学习任务；</li>
             <li>为车链生态做出任何贡献，包括但不限于：争取到合作伙伴、研发出创新性新技术成果、撰写行业专利、扩大车链生态知名度与影响力、甚至仅仅是一条有价值的改进建议；</li>
             <li>……</li>
           </ul>
@@ -106,7 +107,7 @@
 <script>
   import myTopSearch from "../topSearch/topSearch"
   export default {
-    name: "login",
+    name: "yuanBeanPage",
     data() {
         return {}
     },
