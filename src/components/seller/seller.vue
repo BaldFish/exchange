@@ -4,9 +4,12 @@
     <my-toggle></my-toggle>
     <div class="presentation_bg">
       <div class="presentation_box">
-        <div class="logo"></div>
+        <div class="logo">
+        31312312
+        </div>
+        <p class="presentation">打造基于区块链技术的汽车数据生态</p>
       </div>
-      <p>打造基于区块链技术的汽车数据生态</p>
+      
     </div>
     <div class="headline">
       <p></p>
@@ -107,9 +110,31 @@
       background-image: url('./images/01.png');
       background-position: top center;
       background-repeat: no-repeat;
-      presentation_box{
-        .logo{}
-        .presentation{}
+      max-width 1920px
+      .presentation_box{
+        width 1212px
+        height 252px
+        margin 0 auto
+        position relative
+        font-size 0
+        .logo{
+          width 288px
+          height 104px
+          display inline-block
+          font-size 14px
+          position: absolute;
+          top: 50%;
+          transform: translate(102px, -50%);
+        }
+        .presentation{
+          width 664px
+          height 150px
+          display inline-block
+          font-size 14px
+          position: absolute;
+          top: 50%;
+          transform: translate(458px, -50%);
+        }
       }
     }
     .headline {
