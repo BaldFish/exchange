@@ -22,6 +22,8 @@ import mySearchCase from '@/components/searchCase/searchCase'
 import mySearchFacility from '@/components/searchFacility/searchFacility'
 import myPublicityPage from '@/components/publicityPage/publicityPage'
 import myTransferPlatform from '@/components/transferPlatform/transferPlatform'
+import myInfoPublicity from '@/components/infoPublicity/infoPublicity'
+import myYuanBeanPage from '@/components/yuanBeanPage/yuanBeanPage'
 Vue.use(Router);
 
 export default new Router({
@@ -144,6 +146,17 @@ export default new Router({
       path: '/transferPlatform',
       name: 'transferPlatform',
       component: myTransferPlatform
-    }
+    },
+    {
+      path: '/infoPublicity',
+      name: 'infoPublicity',
+      component: myInfoPublicity
+    },
+    {
+      path: '/yuanBeanPage',
+      name: 'yuanBeanPage',
+      component: myYuanBeanPage
+    },
+
   ]
 })
