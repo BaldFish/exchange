@@ -59,58 +59,77 @@
     
     <div class="check_container" v-if="next===1">
       <div class="check_info">
-        <h2>使用可信币抵用</h2>
+        <h2>确认订单</h2>
         <div class="check_title_info">
           <p v-if="walletAddress===''">未绑定钱包地址
             <router-link to="/securityCenter" class="to_bind">去绑定 ></router-link>
           </p>
           <p v-if="walletAddress!==''">钱包地址：{{walletAddress}}</p>
-          <p>可信币：{{balance}}</p>
+          <p>可信积分：{{balance}}</p>
         </div>
       </div>
-      <div class="check_code check_confirm">
-        <p>可使用可信币，进行等价交易。</p><br>
-        <p>提示：可用其它钱包地址支付</p>
+      <div class="check_code">
+        <div class="payment">
+          <span>选择支付方式：	&nbsp;</span>
+          <span class="pay">
+              <label class="pay_label">
+                <input class="pay_radio" type="radio" name="pay" value="1" v-model="value">
+                <span class="pay_radioInput"></span>银联
+              </label>
+              <label class="pay_label">
+                  <input class="pay_radio" type="radio" name="pay" value="2" v-model="value">
+                  <span class="pay_radioInput"></span>微信
+              </label>
+            <label class="pay_label">
+                  <input class="pay_radio" type="radio" name="pay" value="3" v-model="value">
+                  <span class="pay_radioInput"></span>可信积分
+              </label>
+            <label class="pay_label">
+                  <input class="pay_radio" type="radio" name="pay" value="4" v-model="value">
+                  <span class="pay_radioInput"></span>元豆
+              </label>
+            </span>
+        </div>
+        <p>可使用可信积分，进行等价交易。</p>
+        <p class="tip">提示：可用其它钱包地址支付</p>
         <button @click="notarize">确认支付</button>
       </div>
     </div>
     
-    <div class="check_container" v-if="next===2">
+    <div class="check_container">
       <div class="check_info">
-        <h2>使用可信币抵用</h2>
+        <h2>确认订单</h2>
         <div class="check_title_info">
           <p v-if="walletAddress===''">未绑定钱包地址
             <router-link to="/securityCenter" class="to_bind">去绑定 ></router-link>
           </p>
           <p v-if="walletAddress!==''">钱包地址：{{walletAddress}}</p>
-          <p>可信币：{{balance}}</p>
+          <p>可信积分：{{balance}}</p>
         </div>
       </div>
       <div class="check_code">
-        <p>可使用可信币，进行等价交易。</p><br>
-        <p>提示：可用其它钱包地址支付</p>
+        <p>可使用可信积分，进行等价交易。</p>
+        <p class="tip">提示：可用其它钱包地址支付</p>
         <img class="check_code_img":src="`data:image/png;base64,${paymentInfo.png}`" alt="" v-if="walletAddress!==''">
       </div>
     </div>
     
-    <div class="check_container" v-if="next===3">
+    <div class="check_container">
       <div class="check_info">
-        <h2>使用可信币抵用</h2>
+        <h2>确认订单</h2>
         <div class="check_title_info">
           <p v-if="walletAddress===''">未绑定钱包地址
             <router-link to="/securityCenter" class="to_bind">去绑定 ></router-link>
           </p>
           <p v-if="walletAddress!==''">钱包地址：{{walletAddress}}</p>
-          <p>可信币：{{balance}}</p>
+          <p>可信积分：{{balance}}</p>
         </div>
       </div>
       <div class="check_code">
-        <p>可使用可信币，进行等价交易。</p><br>
-        <p>提示：可用其它钱包地址支付</p>
         <div class="check_success">
           <img src="./images/payment.png" alt="">
           <p>支付成功！</p>
-          <router-link to="/personalAssets" class="to_home">查看资产</router-link>
+          <router-link to="/personalAssets" class="to_see">查看资产</router-link>
         </div>
       </div>
     </div>
@@ -144,7 +163,8 @@
         next: 1,
         mallId: "5b18e49ea4cc0d14ed0a3a1c",
         timer: "",
-        phone: ""
+        phone: "",
+        value:"3",
       }
     },
     mounted() {
@@ -292,7 +312,7 @@
 </script>
 <style scoped>
   .nav_content {
-    width: 1078px;
+    width: 1080px;
     float: right;
   }
   
@@ -428,7 +448,7 @@
     color: #c6351e;
   }
   
-  .check_container {
+  /*.check_container {
     width: 1080px;
     height: 330px;
     background-color: #ffffff;
@@ -455,10 +475,8 @@
     color: #222222;
     width: 240px;
     height: 180px;
-    margin: 0 auto;
-    margin-top: 30px;
+    margin: 30px auto 0;
   }
-  
   .check_code_img {
     width: 100px;
     height: 100px;
@@ -489,12 +507,10 @@
     margin-top: 18px;
     margin-right: 14px;
   }
-  
   .check_confirm {
     width: 310px;
     margin-top: 92px;
   }
-  
   .check_confirm button {
     width: 100px;
     height: 30px;
@@ -511,5 +527,121 @@
   .to_bind {
     font-size: 14px;
     color: #c6351e;
+  }*/
+</style>
+<style scoped lang="stylus">
+  .check_container {
+    box-sizing border-box
+    width: 1080px;
+    //height: 330px;
+    background-color: #ffffff;
+    border-top: 6px solid #c6351e;
+    margin-bottom: 112px;
+    .check_info{
+      h2 {
+        font-size: 18px;
+        color: #222222;
+        margin: 18px;
+        margin-bottom: 10px;
+      }
+      .check_title_info {
+        font-size: 14px;
+        color: #666666;
+        margin-left: 18px;
+        line-height: 22px;
+        .to_bind {
+          font-size: 14px;
+          color: #c6351e;
+        }
+      }
+    }
+    .check_code {
+      text-align center
+      font-size: 16px;
+      color: #333333;
+      margin: 0 auto;
+      .payment{
+        margin-top 10px
+        margin-bottom 38px
+        color: #333333;
+        .pay {
+          .pay_label {
+            margin-right 26px
+            display: inline-block
+          }
+          .pay_radio {
+            display: none
+          }
+          .pay_radioInput {
+            //background-color: #fffff;
+            border: 1px solid #7d7d7d;
+            border-radius: 50%;
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+            vertical-align: middle;
+            line-height: 1
+          }
+          .pay_radio:checked + .pay_radioInput:after {
+            background-color: #d91e01;
+            border-radius: 50%;
+            content: "";
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin 2px
+          }
+          .pay_checkbox.pay_radioInput, .pay_radio:checked + .pay_checkbox.pay_radioInput:after {
+            border-radius: 0
+          }
+        }
+      }
+      p{
+        text-align center
+        line-height 36px
+        color: #222222;
+      }
+      .tip{
+        font-size 14px
+      }
+      button {
+        width: 100px;
+        height: 30px;
+        margin 0 auto
+        color: #ffffff;
+        line-height: 30px;
+        background-color: #c6351e;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        margin-top 24px
+        margin-bottom 20px
+      }
+      .check_code_img {
+        width: 100px;
+        height: 100px;
+        border: 1px solid #cccccc;
+        display: inline-block;
+        margin-top 24px
+        margin-bottom 20px
+      }
+      .check_success {
+        text-align: center;
+        font-size: 16px;
+        color: #c6351e;
+        margin-top: 4px;
+        .to_see {
+          width: 130px;
+          height: 30px;
+          display: inline-block;
+          background-color: #c6351e;
+          color: #ffffff;
+          line-height: 30px;
+          margin-top 10px
+          margin-bottom 10px
+        }
+      }
+    }
   }
 </style>

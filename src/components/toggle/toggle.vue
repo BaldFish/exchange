@@ -2,10 +2,10 @@
   <div class="toggle">
     <ul>
       <li>
-        <router-link to="/home">资产平台</router-link>
+        <router-link to="/home">资产交易平台</router-link>
       </li>
       <li>
-        <router-link to="/transferPlatform">转让平台</router-link>
+        <router-link to="/transferPlatform">资产转让平台</router-link>
       </li>
     </ul>
   </div>

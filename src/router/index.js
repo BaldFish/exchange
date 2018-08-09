@@ -144,6 +144,11 @@ export default new Router({
       component: myPublicityPage
     },
     {
+      path: '/yuanBeanPage',
+      name: 'yuanBeanPage',
+      component: myYuanBeanPage
+    },
+    {
       path: '/transferPlatform',
       name: 'transferPlatform',
       component: myTransferPlatform
@@ -152,11 +157,6 @@ export default new Router({
       path: '/infoPublicity',
       name: 'infoPublicity',
       component: myInfoPublicity
-    },
-    {
-      path: '/yuanBeanPage',
-      name: 'yuanBeanPage',
-      component: myYuanBeanPage
     },
     {
       path: '/seller',
