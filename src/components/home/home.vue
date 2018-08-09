@@ -1,10 +1,7 @@
 <template>
   <div class="home">
     <my-topSearch></my-topSearch>
-    <!--  <a href="#/publicityPage">
-        <div class="banner"></div>
-      </a>-->
-    <div class="nav">
+    <div class="toggle">
       <ul>
         <li>
           <router-link to="/home">资产平台</router-link>
@@ -21,7 +18,6 @@
         </el-carousel-item>
       </el-carousel>
     </div>
-    
     <div class="list">
       <div class="case clearfix">
         <div class="fl fl_bg">
@@ -124,9 +120,11 @@
   import {baseURL, cardURL} from '@/common/js/public.js';
   import formatDate from "@/common/js/formatDate.js";
   import myTopSearch from "../topSearch/topSearch"
-  
   export default {
     name: "home",
+    components: {
+      myTopSearch,
+    },
     data() {
       return {
         casePage: 1,
@@ -157,6 +155,8 @@
         console.log(error)
       });
     },
+    watch: {},
+    computed: {},
     methods: {
       //获取维修案例列表
       acquireCaseList() {
@@ -212,11 +212,6 @@
         }));
       },
     },
-    watch: {},
-    computed: {},
-    components: {
-      myTopSearch
-    }
   }
 </script>
 
@@ -232,7 +227,7 @@
       /*background-size:contain;*/
       /*background-size:auto;*/
     }
-    .nav {
+    .toggle {
       width 100%
       height 26px
       border-bottom 2px solid #d91e01
@@ -243,8 +238,6 @@
         margin 0 auto
         font-size 0
         li {
-          font-size: 14px;
-          color: #d91e01;
           display inline-block
           margin-right 46px
           a {
@@ -252,15 +245,15 @@
             color: #333333;
           }
         }
-        li:nth-child(1) {
-          a {
+        li:nth-child(1){
+          a{
             font-size: 14px;
-            color: #d91e01;
+            color:#d91e01;
           }
         }
       }
     }
-    
+  
     .list {
       width 1212px
       margin 0 auto
@@ -648,4 +641,6 @@
       }
     }
   }
+  
+
 </style>
