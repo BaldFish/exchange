@@ -110,7 +110,7 @@
       <div class="check_code">
         <p>可使用可信积分，进行等价交易。</p>
         <p class="tip">提示：可用其它钱包地址支付</p>
-        <img class="check_code_img":src="`data:image/png;base64,${paymentInfo.png}`" alt="" v-if="walletAddress!==''">
+        <img class="check_code_img" :src="`data:image/png;base64,${paymentInfo.png}`" alt="" v-if="walletAddress!==''">
       </div>
     </div>
     
@@ -131,6 +131,19 @@
           <p>支付成功！</p>
           <router-link to="/personalAssets" class="to_see">查看资产</router-link>
         </div>
+        <div class="code_box">
+          <p>您还未绑定钱包地址，请下载钱包APP生成钱包地址后，并绑定，方便在手机上查阅！</p>
+          <ul class="code">
+            <li>
+              <img src="./images/Android_cn.png" alt="Android_cn">
+              <p>Android中文版</p>
+            </li>
+            <li>
+              <img src="./images/Android_en.png" alt="Android_en">
+              <p>Android英文版</p>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -150,8 +163,8 @@
     },
     data() {
       return {
-        paymentInfo:{},
-        orderNum:"",
+        paymentInfo: {},
+        orderNum: "",
         userId: "",
         token: "",
         id: "",
@@ -164,7 +177,7 @@
         mallId: "5b18e49ea4cc0d14ed0a3a1c",
         timer: "",
         phone: "",
-        value:"3",
+        value: "3",
       }
     },
     mounted() {
@@ -172,7 +185,7 @@
         this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
         this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
         if (JSON.parse(sessionStorage.getItem("buyInfoObj"))) {
-          this.orderNum=JSON.parse(sessionStorage.getItem("buyInfoObj")).orderNum
+          this.orderNum = JSON.parse(sessionStorage.getItem("buyInfoObj")).orderNum
         }
         this.acquireOrderInfo();
         this.acquireUserInfo();
@@ -203,7 +216,7 @@
       notarize() {
         this.acquireIntegralInfo();
       },
-      acquireIntegralInfo(){
+      acquireIntegralInfo() {
         axios({
           method: "GET",
           url: `${baseURL}/v1/order/pay/${this.orderNum}`,
@@ -211,10 +224,10 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          if(this.buyInfoObj.orderStatus===0){
+          if (this.buyInfoObj.orderStatus === 0) {
             return
-          }else if(this.buyInfoObj.orderStatus===1){
-            this.paymentInfo=res.data;
+          } else if (this.buyInfoObj.orderStatus === 1) {
+            this.paymentInfo = res.data;
             this.next = 2;
             if (this.walletAddress) {
               let that = this;
@@ -237,10 +250,10 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          this.buyInfoObj =res.data;
-          this.orderNum=this.buyInfoObj.orderNum;
-          if(this.buyInfoObj.orderStatus===2){
-            this.next=3
+          this.buyInfoObj = res.data;
+          this.orderNum = this.buyInfoObj.orderNum;
+          if (this.buyInfoObj.orderStatus === 2) {
+            this.next = 3
           }
         }).catch((err) => {
           console.log(err);
@@ -537,7 +550,7 @@
     background-color: #ffffff;
     border-top: 6px solid #c6351e;
     margin-bottom: 112px;
-    .check_info{
+    .check_info {
       h2 {
         font-size: 18px;
         color: #222222;
@@ -560,7 +573,7 @@
       font-size: 16px;
       color: #333333;
       margin: 0 auto;
-      .payment{
+      .payment {
         margin-top 10px
         margin-bottom 38px
         color: #333333;
@@ -597,12 +610,12 @@
           }
         }
       }
-      p{
+      p {
         text-align center
         line-height 36px
         color: #222222;
       }
-      .tip{
+      .tip {
         font-size 14px
       }
       button {
@@ -640,6 +653,25 @@
           line-height: 30px;
           margin-top 10px
           margin-bottom 10px
+        }
+      }
+      .code_box{
+        p{
+          font-size 14px
+          color: #666666;
+        }
+        .code{
+          font-size 0
+          li{
+            margin 10px
+            font-size 14px
+            color: #666666;
+            display inline-block
+            text-align center
+            img{
+              vertical-align top
+            }
+          }
         }
       }
     }
