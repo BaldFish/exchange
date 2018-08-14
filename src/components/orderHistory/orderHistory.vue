@@ -30,7 +30,7 @@
       <table>
         <thead>
         <tr class="img_thead">
-          <th>支付钱包地址：{{userInfo.wallet_address}}</th>
+          <th class="payment" style="width: 600px">支付钱包地址：{{userInfo.wallet_address}}</th>
           <!--<th colspan="5" class="order_amount">
             订单金额：
             <span>￥{{item.price}}</span>
@@ -146,7 +146,6 @@
           }
           this.dataList = res.data.data;
           this.total = res.data.count;
-          console.log(this.dataList)
         }).catch(error => {
           console.log(error);
         });

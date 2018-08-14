@@ -5,11 +5,15 @@
     <div class="presentation_bg">
       <div class="presentation_box">
         <div class="logo">
-        31312312
+          <div class="logo_info">
+            <span class="logo_text">证件信息</span>
+            <a href="#/infoPublicity" class="logo_img"></a>
+          </div>
         </div>
-        <p class="presentation">打造基于区块链技术的汽车数据生态</p>
+        <p class="presentation">
+          元征科技股份有限公司是一家从事汽车诊断、检测、养护产品研发、生产和销售的高科技企业，总部位于中国广东省深圳市龙岗区坂田五和大道北元征工业园。元征的产品以汽车电子检测和诊断为基础，涵盖汽车诊断、检测、养护、机械、电子、工具等产品线，为世界各地经销商，汽车制造厂提供汽车产品、技术和服务。元征于1993年在中国深圳正式注册成立。现任总裁为刘正之，董事长为刘易之。<br><br>深圳市元征科技股份有限公司于2002年10月在香港创业板上市。2011年3月元征公司从香港创业板转往主板上市交易。
+        </p>
       </div>
-      
     </div>
     <div class="headline">
       <p></p>
@@ -89,7 +93,7 @@
     },
     data() {
       return {
-        percentage:50
+        percentage: 50
       }
     },
     created() {
@@ -111,26 +115,56 @@
       background-position: top center;
       background-repeat: no-repeat;
       max-width 1920px
-      .presentation_box{
+      .presentation_box {
         width 1212px
         height 252px
         margin 0 auto
         position relative
         font-size 0
-        .logo{
+        .logo {
           width 288px
           height 104px
           display inline-block
           font-size 14px
+          background-color #ffffff
           position: absolute;
           top: 50%;
           transform: translate(102px, -50%);
+          background-image: url('./images/logo.png');
+          background-position: top 20px center;
+          background-repeat: no-repeat;
+          .logo_info {
+            font-size 0
+            margin-left 30px
+            margin-top 68px
+            
+            .logo_text {
+              display inline-block
+              font-size: 14px;
+              color: #666666;
+              margin-right 10px
+              line-height 22px
+              vertical-align top
+            }
+            .logo_img {
+              display inline-block
+              width 20px
+              height 22px
+              line-height 22px
+              vertical-align top
+              background-image: url('./images/03.png');
+              background-position: top center;
+              background-repeat: no-repeat;
+              cursor pointer
+            }
+          }
         }
-        .presentation{
+        .presentation {
           width 664px
-          height 150px
           display inline-block
           font-size 14px
+          line-height 18px
+          color #ffffff
           position: absolute;
           top: 50%;
           transform: translate(458px, -50%);
@@ -161,11 +195,11 @@
       width 1212px
       margin 0 auto
       padding 0 6px;
-      .content{
+      .content {
         width 1198px
         margin 0 auto
         font-size: 0;
-        li{
+        li {
           box-sizing border-box
           display inline-block
           width 280px
@@ -178,7 +212,7 @@
           cursor pointer
           vertical-align middle
           padding 10px
-          .content_img{
+          .content_img {
             width 260px
             height 260px
             display: table-cell;
@@ -192,25 +226,25 @@
               max-height 260px
             }
           }
-          .content_title{
+          .content_title {
             color: #000033
             font-size 14px
             line-height 34px
             text-indent 2px
             margin-bottom 16px
           }
-          .price{
+          .price {
             margin-top 7px
             font-size 16px
             color #e90031;
             line-height 26px
-            span{
+            span {
               font-size: 12px;
               color: #666666;
             }
           }
         }
-        li:nth-child(4n){
+        li:nth-child(4n) {
           margin-right 0
         }
       }
