@@ -154,7 +154,6 @@
   import {baseURL, cardURL} from '@/common/js/public.js';
   import myTopSearch from "../topSearch/topSearch"
   import {BigNumber} from 'bignumber.js';
-  import formatDate from "@/common/js/formatDate.js";
   
   export default {
     name: "checkOrder",
@@ -209,7 +208,7 @@
           type: 'warning',
           center: true
         }).then(() => {
-          window.location.href = "#/securityCenter"
+          window.location.href = "/securityCenter"
         }).catch(() => {
         });
       },

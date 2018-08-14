@@ -89,7 +89,7 @@
   import "../../common/stylus/paging.styl";
   import axios from "axios";
   import {baseURL} from '@/common/js/public.js';
-  import formatDate from "@/common/js/formatDate.js";
+  import utils from "@/common/js/utils.js";
   const querystring = require('querystring');
 
   export default{
@@ -141,8 +141,8 @@
           url: `${baseURL}/v1/order/list/${loginInfo.user_id}?page=${this.currentPage}&limit=${this.limit}&begin=${this.begin}&end=${this.end}`,
         }).then(res => {
           for(let v of res.data.data){
-            v.created_at=formatDate(new Date(v.created_at), "yyyy-MM-dd hh:mm:ss");
-            v.updated_at=formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
+            v.created_at=utils.formatDate(new Date(v.created_at), "yyyy-MM-dd hh:mm:ss");
+            v.updated_at=utils.formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
           }
           this.dataList = res.data.data;
           this.total = res.data.count;
@@ -224,7 +224,7 @@
             return o.orderNum===val
           });
           this.getPay(buyInfoObj);
-          window.location.href="#/checkOrder"
+          window.location.href="/checkOrder"
         }
       },
       getPay(val){

@@ -72,7 +72,7 @@
           type: 'warning',
           center: true
         }).then(() => {
-          window.location.href="#/login"
+          window.location.href="/login"
         }).catch(() => {
         });
       },
@@ -94,7 +94,7 @@
       },
       turnFavorite(){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-          window.location.href="#/favorite"
+          window.location.href="/favorite"
         }else{
           this.open()
         }
@@ -105,10 +105,10 @@
         inputValue.input=this.input;
         if(this.value==='1'){
           this.getCaseInput(inputValue);
-          window.location.href="#/searchCase"
+          window.location.href="/searchCase"
         }else if(this.value==='2'){
           this.getFacilityInput(inputValue);
-          window.location.href="#/searchFacility"
+          window.location.href="/searchFacility"
         }
       },
       getCaseInput(inputValue){

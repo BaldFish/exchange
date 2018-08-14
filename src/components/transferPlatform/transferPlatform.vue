@@ -45,7 +45,6 @@
   import axios from "axios";
   import _ from "lodash";
   import {baseURL, cardURL} from '@/common/js/public.js';
-  import formatDate from "@/common/js/formatDate.js";
   import utils from "@/common/js/utils.js";
   import myTopSearch from "../topSearch/topSearch"
   import myToggle from "../toggle/toggle"
@@ -63,7 +62,7 @@
         bannerList: [
           {link_url: 'javascript:void(0)', picture_url: require('./images/01.png')},
         ],
-        tabsParam: ["最新上线", "即将结束"],
+        tabsParam: ["最新上线", "已结束"],
         nowIndex: 0,
         percentage: 75,
         propertyList: [],
@@ -75,8 +74,8 @@
     created() {
     },
     mounted() {
-      this.acquirePropertyList()
-      this.acquireFinishedList()
+      this.acquirePropertyList();
+      this.acquireFinishedList();
     },
     watch: {},
     computed: {},
@@ -94,8 +93,8 @@
           }
         }).then((res) => {
           for (let v of res.data.data) {
-            v.complete_time = formatDate(new Date(v.complete_time), "yyyy-MM-dd hh:mm:ss");
-            v.online_time = formatDate(new Date(v.online_time), "yyyy-MM-dd hh:mm:ss");
+            v.complete_time = utils.formatDate(new Date(v.complete_time), "yyyy-MM-dd hh:mm:ss");
+            v.online_time = utils.formatDate(new Date(v.online_time), "yyyy-MM-dd hh:mm:ss");
             v.percentage=utils.divide(v.complete_amount,v.total_amount)*100
           }
           this.propertyList = res.data.data;
@@ -113,8 +112,8 @@
           }
         }).then((res) => {
           for (let v of res.data.data) {
-            v.complete_time = formatDate(new Date(v.complete_time), "yyyy-MM-dd hh:mm:ss");
-            v.online_time = formatDate(new Date(v.online_time), "yyyy-MM-dd hh:mm:ss");
+            v.complete_time = utils.formatDate(new Date(v.complete_time), "yyyy-MM-dd hh:mm:ss");
+            v.online_time = utils.formatDate(new Date(v.online_time), "yyyy-MM-dd hh:mm:ss");
             v.percentage=utils.divide(v.complete_amount,v.total_amount)*100
           }
           this.finishedList = res.data.data;

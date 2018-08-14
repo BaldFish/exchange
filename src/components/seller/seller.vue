@@ -7,7 +7,7 @@
         <div class="logo">
           <div class="logo_info">
             <span class="logo_text">证件信息</span>
-            <a href="#/infoPublicity" class="logo_img"></a>
+            <a href="/infoPublicity" class="logo_img"></a>
           </div>
         </div>
         <p class="presentation">
@@ -22,53 +22,13 @@
     </div>
     <div class="tabs_content">
       <ul class="content">
-        <li>
+        <li v-for="item of allList" :key="item.id">
           <div class="content_img">
-            <img src="./images/02.png" alt="">
+            <img :src="item.url" alt="">
           </div>
-          <h4 class="content_title">维修共享设备5件维修共享</h4>
-          <my-progressBar :percentage="percentage"></my-progressBar>
-          <p class="price">&yen;523200.00&nbsp;<span>起</span></p>
-        </li>
-        <li>
-          <div class="content_img">
-            <img src="./images/02.png" alt="">
-          </div>
-          <h4 class="content_title">维修共享设备5件维修共享</h4>
-          <my-progressBar :percentage="percentage"></my-progressBar>
-          <p class="price">&yen;523200.00&nbsp;<span>起</span></p>
-        </li>
-        <li>
-          <div class="content_img">
-            <img src="./images/02.png" alt="">
-          </div>
-          <h4 class="content_title">维修共享设备5件维修共享</h4>
-          <my-progressBar :percentage="percentage"></my-progressBar>
-          <p class="price">&yen;523200.00&nbsp;<span>起</span></p>
-        </li>
-        <li>
-          <div class="content_img">
-            <img src="./images/02.png" alt="">
-          </div>
-          <h4 class="content_title">维修共享设备5件维修共享</h4>
-          <my-progressBar :percentage="percentage"></my-progressBar>
-          <p class="price">&yen;523200.00&nbsp;<span>起</span></p>
-        </li>
-        <li>
-          <div class="content_img">
-            <img src="./images/02.png" alt="">
-          </div>
-          <h4 class="content_title">维修共享设备5件维修共享</h4>
-          <my-progressBar :percentage="percentage"></my-progressBar>
-          <p class="price">&yen;523200.00&nbsp;<span>起</span></p>
-        </li>
-        <li>
-          <div class="content_img">
-            <img src="./images/02.png" alt="">
-          </div>
-          <h4 class="content_title">维修共享设备5件维修共享</h4>
-          <my-progressBar :percentage="percentage"></my-progressBar>
-          <p class="price">&yen;523200.00&nbsp;<span>起</span></p>
+          <h4 class="content_title">{{item.name}}</h4>
+          <my-progressBar :percentage="item.percentage"></my-progressBar>
+          <p class="price">&yen;{{item.total_amount}}&nbsp;<span>起</span></p>
         </li>
       </ul>
     </div>
@@ -79,7 +39,7 @@
   import axios from "axios";
   import _ from "lodash";
   import {baseURL, cardURL} from '@/common/js/public.js';
-  import formatDate from "@/common/js/formatDate.js";
+  import utils from "@/common/js/utils.js";
   import myTopSearch from "../topSearch/topSearch"
   import myToggle from "../toggle/toggle"
   import myProgressBar from "../progressBar/progressBar"
@@ -93,16 +53,43 @@
     },
     data() {
       return {
-        percentage: 50
+        page:1,
+        limit:10000,
+        percentage: 50,
+        allList:[],
+        sum:0,
       }
     },
     created() {
     },
     mounted() {
+      this.acquireAllList();
     },
     watch: {},
     computed: {},
-    methods: {},
+    methods: {
+      acquireAllList() {
+        axios({
+          method: "GET",
+          url: `${cardURL}/v1/assets-transfer/package?page=${this.page}&limit=${this.limit}`,
+          headers: {
+            "Content-Type": "application/json",
+            "charset":"UTF-8",
+          }
+        }).then((res) => {
+          for (let v of res.data.data) {
+            v.complete_time = utils.formatDate(new Date(v.complete_time), "yyyy-MM-dd hh:mm:ss");
+            v.create_time = utils.formatDate(new Date(v.create_time), "yyyy-MM-dd hh:mm:ss");
+            v.online_time = utils.formatDate(new Date(v.online_time), "yyyy-MM-dd hh:mm:ss");
+            v.update_time = utils.formatDate(new Date(v.update_time), "yyyy-MM-dd hh:mm:ss");
+            v.percentage=utils.divide(v.complete_amount,v.total_amount)*100
+          }
+          this.allList = res.data.data;
+          this.sum = res.data.count;
+        }).catch((err) => {
+        })
+      },
+    },
   }
 </script>
 

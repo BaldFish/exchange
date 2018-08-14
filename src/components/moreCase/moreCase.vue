@@ -5,39 +5,39 @@
       <div class="site">
         <ul>
           <li>当前位置 ：</li>
-          <li><a href="#/">首页></a></li>
-          <li><a href="#/moreCase">维修案例</a></li>
+          <li><a href="/">首页></a></li>
+          <li><a href="/moreCase">维修案例</a></li>
         </ul>
       </div>
     </div>
     <div class="case_list">
       <div class="fr_case" v-for="(item,index) of caseList" :key="item.id">
-        <h4><a href="#/caseDetails" @click="getCaseDetails(item.id)">{{item.assetname}}</a></h4>
+        <h4><a href="/caseDetails" @click="getCaseDetails(item.id)">{{item.assetname}}</a></h4>
         <div class="attestation">
           <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
           <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
           <span class="trust" v-if="item.creditlevel!=='未认证'">{{item.creditlevel}}</span>
         </div>
         <div class="putaway">
-          <a class="time" href="#/caseDetails" @click="getCaseDetails(item.id)"><span>上架时间：</span>{{item.sell_at}}</a>
-          <a class="equity" href="#/caseDetails" @click="getCaseDetails(item.id)"><span>权益：</span>{{item.sell_type}}</a>
+          <a class="time" href="/caseDetails" @click="getCaseDetails(item.id)"><span>上架时间：</span>{{item.sell_at}}</a>
+          <a class="equity" href="/caseDetails" @click="getCaseDetails(item.id)"><span>权益：</span>{{item.sell_type}}</a>
         </div>
         <div class="belong">
-          <a href="#/caseDetails" @click="getCaseDetails(item.id)">
+          <a href="/caseDetails" @click="getCaseDetails(item.id)">
             <span>所属人：</span>{{item.assetowner}}
           </a>
         </div>
         <div class="fault">
           <p>
-            <a href="#/caseDetails" @click="getCaseDetails(item.id)">
+            <a href="/caseDetails" @click="getCaseDetails(item.id)">
               <span>故障现象：</span>{{item.assetcontent}}
             </a>
           </p>
         </div>
         <div :class="item.shopcart_id?'like':'dislike'" @click="toggleLike(item.id)">收藏</div>
         <div class="price_box">
-          <a href="#/caseDetails" @click="getCaseDetails(item.id)"><p class="price">{{item.price}}</p></a>
-          <a href="#/caseSource" @click="getCaseSource(item.id)"><p class="tracing">可信溯源</p></a>
+          <a href="/caseDetails" @click="getCaseDetails(item.id)"><p class="price">{{item.price}}</p></a>
+          <a href="/caseSource" @click="getCaseSource(item.id)"><p class="tracing">可信溯源</p></a>
           <a href="javascript:void(0)" @click="buy(item.id)"><p class="buy">一键购买</p></a>
         </div>
       </div>
@@ -61,7 +61,7 @@
   import _ from "lodash";
   import {baseURL,cardURL} from '@/common/js/public.js';
   import myTopSearch from "../topSearch/topSearch";
-  import formatDate from "@/common/js/formatDate.js";
+  import utils from "@/common/js/utils.js";
   const querystring = require('querystring');
   
   export default {
@@ -95,7 +95,7 @@
           type: 'warning',
           center: true
         }).then(() => {
-          window.location.href="#/login"
+          window.location.href="/login"
         }).catch(() => {
         });
       },
@@ -152,7 +152,7 @@
             }
           }).then((res) => {
             for(let v of res.data.data){
-              v.sell_at=formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+              v.sell_at=utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
             }
             this.total=res.data.count;
             this.caseList = res.data.data;
@@ -168,7 +168,7 @@
             }
           }).then((res) => {
             for(let v of res.data.data){
-              v.sell_at=formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+              v.sell_at=utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
             }
             this.total=res.data.count;
             this.caseList = res.data.data;
@@ -217,7 +217,7 @@
           }).then((res) => {
             buyInfoObj=res.data;
             this.getBuy(buyInfoObj);
-            window.location.href="#/checkOrder"
+            window.location.href="/checkOrder"
           }).catch((err) => {
             console.log(err);
           })

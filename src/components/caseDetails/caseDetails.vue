@@ -5,8 +5,8 @@
       <div class="site">
         <ul>
           <li>当前位置 ：</li>
-          <li><a href="#/">首页></a></li>
-          <li><a href="#/moreCase">维修案例></a></li>
+          <li><a href="/">首页></a></li>
+          <li><a href="/moreCase">维修案例></a></li>
           <li>{{caseDetails.assetname}}</li>
         </ul>
       </div>
@@ -19,7 +19,7 @@
         <span class="trust" v-if="caseDetails.creditlevel!=='未认证'">{{caseDetails.creditlevel}}</span>
       </div>
       <div :class="caseDetails.shopcart_id?'like':'dislike'" @click="toggleLike(caseDetails.id)">收藏</div>
-      <a href="#/caseSource" @click="getCaseSource"><p class="tracing">可信溯源</p></a>
+      <a href="/caseSource" @click="getCaseSource"><p class="tracing">可信溯源</p></a>
       <div class="intro_list">
         <ul>
           <li>
@@ -57,7 +57,7 @@
   import axios from "axios";
   import myTopSearch from "../topSearch/topSearch"
   import {baseURL,cardURL} from '@/common/js/public.js';
-  import formatDate from "@/common/js/formatDate.js";
+  import utils from "@/common/js/utils.js";
   const querystring = require('querystring');
   
   export default {
@@ -89,7 +89,7 @@
           type: 'warning',
           center: true
         }).then(() => {
-          window.location.href="#/login"
+          window.location.href="/login"
         }).catch(() => {
         });
       },
@@ -142,7 +142,7 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
-            res.data.sell_at=formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
+            res.data.sell_at=utils.formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
             this.caseDetails=res.data;
           }).catch((err) => {
             console.log(err);
@@ -155,7 +155,7 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
-            res.data.sell_at=formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
+            res.data.sell_at=utils.formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
             this.caseDetails=res.data;
           }).catch((err) => {
             console.log(err);
@@ -189,7 +189,7 @@
           }).then((res) => {
             buyInfoObj=res.data;
             this.getBuy(buyInfoObj);
-            window.location.href="#/checkOrder"
+            window.location.href="/checkOrder"
           }).catch((err) => {
             console.log(err);
           })

@@ -50,6 +50,48 @@ let utils = {
     m = (r2.split(".")[1] ? r2.split(".")[1].length : 0) - (r1.split(".")[1] ? r1.split(".")[1].length : 0);
     resultVal = Number(r1.replace(".", "")) / Number(r2.replace(".", "")) * Math.pow(10, m);
     return typeof d !== "number" ? Number(resultVal) : Number(resultVal.toFixed(parseInt(d)));
+  },
+  /*
+  函数：时间格式化函数
+  说明：
+  参数：
+  调用：
+  返回值：
+  */
+  formatDate: function (date, fmt) {
+    if (/(y+)/.test(fmt)) {
+      fmt = fmt.replace(
+        RegExp.$1,
+        (date.getFullYear() + "").substr(4 - RegExp.$1.length)
+      );
+    }
+    let o = {
+      "M+": date.getMonth() + 1,
+      "d+": date.getDate(),
+      "h+": date.getHours(),
+      "m+": date.getMinutes(),
+      "s+": date.getSeconds()
+    };
+    for (let k in o) {
+      if (new RegExp(`(${k})`).test(fmt)) {
+        let str = o[k] + "";
+        fmt = fmt.replace(
+          RegExp.$1,
+          RegExp.$1.length === 1 ? str : utils.padLeftZero(str)
+        );
+      }
+    }
+    return fmt;
+  },
+  /*
+  函数：时间补零函数
+  说明：
+  参数：
+  调用：
+  返回值：
+  */
+  padLeftZero: function (str) {
+    return ("00" + str).substr(str.length);
   }
 };
 export default utils

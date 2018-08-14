@@ -59,7 +59,7 @@
   import axios from "axios";
   import "../../common/stylus/paging.styl";
   import {baseURL, cardURL} from '@/common/js/public.js';
-  import formatDate from "@/common/js/formatDate.js";
+  import utils from "@/common/js/utils.js";
   
   export default {
     name: "favorite",
@@ -110,8 +110,8 @@
           }).then((res) => {
             this.total = res.data.count;
             for(let v of res.data.data){
-              v.created_at=formatDate(new Date(v.created_at), "yyyy-MM-dd hh:mm:ss");
-              v.updated_at=formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
+              v.created_at=utils.formatDate(new Date(v.created_at), "yyyy-MM-dd hh:mm:ss");
+              v.updated_at=utils.formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
             }
             this.favoriteList = res.data.data;
           }).catch((err) => {
@@ -143,10 +143,10 @@
       turnDetails(apiKey, assetId) {
         if (apiKey === "5a6be74a55aaf50001a5e250") {
           this.getCaseDetails(assetId);
-          window.location.href = "#/caseDetails"
+          window.location.href = "/caseDetails"
         } else if (apiKey === "5ae04522cff7cb000194f2f4") {
           this.getFacilityDetails(assetId);
-          window.location.href = "#/facilityDetails"
+          window.location.href = "/facilityDetails"
         }
       },
       getCaseDetails(val) {

@@ -5,29 +5,29 @@
       <div class="site">
         <ul>
           <li>当前位置 ：</li>
-          <li><a href="#/">首页></a></li>
-          <li><a href="#/moreFacility">维修设备></a></li>
+          <li><a href="/">首页></a></li>
+          <li><a href="/moreFacility">维修设备></a></li>
         </ul>
       </div>
     </div>
     <div class="facility_list">
       <div class="fl facility_info" v-for="(item,index) of searchFacilityList" :key="item.id">
-        <a href="#/facilityDetails" @click="getFacilityDetails(item.id)"><h4>{{item.assetname}}</h4></a>
+        <a href="/facilityDetails" @click="getFacilityDetails(item.id)"><h4>{{item.assetname}}</h4></a>
         <div class="belong">
-          <a href="#/facilityDetails" @click="getFacilityDetails(item.id)">
+          <a href="/facilityDetails" @click="getFacilityDetails(item.id)">
             <span>所属人：</span>{{item.assetowner}}
           </a>
         </div>
         <div class="putaway">
-          <a class="time" href="#/facilityDetails" @click="getFacilityDetails(item.id)"><span>上架时间：</span>{{item.sell_at}}</a>
-          <a class="equity" href="#/facilityDetails" @click="getFacilityDetails(item.id)"><span>权益：</span>{{item.sell_type}}</a>
+          <a class="time" href="/facilityDetails" @click="getFacilityDetails(item.id)"><span>上架时间：</span>{{item.sell_at}}</a>
+          <a class="equity" href="/facilityDetails" @click="getFacilityDetails(item.id)"><span>权益：</span>{{item.sell_type}}</a>
         </div>
         <div class="fl price_box">
-          <a href="#/facilityDetails" @click="getFacilityDetails(item.id)"><p class="price">{{item.price}}</p></a>
-          <a href="#/facilitySource" @click="getFacilitySource(item.id)"><p class="tracing">可信溯源</p></a>
+          <a href="/facilityDetails" @click="getFacilityDetails(item.id)"><p class="price">{{item.price}}</p></a>
+          <a href="/facilitySource" @click="getFacilitySource(item.id)"><p class="tracing">可信溯源</p></a>
         </div>
         <div class="fr facility_img">
-          <a href="#/facilityDetails" @click="getFacilityDetails(item.id)"><img :src="item.asseturl" alt=""></a>
+          <a href="/facilityDetails" @click="getFacilityDetails(item.id)"><img :src="item.asseturl" alt=""></a>
         </div>
         <div class="attestation clearfix">
           <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
@@ -54,7 +54,7 @@
   import axios from "axios";
   import _ from "lodash";
   import {baseURL,cardURL} from '@/common/js/public.js';
-  import formatDate from "@/common/js/formatDate.js";
+  import utils from "@/common/js/utils.js";
   import myTopSearch from "../topSearch/topSearch"
   
   export default {
@@ -100,7 +100,7 @@
           }).then((res) => {
             this.total=res.data.count;
             for(let v of res.data.data){
-              v.sell_at=formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+              v.sell_at=utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
             }
             this.searchFacilityList = res.data.data
           }).catch((err) => {
@@ -116,7 +116,7 @@
           }).then((res) => {
             this.total=res.data.count;
             for(let v of res.data.data){
-              v.sell_at=formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+              v.sell_at=utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
             }
             this.searchFacilityList = res.data.data
           }).catch((err) => {
