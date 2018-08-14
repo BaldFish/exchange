@@ -25,6 +25,7 @@ import myTransferPlatform from '@/components/transferPlatform/transferPlatform'
 import myInfoPublicity from '@/components/infoPublicity/infoPublicity'
 import myYuanBeanPage from '@/components/yuanBeanPage/yuanBeanPage'
 import mySeller from '@/components/seller/seller'
+import myTransferDetails from '@/components/transferDetails/transferDetails'
 Vue.use(Router);
 
 export default new Router({
@@ -163,6 +164,11 @@ export default new Router({
       path: '/seller',
       name: 'seller',
       component: mySeller
+    },
+    {
+      path: '/transferDetails',
+      name: 'transferDetails',
+      component: myTransferDetails
     },
   ]
 })
