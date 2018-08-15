@@ -23,6 +23,7 @@ const store = new Vuex.Store({
     caseSource: {},
     facilityDetails: {},
     facilitySource: {},
+    propertyDetails:{},
     caseValue: "",
     caseInput: "",
     facilityValue: "",
@@ -46,6 +47,10 @@ const store = new Vuex.Store({
     changeFacilitySource(state, params) {
       state.facilitySource = params;
       window.sessionStorage.setItem("facilitySource", JSON.stringify(state.facilitySource))
+    },
+    changePropertyDetails(state, params) {
+      state.propertyDetails = params;
+      window.sessionStorage.setItem("propertyDetails", JSON.stringify(state.propertyDetails))
     },
     changeCaseInput(state, params) {
       state.caseValue = params.value;

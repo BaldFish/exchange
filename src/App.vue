@@ -4,14 +4,14 @@
       <div class="head">
         <a href="/">欢迎来到 可信链 ！</a>
         <div class="no_login" v-if="!isLogin">
-          <a href="#/login">请登录</a>
-          <a href="#/register">免费注册</a>
+          <a href="/login">请登录</a>
+          <a href="/register">免费注册</a>
         </div>
         <div class="login" v-if="isLogin" @mouseleave="leaveUl">
           <div @click.capture="toggle">{{userName}} <img src="./down.png" alt=""></div>
           <ul v-if="switchover">
-            <li><a href="#/personalAssets">个人中心</a></li>
-            <li><a href="#/securityCenter">安全中心</a></li>
+            <li><a href="/personalAssets">个人中心</a></li>
+            <li><a href="/securityCenter">安全中心</a></li>
             <li @click="dropOut">退出</li>
           </ul>
         </div>

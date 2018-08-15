@@ -79,13 +79,12 @@
         }).then((res) => {
           for (let v of res.data.data) {
             v.complete_time = utils.formatDate(new Date(v.complete_time), "yyyy-MM-dd hh:mm:ss");
-            v.create_time = utils.formatDate(new Date(v.create_time), "yyyy-MM-dd hh:mm:ss");
             v.online_time = utils.formatDate(new Date(v.online_time), "yyyy-MM-dd hh:mm:ss");
-            v.update_time = utils.formatDate(new Date(v.update_time), "yyyy-MM-dd hh:mm:ss");
             v.percentage=utils.divide(v.complete_amount,v.total_amount)*100
           }
           this.allList = res.data.data;
           this.sum = res.data.count;
+          console.log(res.data)
         }).catch((err) => {
         })
       },
