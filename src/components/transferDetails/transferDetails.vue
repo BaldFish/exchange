@@ -9,45 +9,17 @@
             <img class="prev" @click="prevImg" src="./images/pre.png" alt="">
             <div class="img-list">
               <ul v-bind:style="{right: toRight + 'px' }">
-                <li v-for="item in bannerList" @click="showImg(item)">
+                <li v-for="item in bannerList" @click="showImg(item.url)">
                   <input type="radio" name="showImg">
-                  <img :src="item" alt="">
+                  <img :src="item.url" alt="">
                 </li>
-                <!--<li>
-                  <input type="radio" name="showImg">
-                  <img src="./images/test.png" alt="">
-                </li>
-                <li>
-                  <input type="radio" name="showImg">
-                  <img src="./images/02.png" alt="">
-                </li>
-                <li>
-                  <input type="radio" name="showImg">
-                  <img src="./images/test.png" alt="">
-                </li>
-                <li>
-                  <input type="radio" name="showImg">
-                  <img src="./images/02.png" alt="">
-                </li>
-                <li>
-                  <input type="radio" name="showImg">
-                  <img src="./images/test.png" alt="">
-                </li>
-                <li>
-                  <input type="radio" name="showImg">
-                  <img src="./images/02.png" alt="">
-                </li>
-                <li>
-                  <input type="radio" name="showImg">
-                  <img src="./images/test.png" alt="">
-                </li>-->
               </ul>
             </div>
             <img class="next" @click="nextImg" src="./images/next.png" alt="">
           </div>
         </div>
         <div class="goods-buy">
-          <p class="goods-title">美的（Midea）FS40-13C 五叶落地扇/电风扇</p>
+          <p class="goods-title">{{goodsTitle}}</p>
           <div class="goods-logo">
             <span>LAUNCH</span>
             <span>买家</span>
@@ -56,41 +28,18 @@
             <ul>
               <li>
                 <label>认购金额：</label>
-                <span class="money">￥85000.00</span>
+                <span class="money">￥{{price}}</span>
               </li>
               <li class="goods-list">
                 <label>选择设备：</label>
                 <ul>
-                  <li>
-                    <input type="radio" name="radio">
+                  <li v-for="data in goodsList" @click="getSingleGood(data)">
+                    <input type="radio" name="radio" :disabled="data.status == 1?true:false" :checked="data.isChecked">
                     <div class="radio-box">
-                      <img src="./images/02.png" alt="">
-                      <p>五叶落地落地666666666666666扇落...</p>
+                      <img :src="data.url" alt="">
+                      <p>{{data.name}}</p>
                     </div>
                   </li>
-                  <li>
-                    <input type="radio" name="radio">
-                    <div class="radio-box">
-                      <img src="./images/02.png" alt="">
-                      <p>五叶落地落地666666666666666扇落...</p>
-                    </div>
-                  </li>
-                  <li>
-                    <input type="radio" name="radio">
-                    <div class="radio-box">
-                      <img src="./images/02.png" alt="">
-                      <p>五叶落地落地666666666666666扇落...</p>
-                    </div>
-                  </li>
-                  <li>
-                    <input type="radio" name="radio">
-                    <div class="radio-box">
-                      <img src="./images/02.png" alt="">
-                      <p>五叶落地落地666666666666666扇落...</p>
-                    </div>
-                  </li>
-
-
                 </ul>
                 <div style="clear: both"></div>
               </li>
@@ -101,7 +50,7 @@
                 </template>
 
                 <label class="rest">剩余：</label>
-                <span>60/100</span>
+                <span>{{total_num - complete_num}}/{{total_num}}</span>
 
               </li>
               <li class="progress">
@@ -391,27 +340,30 @@
     data() {
         return {
           num8: 1,
+          goodsTitle:'',
           percentage:75,
           isShow:true,
           dialogTableVisible: false,
           toRight:0,
-          bannerList:[
-            require('./images/02.png'),
-            require('./images/test.png'),
-            require('./images/lock.png'),
-            require('./images/02.png'),
-            require('./images/test.png'),
-            require('./images/lock.png'),
-            require('./images/02.png'),
-            require('./images/test.png'),
-            require('./images/lock.png'),
-          ],
+          bannerList:[],
+          goodsList:[],
           activeImg:require('./images/02.png'),
+          price:'',
+          complete_num:'',
+          total_num:'',
+          firstCheckedIndex:0,//第一次出现"0未完成"数组下标
+
+
         }
     },
     created() {
     },
     mounted() {
+      //商品标题&进度条
+      this.getGoodsTitle();
+      //商品图片、商品列表
+      this.getGoodsDetails();
+
     },
     methods: {
       handleChange(value) {
@@ -435,7 +387,129 @@
       //展示大图
       showImg(item){
         this.activeImg = item
-      }
+      },
+      //商品标题&进度条
+      getGoodsTitle(){
+        axios({
+          method: "GET",
+          url: `${cardURL}/v1/assets-transfer/package/1`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          this.goodsTitle=res.data.name;
+          this.percentage = Math.round((res.data.complete_amount / res.data.total_amount)*100);
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
+      //商品图片、商品列表
+      getGoodsDetails(){
+        axios({
+          method: "GET",
+          url: `${cardURL}/v1/assets-transfer/asset/packid/1`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          //获取轮播数据
+          this.bannerList = res.data.data;
+          this.activeImg = res.data.data[0].url;
+          //获取商品数据
+          this.goodsList = res.data.data;
+          /*this.goodsList =  [
+            {
+              "id": "1",
+              "apikey": "zyclq",
+              "name": "中央处理器",
+              "url": "http://pic42.photophoto.cn/20170311/1155117159645226_b.jpg",
+              "status": 1,
+              "total_num": 10,
+              "price": 2000
+            },
+            {
+              "id": "2",
+              "apikey": "ncnco",
+              "name": "内存",
+              "url": "http://pic44.photophoto.cn/20170726/0017029157836055_b.jpg",
+              "status": 0,
+              "total_num": 10,
+              "price": 888
+            },
+            {
+              "id": "3",
+              "apikey": "xpxpo",
+              "name": "芯片",
+              "url": "http://pic43.photophoto.cn/20170602/1190121114784731_b.jpg",
+              "status": 1,
+              "total_num": 10,
+              "price": 1000
+            },
+            {
+              "id": "4",
+              "apikey": "iosbo",
+              "name": "IO设备",
+              "url": "http://pic44.photophoto.cn/20170729/0008118023308172_b.jpg",
+              "status": 0,
+              "total_num": 8,
+              "price": 1666
+            },
+            {
+              "id": "5",
+              "apikey": "dyuan",
+              "name": "电源",
+              "url": "http://pic44.photophoto.cn/20170725/0017029572630842_b.jpg",
+              "status": 0,
+              "total_num": 4,
+              "price": 500
+            }
+          ];*/
+
+          //判断首次出现"0未完成"位置，并添加isChecked属性
+          let unDoneList = [];
+          //let j=0;
+          this.goodsList.forEach((good)=>{
+            good.isChecked = false;
+            if(good.status == 0){
+              unDoneList.push(good)
+            }
+          });
+          for (let i=0;i<this.goodsList.length;i++){
+            if(this.goodsList[i].id == unDoneList[0].id){
+              this.firstCheckedIndex=i;
+            }
+          }
+          this.goodsList[this.firstCheckedIndex].isChecked = true;
+
+          this.getSingleGood(this.goodsList[this.firstCheckedIndex])
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
+      //点击单个商品
+      getSingleGood(data){
+        this.goodsList.forEach((good)=>{
+          good.isChecked = false;
+        });
+        data.isChecked = true;
+
+        axios({
+          method: "GET",
+          url: `${cardURL}/v1/assets-transfer/asset/id/${data.id}/${data.apikey}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          this.complete_num = res.data.complete_num;
+          this.total_num = res.data.total_num;
+          this.price = res.data.price;
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
+
+
+
     },
     watch: {},
     computed: {},
@@ -502,7 +576,9 @@
     width: 50px;
     height: 49px;
     position: relative;
-    top: -52px;
+    top: -52.3px;
+    border: solid 1px #eee;
+    right: 1px;
   }
   .prev{
     float left
@@ -525,7 +601,6 @@
   .goods-buy{
     width:735px;
     float: right;
-    margin-top: 20px;
     margin-top: 36px;
     margin-right: 56px;
   }
@@ -545,7 +620,7 @@
     font-size: 6px;
     width: 45px;
     color: #d91e01;
-    line-height: 20px;
+    line-height: 18px;
     margin: 0 auto;
     display: inline-block;
     float: left;
@@ -582,13 +657,19 @@
     cursor pointer
     height:52px
   }
+  .goods-list li input:disabled + div{
+    background-color: #eee;
+  }
+  .goods-list li input:disabled + div p{
+    opacity: 0.5;
+  }
   .goods-list li img{
     width: 40px;
     height: 40px;
     float: left;
-    margin-top: 4px;
-    margin-right: 5px;
-    margin-left: 2px;
+    margin-top: 4.5px;
+    margin-right: 10px;
+    margin-left: 5px;
   }
   .goods-list li p{
     line-height 52px
