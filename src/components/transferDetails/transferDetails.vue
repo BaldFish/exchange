@@ -70,7 +70,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="assets-container">
       <div class="tabs_nav">
         <ul class="tabs">
@@ -89,29 +89,11 @@
           </tr>
           </thead>
           <tbody>
-          <tr>
-            <td>共享维修设备1</td>
-            <td>309345687元</td>
-            <td>已售出</td>
-            <td @click="dialogTableVisible = true">查看</td>
-          </tr>
-          <tr>
-            <td>共享维修设备1</td>
-            <td>309345687元</td>
-            <td>已售出</td>
-            <td @click="dialogTableVisible = true">查看</td>
-          </tr>
-          <tr>
-            <td>共享维修设备1</td>
-            <td>309345687元</td>
-            <td>已售出</td>
-            <td @click="dialogTableVisible = true">查看</td>
-          </tr>
-          <tr>
-            <td>共享维修设备1</td>
-            <td>309345687元</td>
-            <td>已售出</td>
-            <td @click="dialogTableVisible = true">查看</td>
+          <tr v-for="item in goodsList">
+            <td>{{item.name}}</td>
+            <td>{{item.price * item.total_number}}元</td>
+            <td>{{item.status==1?'已售出':'未售出'}}</td>
+            <td @click="checkAssetsDetail(item)">查看</td>
           </tr>
           </tbody>
         </table>
@@ -127,40 +109,21 @@
           </tr>
           </thead>
           <tbody>
-          <tr>
-            <td>138****7431</td>
-            <td>维修共享设备2</td>
-            <td>21000元</td>
-            <td>2018-08-02 16:01:51</td>
+          <tr v-for="item in recordList">
+            <td>{{item.account}}</td>
+            <td>{{item.asset_name}}</td>
+            <td>{{item.amount}}元</td>
+            <td>{{item.buy_time}}</td>
           </tr>
-          <tr>
-            <td>138****7431</td>
-            <td>维修共享设备2</td>
-            <td>21000元</td>
-            <td>2018-08-02 16:01:51</td>
-          </tr>
-          <tr>
-            <td>138****7431</td>
-            <td>维修共享设备2</td>
-            <td>21000元</td>
-            <td>2018-08-02 16:01:51</td>
-          </tr>
-          <tr>
-            <td>138****7431</td>
-            <td>维修共享设备2</td>
-            <td>21000元</td>
-            <td>2018-08-02 16:01:51</td>
-          </tr>
-          
           </tbody>
         </table>
       </div>
-    
+
     </div>
     
     <img class="lock" src="./images/lock.png" alt="">
-    
-    <el-dialog class="info-dialog" title="上链信息" :visible.sync="dialogTableVisible">
+
+    <el-dialog class="info-dialog" title="上链信息" width="760px" :visible.sync="dialogTableVisible">
       <div>
         <p class="title">资产详情</p>
         <div class="details-container">
@@ -243,11 +206,11 @@
             <label>"记录时间": </label>
             <span>"2018-05-23 09:13:30"</span>
           </p>
-        
+
         </div>
       </div>
       <div class="record-container2">
-        <p class="title">资产转让记录</p>
+        <p class="title">资产使用记录</p>
         <div class="scroll-box">
           <p>
             <label>"资产ID" :</label>
@@ -360,6 +323,7 @@
         num: 1,
         min: 1,
         max: 1,
+        recordList:[],
       }
     },
     created() {},
@@ -370,6 +334,8 @@
       this.getPropertyDetails();
       //商品图片、商品列表
       this.getGoodsDetails();
+      //获取认购列表
+      this.getRecordList();
       
     },
     methods: {
@@ -506,7 +472,77 @@
       },
       getBuy(val) {
         this.$store.commit("changeBuy", val);
-      }
+      },
+      //获取认购列表
+      getRecordList(){
+        axios({
+          method: "GET",
+          url: `${cardURL}/v1/assets-transfer/record/${this.id}/2?page=&limit=`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          this.recordList = res.data.data;
+          this.recordList.forEach((record)=>{
+            record.buy_time = utils.formatDate(new Date(record.buy_time),'yyyy-MM-dd hh:mm:ss')
+          })
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
+      //获取弹框数据
+      checkAssetsDetail(item){
+        this.dialogTableVisible = true;
+
+        console.log(item,"item")
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/asset/5ae04522cff7cb000194f2f4/9f93a461-4ece-46ea-8ff3-2b921289ab74/detail`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+
+          console.log(res,'111')
+
+        }).catch((err) => {
+          console.log(err);
+        });
+
+        axios({
+          method: "GET",
+          url: `${cardURL}/v1/transed-asset/${item.id}/apikey/${item.apiKey}?page=0&limit=1000000`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+
+          console.log(res,'222')
+
+        }).catch((err) => {
+          console.log(err);
+        });
+
+        axios({
+          method: "GET",
+          url: `${cardURL}/v1/used-asset/${item.id}/apikey/${item.apiKey}?page=0&limit=1000000`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+
+          console.log(res,'333')
+
+
+        }).catch((err) => {
+          console.log(err);
+        });
+
+
+      },
+
+
+
     },
     watch: {},
     computed: {},
