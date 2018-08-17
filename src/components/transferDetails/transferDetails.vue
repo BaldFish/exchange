@@ -494,10 +494,20 @@
       checkAssetsDetail(item){
         this.dialogTableVisible = true;
 
-        console.log(item,"item")
+        //let apiKey = item.apiKey;
+        //let id = item.id;
+
+        let apiKey = "5ae04522cff7cb000194f2f4";
+        let id = "9f93a461-4ece-46ea-8ff3-2b921289ab74";
+
+        this.acquireAssetDetails(apiKey,id);
+        this.acquireUsageRecord(apiKey,id);
+        this.acquireAssetSource(apiKey,id);
+      },
+      acquireAssetDetails(apiKey,id){
         axios({
           method: "GET",
-          url: `${baseURL}/v1/asset/5ae04522cff7cb000194f2f4/9f93a461-4ece-46ea-8ff3-2b921289ab74/detail`,
+          url: `${baseURL}/v1/asset/${apiKey}/${id}/detail`,
           headers: {
             "Content-Type": "application/json",
           }
@@ -508,24 +518,11 @@
         }).catch((err) => {
           console.log(err);
         });
-
+      },
+      acquireUsageRecord(apiKey,id){
         axios({
           method: "GET",
-          url: `${cardURL}/v1/transed-asset/${item.id}/apikey/${item.apiKey}?page=0&limit=1000000`,
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }).then((res) => {
-
-          console.log(res,'222')
-
-        }).catch((err) => {
-          console.log(err);
-        });
-
-        axios({
-          method: "GET",
-          url: `${cardURL}/v1/used-asset/${item.id}/apikey/${item.apiKey}?page=0&limit=1000000`,
+          url: `${cardURL}/v1/used-asset/${id}/apikey/${apiKey}?page=0&limit=1000000`,
           headers: {
             "Content-Type": "application/json",
           }
@@ -537,9 +534,22 @@
         }).catch((err) => {
           console.log(err);
         });
-
-
       },
+      acquireAssetSource(apiKey,id){
+        axios({
+          method: "GET",
+          url: `${cardURL}/v1/transed-asset/${id}/apikey/${apiKey}?page=0&limit=1000000`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+
+          console.log(res,'222')
+
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
 
 
 
