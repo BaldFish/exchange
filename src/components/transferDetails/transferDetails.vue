@@ -104,16 +104,18 @@
           <tr>
             <th><span class="dot"></span>帐号</th>
             <th><span class="dot"></span>设备名称</th>
+            <th><span class="dot"></span>份数</th>
             <th><span class="dot"></span>金额</th>
             <th><span class="dot"></span>时间</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="item in recordList">
-            <td>{{item.account}}</td>
-            <td>{{item.asset_name}}</td>
-            <td>{{item.amount}}元</td>
-            <td>{{item.buy_time}}</td>
+            <td>{{item.created_by}}</td>
+            <td>{{item.assetname}}</td>
+            <td>{{item.count}}</td>
+            <td>{{item.price}}元</td>
+            <td>{{item.updated_at}}</td>
           </tr>
           </tbody>
         </table>
@@ -127,28 +129,28 @@
       <div>
         <p class="title">资产详情</p>
         <div class="details-container">
-          <img src="./images/02.png" alt="">
+          <img :src="facilityDetails.asseturl" alt="">
           <div class="box1-tips">
-            <span>认证商家</span>
-            <span>认证账户</span>
-            <span>高可信</span>
+            <span class="merchant" v-if="facilityDetails.authtype==='认证商家'">{{facilityDetails.authtype}}</span>
+            <span class="person" v-if="facilityDetails.authtype==='认证个人'">{{facilityDetails.authtype}}</span>
+            <span class="trust" v-if="facilityDetails.creditlevel!=='未认证'">{{facilityDetails.creditlevel}}</span>
           </div>
           <ul>
             <li>
               <label>资产所属人：</label>
-              <span>0X32829342....1234567890</span>
+              <span>{{facilityDetails.assetowner}}</span>
             </li>
             <li>
               <label>权益：</label>
-              <span>所有权</span>
+              <span>{{facilityDetails.sell_type}}</span>
             </li>
             <li>
               <label>设备ID：</label>
-              <span>String123456</span>
+              <span>{{facilityDetails.id}}</span>
             </li>
             <li>
               <label>时间：</label>
-              <span>2005.03.04 12：32：44</span>
+              <span>{{facilityDetails.sell_at}}</span>
             </li>
           </ul>
           <div style="clear: both"></div>
@@ -157,135 +159,55 @@
       <div class="record-container1">
         <p class="title">资产转让记录</p>
         <div class="scroll-box">
-          <p>
-            <label>"资产ID" :</label>
-            <span>"5ac33fa7d6c15a00018d8857",</span>
-          </p>
-          <p>
-            <label>"记录名称" :</label>
-            <span>"设备订单信息",</span>
-          </p>
-          <p>
-            <label>"记录内容" :</label>
-            <span>{"订单号": "SROR20180525022311322", "记录时间":"2018-05-25 02:23:01"}",</span>
-          </p>
-          <p>
-            <label>"记录哈希" :</label>
-            <span>"0xcb8a702e63313d95c0af111c9b8d03fd32410faef618440ba1b8f8637cf5b981",</span>
-          </p>
-          <p>
-            <label>"交易哈希" :</label>
-            <span>"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"</span>
-          </p>
-          <p>
-            <label>"记录时间": </label>
-            <span>"2018-05-23 09:13:30"</span>
-          </p>
-          <br>
-          <p>
-            <label>"资产ID" :</label>
-            <span>"5ac33fa7d6c15a00018d8857",</span>
-          </p>
-          <p>
-            <label>"记录名称" :</label>
-            <span>"设备订单信息",</span>
-          </p>
-          <p>
-            <label>"记录内容" :</label>
-            <span>{"订单号": "SROR20180525022311322", "记录时间":"2018-05-25 02:23:01"}",</span>
-          </p>
-          <p>
-            <label>"记录哈希" :</label>
-            <span>"0xcb8a702e63313d95c0af111c9b8d03fd32410faef618440ba1b8f8637cf5b981",</span>
-          </p>
-          <p>
-            <label>"交易哈希" :</label>
-            <span>"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"</span>
-          </p>
-          <p>
-            <label>"记录时间": </label>
-            <span>"2018-05-23 09:13:30"</span>
-          </p>
-
+          <div v-for="(item,index) of assetSource" :key="item.id">
+            <p>
+              <label>"交易发起方" :</label>
+              <span>"{{item.from}}",</span>
+            </p>
+            <p>
+              <label>"交易接收方" :</label>
+              <span>"{{item.to}}",</span>
+            </p>
+            <p>
+              <label>"交易价格" :</label>
+              <span>"{{item.price}}",</span>
+            </p>
+            <p>
+              <label>"交易时间" :</label>
+              <span>"{{item.updated_at}}",</span>
+            </p>
+          </div>
         </div>
       </div>
       <div class="record-container2">
         <p class="title">资产使用记录</p>
         <div class="scroll-box">
-          <p>
-            <label>"资产ID" :</label>
-            <span>"5ac33fa7d6c15a00018d8857",</span>
-          </p>
-          <p>
-            <label>"记录名称" :</label>
-            <span>"设备订单信息",</span>
-          </p>
-          <p>
-            <label>"记录内容" :</label>
-            <span>{"订单号": "SROR20180525022311322", "记录时间":"2018-05-25 02:23:01"}",</span>
-          </p>
-          <p>
-            <label>"记录哈希" :</label>
-            <span>"0xcb8a702e63313d95c0af111c9b8d03fd32410faef618440ba1b8f8637cf5b981",</span>
-          </p>
-          <p>
-            <label>"交易哈希" :</label>
-            <span>"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"</span>
-          </p>
-          <p>
-            <label>"记录时间": </label>
-            <span>"2018-05-23 09:13:30"</span>
-          </p>
-          <br>
-          <p>
-            <label>"资产ID" :</label>
-            <span>"5ac33fa7d6c15a00018d8857",</span>
-          </p>
-          <p>
-            <label>"记录名称" :</label>
-            <span>"设备订单信息",</span>
-          </p>
-          <p>
-            <label>"记录内容" :</label>
-            <span>{"订单号": "SROR20180525022311322", "记录时间":"2018-05-25 02:23:01"}",</span>
-          </p>
-          <p>
-            <label>"记录哈希" :</label>
-            <span>"0xcb8a702e63313d95c0af111c9b8d03fd32410faef618440ba1b8f8637cf5b981",</span>
-          </p>
-          <p>
-            <label>"交易哈希" :</label>
-            <span>"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"</span>
-          </p>
-          <p>
-            <label>"记录时间": </label>
-            <span>"2018-05-23 09:13:30"</span>
-          </p>
-          <br>
-          <p>
-            <label>"资产ID" :</label>
-            <span>"5ac33fa7d6c15a00018d8857",</span>
-          </p>
-          <p>
-            <label>"记录名称" :</label>
-            <span>"设备订单信息",</span>
-          </p>
-          <p>
-            <label>"记录内容" :</label>
-            <span>{"订单号": "SROR20180525022311322", "记录时间":"2018-05-25 02:23:01"}",</span>
-          </p>
-          <p>
-            <label>"记录哈希" :</label>
-            <span>"0xcb8a702e63313d95c0af111c9b8d03fd32410faef618440ba1b8f8637cf5b981",</span>
-          </p>
-          <p>
-            <label>"交易哈希" :</label>
-            <span>"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"</span>
-          </p>
-          <p>
-            <label>"记录时间": </label>
-            <span>"2018-05-23 09:13:30"</span>
-          </p>
+          <div v-for="(item,index) of usageRecord" :key="item.id">
+            <p>
+              <label>"资产ID" :</label>
+              <span>"{{item.asset_id}}",</span>
+            </p>
+            <p>
+              <label>"记录名称" :</label>
+              <span>"{{item.name}}",</span>
+            </p>
+            <p>
+              <label>"记录内容" :</label>
+              <span>"{{item.content}}",</span>
+            </p>
+            <p>
+              <label>"记录哈希" :</label>
+              <span>"{{item.record_hash}}",</span>
+            </p>
+            <p>
+              <label>"交易哈希" :</label>
+              <span>"{{item.txn_hash}}"</span>
+            </p>
+            <p>
+              <label>"记录时间": </label>
+              <span>"{{item.updated_at}}"</span>
+            </p>
+          </div>
         </div>
       </div>
     </el-dialog>
@@ -324,6 +246,12 @@
         min: 1,
         max: 1,
         recordList:[],
+        assetSource:[],
+        usageRecord:[],
+        facilityDetails:{},
+
+
+
       }
     },
     created() {},
@@ -483,8 +411,10 @@
           }
         }).then((res) => {
           this.recordList = res.data.data;
+
+          console.log(this.recordList,"recordList")
           this.recordList.forEach((record)=>{
-            record.buy_time = utils.formatDate(new Date(record.buy_time),'yyyy-MM-dd hh:mm:ss')
+            record.updated_at = utils.formatDate(new Date(record.updated_at),'yyyy-MM-dd hh:mm:ss')
           })
         }).catch((err) => {
           console.log(err);
@@ -512,9 +442,9 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-
-          console.log(res,'111')
-
+          res.data.sell_at=utils.formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
+          res.data.assetowner=res.data.assetowner.substr(0,13)+"..."+res.data.assetowner.substr(res.data.assetowner.length-14,13);
+          this.facilityDetails=res.data
         }).catch((err) => {
           console.log(err);
         });
@@ -527,10 +457,10 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-
-          console.log(res,'333')
-
-
+          this.usageRecord = res.data.data;
+          this.usageRecord.forEach((record)=>{
+            record.updated_at = utils.formatDate(new Date(record.updated_at),'yyyy-MM-dd hh:mm:ss')
+          })
         }).catch((err) => {
           console.log(err);
         });
@@ -543,9 +473,10 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-
-          console.log(res,'222')
-
+          this.assetSource = res.data.data;
+          this.assetSource.forEach((record)=>{
+            record.updated_at = utils.formatDate(new Date(record.updated_at),'yyyy-MM-dd hh:mm:ss')
+          })
         }).catch((err) => {
           console.log(err);
         });
@@ -933,18 +864,22 @@
     margin-right 4px
     margin-bottom: 4px;
   }
-  
-  .box1-tips span:nth-child(1) {
+
+  .box1-tips span:nth-child(1){
+    margin-left 10px
+  }
+
+  .box1-tips .merchant {
     background-color: #ffa195;
     margin-left 10px
     margin-top: 6px;
   }
   
-  .box1-tips span:nth-child(2) {
+  .box1-tips .person {
     background-color: #ffdc8f;
   }
   
-  .box1-tips span:nth-child(3) {
+  .box1-tips .trust {
     background-color: #8bc8ff;
   }
   
@@ -953,9 +888,16 @@
     margin: 5px
     margin-left 10px
     font-size: 14px;
-    width: 286px;
   }
-  
+
+  .details-container ul li:nth-child(odd){
+    width: 330px;
+  }
+
+  .details-container ul li:nth-child(even){
+    width: 240px;
+  }
+
   .details-container ul li label {
     color: #999999;
   }
