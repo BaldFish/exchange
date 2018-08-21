@@ -6,7 +6,7 @@
       <div class="goods-banner">
         <img class="show-img" :src="activeImg" alt="">
         <div class="banner-box">
-          <img class="prev" @click="prevImg" src="./images/pre.png" alt="">
+          <img class="prev" @click="prevImg" :src="prev" alt="">
           <div class="img-list">
             <ul v-bind:style="{right: toRight + 'px' }">
               <li v-for="item in bannerList" @click="showImg(item.url)">
@@ -15,7 +15,7 @@
               </li>
             </ul>
           </div>
-          <img class="next" @click="nextImg" src="./images/next.png" alt="">
+          <img class="next" @click="nextImg" :src="next" alt="">
         </div>
       </div>
       <div class="goods-buy">
@@ -46,7 +46,14 @@
               <div style="clear: both"></div>
             </li>
             <li class="number">
-              <label>数量：</label>
+              <label>总份数：</label>
+              <span class="total-num">{{singleGood.total_number}}</span>
+
+              <label class="rest">已售：</label>
+              <span>{{singleGood.complete_number}}</span>
+            </li>
+            <li class="number">
+              <label>购买：</label>
               <template>
                 <el-input-number v-model="num" size="mini" controls-position="right" @change="handleChange" :min="min" :max="max"></el-input-number>
               </template>
@@ -119,6 +126,17 @@
           </tr>
           </tbody>
         </table>
+
+        <div class="clearfix paging">
+          <el-pagination class="my_paging"
+                         layout="prev, pager, next"
+                         :background=true
+                         :total=total
+                         :page-size=pageSize
+                         :current-page.sync=currentPage
+                         @current-change="handleCurrentChange">
+          </el-pagination>
+        </div>
       </div>
 
     </div>
@@ -249,8 +267,11 @@
         assetSource:[],
         usageRecord:[],
         facilityDetails:{},
-
-
+        prev:require("./images/pre.png"),//上一张
+        next:require("./images/next.png"),//下一张
+        total: 10,
+        pageSize: 10,
+        currentPage: 1,
 
       }
     },
@@ -275,13 +296,21 @@
       },
       //上一张图
       prevImg() {
-        this.toRight = this.toRight + 60
+        if(this.toRight === (this.goodsList.length - 4)*60 || this.goodsList.length <= 4){
+          return false
+        } else{
+          this.prev = require("./images/right_mr.png");
+          this.next = require("./images/next.png");
+          this.toRight = this.toRight + 60
+        }
       },
       //下一张图
       nextImg() {
         if (this.toRight == 0) {
           return false
         } else {
+          this.prev = require("./images/pre.png");
+          this.next = require("./images/left_dj.png");
           this.toRight = this.toRight - 60
         }
       },
@@ -322,7 +351,10 @@
           let unDoneList = [];
           this.goodsList.forEach((value) => {
             value.isChecked = false;
-            if (value.status === 0||value.total_number - value.complete_number) {
+            if(value.total_number - value.complete_number === 0){
+              value.status = 1
+            }
+            if (value.status === 0) {
               unDoneList.push(value)
             }
           });
@@ -401,18 +433,22 @@
       getBuy(val) {
         this.$store.commit("changeBuy", val);
       },
+      //分页变化
+      handleCurrentChange(val){
+        this.currentPage = val;
+        this.getRecordList();
+      },
       //获取认购列表
       getRecordList(){
         axios({
           method: "GET",
-          url: `${cardURL}/v1/assets-transfer/record/${this.id}/2?page=&limit=`,
+          url: `${cardURL}/v1/assets-transfer/record/${this.id}/2?page=${this.currentPage}&limit=${this.pageSize}`,
           headers: {
             "Content-Type": "application/json",
           }
         }).then((res) => {
           this.recordList = res.data.data;
-
-          console.log(this.recordList,"recordList")
+          this.total = res.data.count;
           this.recordList.forEach((record)=>{
             record.updated_at = utils.formatDate(new Date(record.updated_at),'yyyy-MM-dd hh:mm:ss')
           })
@@ -587,7 +623,7 @@
   .goods-buy {
     width: 735px;
     float: right;
-    margin-top: 36px;
+    margin-top: 21px;
     margin-right: 56px;
   }
   
@@ -595,7 +631,12 @@
     font-size: 14px;
     color: #333333;
   }
-  
+
+  .total-num{
+    width: 26px;
+    display: inline-block;
+  }
+
   .goods-logo {
     width: 88px;
     height: 18px;
@@ -756,7 +797,7 @@
 <style scoped lang="stylus">
   .assets-container {
     width: 1200px;
-    height: 360px;
+    height: 420px;
     background-color #fff
     margin: 0 auto
   }
@@ -969,5 +1010,13 @@
   .info-dialog .el-dialog {
     border-radius: 30px;
     padding: 0 10px;
+  }
+
+  .goods-buy .el-input-number--mini{
+    width: 80px;
+  }
+
+  .goods-buy .el-input-number.is-controls-right .el-input__inner{
+    padding-left: 20px;
   }
 </style>
