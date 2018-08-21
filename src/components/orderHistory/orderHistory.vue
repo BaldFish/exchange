@@ -1,10 +1,8 @@
 <template>
   <div class="nav_content">
-
     <div class="nav_content_title">
       <span>订单商品信息</span>
     </div>
-
     <table class="order_nav">
       <tr>
         <td>
@@ -24,17 +22,11 @@
         <td>全部状态</td>
       </tr>
     </table>
-
-
     <div class="nav_content_table" v-for="(item,index) in dataList">
       <table>
         <thead>
         <tr class="img_thead">
-          <th class="payment" style="width: 600px">支付钱包地址：{{userInfo.wallet_address}}</th>
-          <!--<th colspan="5" class="order_amount">
-            订单金额：
-            <span>￥{{item.price}}</span>
-          </th>-->
+          <th class="payment" style="width: 600px">支付方式：{{item.pay_method_value}}</th>
         </tr>
         <tr class="th_classify">
           <th>{{item.apiname}}
@@ -45,11 +37,11 @@
         </thead>
         <tbody>
         <tr class="img_tbody">
-          <td  v-if="item.apiname === '共享维修设备'">
+          <td v-if="item.apikey==='5ae04522cff7cb000194f2f4'">
             <img :src="item.asseturl" alt="">
             <p>{{item.assetname}}</p>
           </td>
-          <td v-if="item.apiname === '案例'">
+          <td v-if="item.apikey !== '5ae04522cff7cb000194f2f4'">
             <p class="no_img_p">{{item.assetname}}</p>
           </td>
           <td>{{item.sell_type}}</td>
@@ -58,7 +50,7 @@
             <img src="./images/currency.png" alt="" class="icon_currency">
             {{item.price}}
           </td>
-          <td class="img_lastTd" v-if="item.orderStatus == 2">
+          <td class="img_lastTd" v-if="item.orderStatus === 2">
             <p>已完成</p>
             <router-link to=""><p>查阅</p></router-link>
           </td>
@@ -70,18 +62,16 @@
         </tbody>
       </table>
     </div>
-
     <div class="clearfix paging">
       <el-pagination class="my_paging"
                      layout="prev, pager, next"
                      :background=true
                      :total=total
                      :page-size=limit
-                     :current-page.sync= currentPage
+                     :current-page.sync=currentPage
                      @current-change="handleCurrentChange">
       </el-pagination>
     </div>
-
   </div>
 </template>
 
@@ -90,12 +80,13 @@
   import axios from "axios";
   import {baseURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
+  
   const querystring = require('querystring');
-
-  export default{
-    inject:['reload'],
+  
+  export default {
+    inject: ['reload'],
     name: "orderHistory",
-    data(){
+    data() {
       return {
         options: [{
           value: '1',
@@ -108,9 +99,8 @@
           label: '2017年订单'
         }],
         value: '1',
-        //input: '',
-        dataList:'',
-        userInfo:'',
+        dataList: '',
+        userInfo: '',
         total: 10,//总页数
         limit: 10,//每页显示多少条
         currentPage: 1,//当前页数
@@ -118,7 +108,7 @@
         end: "",//结束时间
       }
     },
-    mounted: function() {
+    mounted: function () {
       //获取用户信息
       let logInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
       axios({
@@ -126,7 +116,7 @@
         url: `${baseURL}/v1/users/${logInfo.user_id}`,
       }).then(res => {
         this.userInfo = res.data;
-        sessionStorage.setItem("userInfo",JSON.stringify(res.data))
+        sessionStorage.setItem("userInfo", JSON.stringify(res.data))
       }).catch(error => {
         console.log(error);
       });
@@ -134,37 +124,37 @@
       this.getData()
     },
     methods: {
-      getData(){
+      getData() {
         let loginInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
         axios({
           method: 'get',
           url: `${baseURL}/v1/order/list/${loginInfo.user_id}?page=${this.currentPage}&limit=${this.limit}&begin=${this.begin}&end=${this.end}`,
         }).then(res => {
-          for(let v of res.data.data){
-            v.created_at=utils.formatDate(new Date(v.created_at), "yyyy-MM-dd hh:mm:ss");
-            v.updated_at=utils.formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
+          for (let v of res.data.data) {
+            v.created_at = utils.formatDate(new Date(v.created_at), "yyyy-MM-dd hh:mm:ss");
+            v.updated_at = utils.formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
           }
           this.dataList = res.data.data;
           this.total = res.data.count;
+          console.log(this.dataList)
         }).catch(error => {
           console.log(error);
         });
       },
       //当前页变动
-      handleCurrentChange(val){
+      handleCurrentChange(val) {
         this.currentPage = val;
         //再次请求数据
         this.getData()
       },
       //最近三个月时间
-      get3MonthBefor(){
-        let resultDate,year,month,date;
+      get3MonthBefor() {
+        let resultDate, year, month, date;
         let currDate = new Date();
         year = currDate.getFullYear();
-        month = currDate.getMonth()+1;
+        month = currDate.getMonth() + 1;
         date = currDate.getDate();
-        switch(month)
-        {
+        switch (month) {
           case 1:
           case 2:
           case 3:
@@ -176,11 +166,11 @@
             break;
         }
         month = (month < 10) ? ('0' + month) : month;
-        resultDate = year + '-'+month+'-'+date;
+        resultDate = year + '-' + month + '-' + date;
         return resultDate;
       },
       //下拉选择
-      selectChange(){
+      selectChange() {
         //时间格式化
         Date.prototype.Format = function (fmt) { //author: meizz
           var o = {
@@ -197,20 +187,19 @@
             if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
           return fmt;
         };
-
-        if (this.value == 1){
+        if (this.value == 1) {
           this.begin = this.get3MonthBefor();
           this.end = new Date().Format("yyyy-MM-dd");
           //再次请求数据
           this.currentPage = 1;
           this.getData()
-        }else if (this.value == 2){
+        } else if (this.value == 2) {
           this.begin = '2018-01-01';
           this.end = new Date().Format("yyyy-MM-dd");
           //再次请求数据
           this.currentPage = 1;
           this.getData()
-        }else {
+        } else {
           this.begin = '2017-01-01';
           this.end = '2017-12-31';
           //再次请求数据
@@ -218,35 +207,34 @@
           this.getData()
         }
       },
-      pay(val){
-        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-          let buyInfoObj=_.find(this.dataList,function (o) {
-            return o.orderNum===val
+      pay(val) {
+        if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+          let buyInfoObj = _.find(this.dataList, function (o) {
+            return o.orderNum === val
           });
           this.getPay(buyInfoObj);
-          window.location.href="/checkOrder"
+          window.location.href = "/checkOrder"
         }
       },
-      getPay(val){
-        this.$store.commit("changeBuy",val);
+      getPay(val) {
+        this.$store.commit("changeBuy", val);
       }
     },
-    
-    
-
   }
 </script>
 <style scoped>
-  .paging{
-    width:1080px;
+  .paging {
+    width: 1080px;
     margin: 0 auto;
     text-align: center
   }
-  .nav_content{
+  
+  .nav_content {
     width: 1078px;
     float: right;
   }
-  .nav_content_title{
+  
+  .nav_content_title {
     width: 1078px;
     height: 50px;
     background-color: #ffffff;
@@ -255,100 +243,123 @@
     font-size: 18px;
     color: #222222;
   }
-  .nav_content_title span{
+  
+  .nav_content_title span {
     padding-left: 20px;
   }
-  .nav_content_table{
+  
+  .nav_content_table {
     margin-top: 12px;
-    width:1078px;
+    width: 1078px;
     background-color: #ffffff;
     border: solid 1px #bfbfbf;
   }
-  .nav_content_table thead th{
+  
+  .nav_content_table thead th {
     font-size: 16px;
     color: #222222;
   }
-  .nav_content_table tbody td{
+  
+  .nav_content_table tbody td {
     font-size: 14px;
     color: #666666;
   }
-  .nav_content_table tbody tr{
+  
+  .nav_content_table tbody tr {
     border-bottom: 1px solid #d2d2d2;
     text-align: center;
-    height:90px;
+    height: 90px;
   }
-  .nav_content_table tbody tr td{
+  
+  .nav_content_table tbody tr td {
     vertical-align: middle;
   }
-  .nav_content_table tbody tr:last-child{
+  
+  .nav_content_table tbody tr:last-child {
     border-bottom: none;
   }
-  .no_img_thead{
+  
+  .no_img_thead {
     height: 50px;
     line-height: 50px;
   }
-  .no_img_thead th:nth-child(1){
+  
+  .no_img_thead th:nth-child(1) {
     width: 480px;
     text-align: left;
     padding-left: 46px;
   }
-  .no_img_thead th{
+  
+  .no_img_thead th {
     width: 154px;
   }
-  .th_classify{
-    width:1080px;
+  
+  .th_classify {
+    width: 1080px;
     height: 40px;
     background-color: #f6f7fa;
     text-align: left;
     line-height: 40px;
   }
-  .th_classify span{
+  
+  .th_classify span {
     margin-left: 50px;
   }
-  .th_classify th:nth-child(1){
+  
+  .th_classify th:nth-child(1) {
     padding-left: 46px;
     width: 100px !important;
   }
-  .no_img_tbody td:nth-child(1){
+  
+  .no_img_tbody td:nth-child(1) {
     text-align: left;
     padding-left: 46px;
     line-height: 20px;
   }
-  .no_img_tbody td{
+  
+  .no_img_tbody td {
     width: 160px;
   }
-  .no_img_lastTd a{
+  
+  .no_img_lastTd a {
     font-size: 14px;
     color: #c6351e;
     margin-top: 10px;
     display: inline-block;
     margin-left: 14px;
   }
-  .img_lastTd p:last-child{
+  
+  .img_lastTd p:last-child {
     margin-top: 10px;
     color: #666666;
   }
-  .img_thead{
+  
+  .img_thead {
     height: 50px;
     line-height: 50px;
   }
-  .img_thead th:first-child{
+  
+  .img_thead th:first-child {
     padding-left: 46px;
     text-align: left;
     width: 452px;
   }
-  .img_thead th:nth-child(2){
+  
+  .img_thead th:nth-child(2) {
     text-align: left;
-    width:370px;
+    width: 370px;
   }
-  .img_thead th{
-    width:152px;
+  
+  .img_thead th {
+    width: 152px;
   }
-  .img_tbody td{
+  
+  .img_tbody td {
     width: 145px;
     text-align: center;
   }
-  .img_tbody td:first-child img{
+  
+  .img_tbody td:first-child img {
     width: 54px;
     height: 54px;
     border: solid 1px #bfbfbf;
@@ -356,14 +367,16 @@
     float: left;
     margin-left: 45px;
   }
-  .img_tbody td:first-child p{
-    width:360px;
+  
+  .img_tbody td:first-child p {
+    width: 360px;
     float: right;
     text-align: left;
     line-height: 20px;
     margin-top: 6px;
   }
-  .order_nav{
+  
+  .order_nav {
     width: 1080px;
     height: 40px;
     background-color: #f6f7fa;
@@ -374,32 +387,40 @@
     line-height: 40px;
     text-align: center;
   }
-  .order_nav td{
-    width:160px;
+  
+  .order_nav td {
+    width: 160px;
   }
-  .order_nav td:nth-child(1){
-    width:536px;
+  
+  .order_nav td:nth-child(1) {
+    width: 536px;
     text-align: left;
   }
-  .order_nav td:nth-child(1) span{
+  
+  .order_nav td:nth-child(1) span {
     margin-left: 90px;
   }
-  .order_nav .my_select{
+  
+  .order_nav .my_select {
     width: 145px;
     margin-left: 32px;
   }
-  .order_amount{
-    width:170px !important;
+  
+  .order_amount {
+    width: 170px !important;
     text-align: left;
   }
-  .order_amount span{
+  
+  .order_amount span {
     color: #c6351e;
   }
-  .no_img_p{
+  
+  .no_img_p {
     padding-left: 46px;
     float: none !important;
   }
-  .icon_currency{
+  
+  .icon_currency {
     position: relative;
     top: 4px;
     width: 13px;
@@ -407,7 +428,7 @@
   }
 </style>
 <style>
-  .order_nav .el-input--suffix .el-input__inner{
+  .order_nav .el-input--suffix .el-input__inner {
     height: 40px !important;
     background-color: #f6f7fa;
   }

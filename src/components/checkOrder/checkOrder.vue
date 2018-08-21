@@ -1,35 +1,9 @@
 <template>
   <div class="nav_content">
-    
     <div class="nav_content_title">
       <span>核对订单信息</span>
     </div>
-    
-    <div class="nav_content_table" v-if="buyInfoObj.apikey==='5a6be74a55aaf50001a5e250'">
-      <table>
-        <thead>
-        <tr class="no_img_thead">
-          <th>订单详情</th>
-          <th>权益</th>
-          <th>数量</th>
-          <th>小计</th>
-        </tr>
-        <tr class="th_classify">
-          <th colspan="5">维修案例</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr class="no_img_tbody">
-          <td>{{buyInfoObj.assetname}}</td>
-          <td>{{buyInfoObj.sell_type}}</td>
-          <td>{{buyInfoObj.count}}</td>
-          <td>{{buyInfoObj.price}}</td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-    
-    <div class="nav_content_table" v-if="buyInfoObj.apikey==='5ae04522cff7cb000194f2f4'">
+    <div class="nav_content_table">
       <table>
         <thead>
         <tr class="img_thead">
@@ -40,13 +14,16 @@
           <th>小计</th>
         </tr>
         <tr class="th_classify">
-          <th colspan="6">维修设备</th>
+          <th colspan="6">{{buyInfoObj.apiname}}</th>
         </tr>
         </thead>
         <tbody>
         <tr class="img_tbody">
-          <td><img :src="buyInfoObj.asseturl" alt=""></td>
+          <td v-if="buyInfoObj.apikey==='5ae04522cff7cb000194f2f4'">
+            <img :src="buyInfoObj.asseturl" alt="">
+          </td>
           <td>{{buyInfoObj.assetname}}</td>
+          <td v-if="buyInfoObj.apikey!=='5ae04522cff7cb000194f2f4'"></td>
           <td>{{buyInfoObj.sell_type}}</td>
           <td>{{buyInfoObj.count}}</td>
           <td>{{total}}</td>
@@ -54,9 +31,7 @@
         </tbody>
       </table>
     </div>
-    
     <p class="order_amount">订单金额：<span>{{total}}</span></p>
-    
     <div class="check_container" v-if="next===1">
       <div class="check_info">
         <h2>确认订单</h2>
@@ -70,33 +45,32 @@
       </div>
       <div class="check_code">
         <div class="payment">
-          <span>选择支付方式：	&nbsp;</span>
+          <span>选择支付方式：&nbsp;&nbsp;</span>
           <span class="pay">
-              <label class="pay_label">
-                <input class="pay_radio" type="radio" name="pay" value="1" v-model="value">
-                <span class="pay_radioInput"></span>银联
-              </label>
-              <label class="pay_label">
-                  <input class="pay_radio" type="radio" name="pay" value="2" v-model="value">
-                  <span class="pay_radioInput"></span>微信
-              </label>
             <label class="pay_label">
-                  <input class="pay_radio" type="radio" name="pay" value="3" v-model="value">
-                  <span class="pay_radioInput"></span>可信积分
-              </label>
+              <input class="pay_radio" type="radio" name="pay" value=30 v-model="value">
+              <span class="pay_radioInput"></span>银联
+            </label>
             <label class="pay_label">
-                  <input class="pay_radio" type="radio" name="pay" value="4" v-model="value">
-                  <span class="pay_radioInput"></span>元豆
-              </label>
-            </span>
+              <input class="pay_radio" type="radio" name="pay" value=10 v-model="value">
+              <span class="pay_radioInput"></span>微信
+            </label>
+            <label class="pay_label">
+              <input class="pay_radio" type="radio" name="pay" value=0 v-model="value">
+              <span class="pay_radioInput"></span>可信积分
+            </label>
+            <label class="pay_label">
+              <input class="pay_radio" type="radio" name="pay" value="20" v-model="value">
+              <span class="pay_radioInput"></span>支付宝
+            </label>
+          </span>
         </div>
         <p>可使用可信积分，进行等价交易。</p>
         <p class="tip">提示：可用其它钱包地址支付</p>
-        <button @click="notarize">确认支付</button>
+        <button @click="acquireIntegralInfo">确认支付</button>
       </div>
     </div>
-    
-    <div class="check_container">
+    <div class="check_container" v-if="next===2">
       <div class="check_info">
         <h2>确认订单</h2>
         <div class="check_title_info">
@@ -110,11 +84,11 @@
       <div class="check_code">
         <p>可使用可信积分，进行等价交易。</p>
         <p class="tip">提示：可用其它钱包地址支付</p>
-        <img class="check_code_img" :src="`data:image/png;base64,${paymentInfo.png}`" alt="" v-if="walletAddress!==''">
+        <img class="check_code_img" :src="`data:image/png;base64,${paymentInfo.png}`" alt="" v-if="value===0">
+        <a class="check_code_a" :href="paymentInfo.image_url" target="_blank" v-if="value!==0">去支付</a>
       </div>
     </div>
-    
-    <div class="check_container">
+    <div class="check_container" v-if="next===3">
       <div class="check_info">
         <h2>确认订单</h2>
         <div class="check_title_info">
@@ -155,6 +129,8 @@
   import myTopSearch from "../topSearch/topSearch"
   import {BigNumber} from 'bignumber.js';
   
+  const querystring = require('querystring');
+  
   export default {
     name: "checkOrder",
     components: {
@@ -173,10 +149,9 @@
         caseDetails: {},
         facilityDetails: {},
         next: 1,
-        mallId: "5b18e49ea4cc0d14ed0a3a1c",
         timer: "",
         phone: "",
-        value: "3",
+        value: 0,
       }
     },
     mounted() {
@@ -201,46 +176,7 @@
       }
     },
     methods: {
-      open() {
-        this.$confirm('此操作需要先绑定钱包地址, 是否绑定?', '提示', {
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          type: 'warning',
-          center: true
-        }).then(() => {
-          window.location.href = "/securityCenter"
-        }).catch(() => {
-        });
-      },
-      notarize() {
-        this.acquireIntegralInfo();
-      },
-      acquireIntegralInfo() {
-        axios({
-          method: "GET",
-          url: `${baseURL}/v1/order/pay/${this.orderNum}`,
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }).then((res) => {
-          if (this.buyInfoObj.orderStatus === 0) {
-            return
-          } else if (this.buyInfoObj.orderStatus === 1) {
-            this.paymentInfo = res.data;
-            this.next = 2;
-            if (this.walletAddress) {
-              let that = this;
-              this.timer = window.setTimeout(function () {
-                that.acquireOrderStatus()
-              }, 5000);
-            } else {
-              this.open()
-            }
-          }
-        }).catch((err) => {
-          console.log(err);
-        });
-      },
+      //获取订单详情
       acquireOrderInfo() {
         axios({
           method: "GET",
@@ -258,18 +194,70 @@
           console.log(err);
         });
       },
+      //订单确认支付
+      acquireIntegralInfo() {
+        if (this.walletAddress) {
+          //防止长时间未点击确认支付或在其它浏览器支付完成，支付前获取订单最新支付状态
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/order/detail/${this.orderNum}`,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((res) => {
+            if (res.data.orderStatus === 0) {
+              return
+            } else if (res.data.orderStatus === 1) {
+              //如果支付状态是未支付，根据支付方式请求支付信息
+              axios({
+                method: "POST",
+                url: `${baseURL}/v1/order/pay/${this.orderNum}`,
+                data: querystring.stringify({
+                  pay_method: this.value
+                })
+              }).then((res) => {
+                if (this.value === 30 || 10 || 20) {
+                  this.paymentInfo = res.data.data;
+                  window.open(this.paymentInfo.image_url, "_blank")
+                } else if (this.value === 0) {
+                  this.paymentInfo = res.data;
+                }
+                this.next = 2;
+                this.acquireOrderStatus();
+              }).catch((err) => {
+                console.log(err);
+              });
+            } else if (res.data.orderStatus === 2) {
+              clearTimeout(this.timer);
+              this.next = 3
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
+        } else {
+          this.open()
+        }
+      },
+      //查询订单支付状态（共用获取订单详情接口）
       acquireOrderStatus() {
         axios({
           method: "GET",
-          url: `${cardURL}/v1/asset-payment/mall/${this.mallId}/order/${this.orderNum}`,
+          url: `${baseURL}/v1/order/detail/${this.orderNum}`,
           headers: {
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          if (res.data.status === 0) {
+          console.log(res.data.orderStatus)
+          if(res.data.orderStatus === 0){
             clearTimeout(this.timer);
-            this.notarize()
-          } else if (res.data.status === 1) {
+            return
+          } else if (res.data.orderStatus === 1) {
+            clearTimeout(this.timer);
+            let that = this;
+            this.timer = window.setTimeout(function () {
+              that.acquireOrderStatus()
+            }, 5000);
+          } else if (res.data.orderStatus === 2) {
             clearTimeout(this.timer);
             this.next = 3
           }
@@ -277,6 +265,7 @@
           console.log(err);
         });
       },
+      //获取用户信息
       acquireUserInfo() {
         axios({
           method: "GET",
@@ -296,6 +285,7 @@
           console.log(err);
         });
       },
+      //获取钱包地址余额
       acquireBalance() {
         axios({
           method: "POST",
@@ -317,6 +307,18 @@
           }
         }).catch((err) => {
           console.log(err);
+        });
+      },
+      //提示框
+      open() {
+        this.$confirm('此操作需要先绑定钱包地址, 是否绑定?', '提示', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          window.location.href = "/securityCenter"
+        }).catch(() => {
         });
       },
     },
@@ -459,93 +461,11 @@
   .order_amount span {
     color: #c6351e;
   }
-  
-  /*.check_container {
-    width: 1080px;
-    height: 330px;
-    background-color: #ffffff;
-    border-top: 6px solid #c6351e;
-    margin-bottom: 130px;
-  }
-  
-  .check_info h2 {
-    font-size: 18px;
-    color: #222222;
-    margin: 18px;
-    margin-bottom: 14px;
-  }
-  
-  .check_title_info {
-    font-size: 14px;
-    color: #666666;
-    margin-left: 22px;
-    line-height: 24px;
-  }
-  
-  .check_code {
-    font-size: 16px;
-    color: #222222;
-    width: 240px;
-    height: 180px;
-    margin: 30px auto 0;
-  }
-  .check_code_img {
-    width: 100px;
-    height: 100px;
-    border: 1px solid #cccccc;
-    display: inline-block;
-    margin-top: 18px;
-    margin-left: 58px;
-  }
-  
-  .check_success {
-    text-align: center;
-    font-size: 16px;
-    color: #c6351e;
-    margin-top: 18px;
-  }
-  
-  .check_success p {
-    margin-top: 6px;
-  }
-  
-  .to_home {
-    width: 130px;
-    height: 30px;
-    display: inline-block;
-    background-color: #c6351e;
-    color: #ffffff;
-    line-height: 30px;
-    margin-top: 18px;
-    margin-right: 14px;
-  }
-  .check_confirm {
-    width: 310px;
-    margin-top: 92px;
-  }
-  .check_confirm button {
-    width: 100px;
-    height: 30px;
-    color: #ffffff;
-    line-height: 30px;
-    background-color: #c6351e;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    margin-top: 24px;
-    margin-left: 94px;
-  }
-  
-  .to_bind {
-    font-size: 14px;
-    color: #c6351e;
-  }*/
 </style>
 <style scoped lang="stylus">
   .check_container {
     box-sizing border-box
     width: 1080px;
-    //height: 330px;
     background-color: #ffffff;
     border-top: 6px solid #c6351e;
     margin-bottom: 112px;
@@ -585,7 +505,6 @@
             display: none
           }
           .pay_radioInput {
-            //background-color: #fffff;
             border: 1px solid #7d7d7d;
             border-radius: 50%;
             display: inline-block;
@@ -638,6 +557,19 @@
         margin-top 24px
         margin-bottom 20px
       }
+      .check_code_a {
+        width: 100px;
+        height: 30px;
+        display: inline-block;
+        margin-top 24px
+        margin-bottom 20px
+        margin-left 0
+        margin-right 0
+        line-height 30px
+        font-size: 16px;
+        background-color: #c6351e;
+        color: #ffffff;
+      }
       .check_success {
         text-align: center;
         font-size: 16px;
@@ -654,20 +586,20 @@
           margin-bottom 10px
         }
       }
-      .code_box{
-        p{
+      .code_box {
+        p {
           font-size 14px
           color: #666666;
         }
-        .code{
+        .code {
           font-size 0
-          li{
+          li {
             margin 10px
             font-size 14px
             color: #666666;
             display inline-block
             text-align center
-            img{
+            img {
               vertical-align top
             }
           }

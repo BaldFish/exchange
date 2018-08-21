@@ -70,7 +70,7 @@
         </div>
       </div>
     </div>
-
+    
     <div class="assets-container">
       <div class="tabs_nav">
         <ul class="tabs">
@@ -118,11 +118,11 @@
           </tbody>
         </table>
       </div>
-
+    
     </div>
     
     <img class="lock" src="./images/lock.png" alt="">
-
+    
     <el-dialog class="info-dialog" title="上链信息" width="760px" :visible.sync="dialogTableVisible">
       <div>
         <p class="title">资产详情</p>
@@ -206,7 +206,7 @@
             <label>"记录时间": </label>
             <span>"2018-05-23 09:13:30"</span>
           </p>
-
+        
         </div>
       </div>
       <div class="record-container2">
@@ -300,15 +300,16 @@
   import myToggle from "../toggle/toggle"
   import myProgressBar from "../progressBar/progressBar"
   import utils from "@/common/js/utils.js";
+  
   const querystring = require('querystring');
   
   export default {
     name: "transferDetails",
     data() {
       return {
-        userId:"",
-        apiKey:"",
-        assetId:"",
+        userId: "",
+        apiKey: "",
+        assetId: "",
         propertyDetails: {},
         percentage: 75,
         isShow: true,
@@ -319,14 +320,15 @@
         activeImg: require('./images/02.png'),
         firstCheckedIndex: 0,//第一次出现"0未完成"数组下标
         id: 1,
-        singleGood:{},
+        singleGood: {},
         num: 1,
         min: 1,
         max: 1,
-        recordList:[],
+        recordList: [],
       }
     },
-    created() {},
+    created() {
+    },
     mounted() {
       //获取资产包id
       this.id = JSON.parse(sessionStorage.getItem("propertyDetails")).id;
@@ -394,7 +396,7 @@
           let unDoneList = [];
           this.goodsList.forEach((value) => {
             value.isChecked = false;
-            if (value.status === 0||value.total_number - value.complete_number) {
+            if (value.status === 0 || value.total_number - value.complete_number) {
               unDoneList.push(value)
             }
           });
@@ -422,43 +424,45 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          this.num=1;
+          this.num = 1;
           this.max = res.data.total_number - res.data.complete_number;
-          this.singleGood=res.data;
+          this.singleGood = res.data;
         }).catch((err) => {
           console.log(err);
         })
       },
+      //创建订单
       buy(val) {
-        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-          let buyInfoObj=val;
-          this.apiKey=buyInfoObj.apikey;
-          this.assetId=buyInfoObj.id;
-          this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-          let data={};
-          data.account=this.userId;
-          data.apikey=this.apiKey;
-          data.asset_id=this.assetId;
-          data.number=this.num;
+        if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+          let buyInfoObj = val;
+          this.apiKey = buyInfoObj.apikey;
+          this.assetId = buyInfoObj.id;
+          this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+          let data = {};
+          data.account = this.userId;
+          data.apikey = this.apiKey;
+          data.asset_id = this.assetId;
+          data.count = this.num;
           axios({
             method: "POST",
             url: `${cardURL}/v1/assets-transfer/record/insert`,
-            data:querystring.stringify(data),
+            data: querystring.stringify(data),
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              "X-Access-Token":this.token,
+              "X-Access-Token": this.token,
             }
           }).then((res) => {
-            buyInfoObj=res.data;
+            buyInfoObj = res.data;
             this.getBuy(buyInfoObj);
-            //window.location.href="/checkOrder"
+            window.location.href="/checkOrder"
           }).catch((err) => {
             console.log(err);
           })
-        }else{
+        } else {
           this.open()
         }
       },
+      //提示框
       open() {
         this.$confirm('此操作需要先登录, 是否登录?', '提示', {
           confirmButtonText: '是',
@@ -474,7 +478,7 @@
         this.$store.commit("changeBuy", val);
       },
       //获取认购列表
-      getRecordList(){
+      getRecordList() {
         axios({
           method: "GET",
           url: `${cardURL}/v1/assets-transfer/record/${this.id}/2?page=&limit=`,
@@ -483,18 +487,18 @@
           }
         }).then((res) => {
           this.recordList = res.data.data;
-          this.recordList.forEach((record)=>{
-            record.buy_time = utils.formatDate(new Date(record.buy_time),'yyyy-MM-dd hh:mm:ss')
+          this.recordList.forEach((record) => {
+            record.buy_time = utils.formatDate(new Date(record.buy_time), 'yyyy-MM-dd hh:mm:ss')
           })
         }).catch((err) => {
           console.log(err);
         })
       },
       //获取弹框数据
-      checkAssetsDetail(item){
+      checkAssetsDetail(item) {
         this.dialogTableVisible = true;
-
-        console.log(item,"item")
+        
+        console.log(item, "item")
         axios({
           method: "GET",
           url: `${baseURL}/v1/asset/5ae04522cff7cb000194f2f4/9f93a461-4ece-46ea-8ff3-2b921289ab74/detail`,
@@ -502,13 +506,13 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-
-          console.log(res,'111')
-
+          
+          console.log(res, '111')
+          
         }).catch((err) => {
           console.log(err);
         });
-
+        
         axios({
           method: "GET",
           url: `${cardURL}/v1/transed-asset/${item.id}/apikey/${item.apiKey}?page=0&limit=1000000`,
@@ -516,13 +520,13 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-
-          console.log(res,'222')
-
+          
+          console.log(res, '222')
+          
         }).catch((err) => {
           console.log(err);
         });
-
+        
         axios({
           method: "GET",
           url: `${cardURL}/v1/used-asset/${item.id}/apikey/${item.apiKey}?page=0&limit=1000000`,
@@ -530,19 +534,11 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-
-          console.log(res,'333')
-
-
+          console.log(res, '333')
         }).catch((err) => {
           console.log(err);
         });
-
-
       },
-
-
-
     },
     watch: {},
     computed: {},
