@@ -6,7 +6,7 @@
       <div class="goods-banner">
         <img class="show-img" :src="activeImg" alt="">
         <div class="banner-box">
-          <img class="prev" @click="prevImg" :src="prev" alt="">
+          <img class="prev" @click="prevImg" src="./images/pre.png" alt="">
           <div class="img-list">
             <ul v-bind:style="{right: toRight + 'px' }">
               <li v-for="item in bannerList" @click="showImg(item.url)">
@@ -15,69 +15,60 @@
               </li>
             </ul>
           </div>
-          <img class="next" @click="nextImg" :src="next" alt="">
+          <img class="next" @click="nextImg" src="./images/next.png" alt="">
         </div>
       </div>
       <div class="goods-buy">
-        <p class="goods-title">{{propertyDetails.name}}</p>
+        <p class="goods-title">{{goodsTitle}}</p>
         <div class="goods-logo">
-          <a href="/seller">
-            <span>LAUNCH</span>
-            <span>卖家</span>
-          </a>
+          <span>LAUNCH</span>
+          <span>买家</span>
         </div>
         <div class="goods-details">
           <ul>
             <li>
               <label>认购金额：</label>
-              <span class="money">￥{{singleGood.price}}</span>
+              <span class="money">￥{{price}}</span>
             </li>
             <li class="goods-list">
               <label>选择设备：</label>
               <ul>
-                <li v-for="item in goodsList" @click="getSingleGood(item)">
-                  <input type="radio" name="radio" :disabled="item.status == 1?true:false" :checked="item.isChecked">
+                <li v-for="data in goodsList" @click="getSingleGood(data)">
+                  <input type="radio" name="radio" :disabled="data.status == 1?true:false" :checked="data.isChecked">
                   <div class="radio-box">
-                    <img :src="item.url" alt="">
-                    <p>{{item.name}}</p>
+                    <img :src="data.url" alt="">
+                    <p>{{data.name}}</p>
                   </div>
                 </li>
               </ul>
               <div style="clear: both"></div>
             </li>
             <li class="number">
-              <label>总份数：</label>
-              <span class="total-num">{{singleGood.total_number}}</span>
-
-              <label class="rest">已售：</label>
-              <span>{{singleGood.complete_number}}</span>
-            </li>
-            <li class="number">
-              <label>购买：</label>
+              <label>数量：</label>
               <template>
-                <el-input-number v-model="num" size="mini" controls-position="right" @change="handleChange" :min="min" :max="max"></el-input-number>
+                <el-input-number v-model="num8" size="mini" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
               </template>
-              
+
               <label class="rest">剩余：</label>
-              <span>{{max}}/{{singleGood.total_number}}</span>
-            
+              <span>{{total_num - complete_num}}/{{total_num}}</span>
+
             </li>
             <li class="progress">
               <label>当前进度：</label>
-              <my-progressBar :percentage="propertyDetails.percentage"></my-progressBar>
+              <my-progressBar :percentage="percentage"></my-progressBar>
             </li>
           </ul>
           <div style="clear: both"></div>
-          
+
           <div class="btn">
-            <!--<button type="button">收藏</button>-->
-            <button type="button" @click="buy(singleGood)">认购</button>
+            <button type="button">收藏</button>
+            <button type="button">认购</button>
           </div>
-        
+
         </div>
       </div>
     </div>
-    
+
     <div class="assets-container">
       <div class="tabs_nav">
         <ul class="tabs">
@@ -98,7 +89,7 @@
           <tbody>
           <tr v-for="item in goodsList">
             <td>{{item.name}}</td>
-            <td>{{item.price * item.total_number}}元</td>
+            <td>{{item.price * item.total_num}}元</td>
             <td>{{item.status==1?'已售出':'未售出'}}</td>
             <td @click="checkAssetsDetail(item)">查看</td>
           </tr>
@@ -124,23 +115,12 @@
           </tr>
           </tbody>
         </table>
-
-        <div class="clearfix paging">
-          <el-pagination class="my_paging"
-                         layout="prev, pager, next"
-                         :background=true
-                         :total=total
-                         :page-size=pageSize
-                         :current-page.sync=currentPage
-                         @current-change="handleCurrentChange">
-          </el-pagination>
-        </div>
       </div>
-    
+
     </div>
-    
+
     <img class="lock" src="./images/lock.png" alt="">
-    
+
     <el-dialog class="info-dialog" title="上链信息" width="760px" :visible.sync="dialogTableVisible">
       <div>
         <p class="title">资产详情</p>
@@ -224,7 +204,7 @@
             <label>"记录时间": </label>
             <span>"2018-05-23 09:13:30"</span>
           </p>
-        
+
         </div>
       </div>
       <div class="record-container2">
@@ -307,7 +287,7 @@
         </div>
       </div>
     </el-dialog>
-  
+
   </div>
 </template>
 
@@ -317,54 +297,40 @@
   import myTopSearch from "../topSearch/topSearch"
   import myToggle from "../toggle/toggle"
   import myProgressBar from "../progressBar/progressBar"
-  import utils from "@/common/js/utils.js";
-  
-  const querystring = require('querystring');
-  
+  import utils from '@/common/js/utils.js';
+
   export default {
     name: "transferDetails",
     data() {
       return {
-        userId: "",
-        apiKey: "",
-        assetId: "",
-        propertyDetails: {},
-        percentage: 75,
-        isShow: true,
+        num8: 1,
+        goodsTitle:'',
+        percentage:75,
+        isShow:true,
         dialogTableVisible: false,
-        toRight: 0,
-        bannerList: [],
-        goodsList: [],
-        activeImg: require('./images/02.png'),
-        firstCheckedIndex: 0,//第一次出现"0未完成"数组下标
-        id: 1,
-        singleGood: {},
-        num: 1,
-        min: 1,
-        max: 1,
+        toRight:0,
+        bannerList:[],
+        goodsList:[],
+        activeImg:require('./images/02.png'),
+        price:'',
+        complete_num:'',
+        total_num:'',
+        firstCheckedIndex:0,//第一次出现"0未完成"数组下标
         recordList:[],
-        assetSource:[],
-        usageRecord:[],
-        facilityDetails:{},
-        prev:require("./images/pre.png"),//上一张
-        next:require("./images/next.png"),//下一张
-        total: 10,
-        pageSize: 10,
-        currentPage: 1,
+
       }
     },
     created() {
     },
     mounted() {
-      //获取资产包id
-      this.id = JSON.parse(sessionStorage.getItem("propertyDetails")).id;
-      //商品标题&进度条包详情信息
-      this.getPropertyDetails();
+      //商品标题&进度条
+      this.getGoodsTitle();
       //商品图片、商品列表
       this.getGoodsDetails();
       //获取认购列表
       this.getRecordList();
-      
+
+
     },
     methods: {
       handleChange(value) {
@@ -374,49 +340,41 @@
         this.isShow = !this.isShow
       },
       //上一张图
-      prevImg() {
-        if(this.toRight === (this.goodsList.length - 4)*60 || this.goodsList.length <= 4){
-          return false
-        } else{
-          this.prev = require("./images/right_mr.png");
-          this.next = require("./images/next.png");
-          this.toRight = this.toRight + 60
-        }
+      prevImg(){
+        this.toRight = this.toRight + 60
       },
       //下一张图
-      nextImg() {
-        if (this.toRight == 0) {
+      nextImg(){
+        if(this.toRight == 0){
           return false
-        } else {
-          this.prev = require("./images/pre.png");
-          this.next = require("./images/left_dj.png");
+        }else{
           this.toRight = this.toRight - 60
         }
       },
       //展示大图
-      showImg(item) {
+      showImg(item){
         this.activeImg = item
       },
       //商品标题&进度条
-      getPropertyDetails() {
+      getGoodsTitle(){
         axios({
           method: "GET",
-          url: `${cardURL}/v1/assets-transfer/package/${this.id}`,
+          url: `${cardURL}/v1/assets-transfer/package/1`,
           headers: {
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          res.data.percentage = utils.divide(res.data.complete_amount, res.data.total_amount) * 100;
-          this.propertyDetails = res.data;
+          this.goodsTitle=res.data.name;
+          this.percentage = Math.round((res.data.complete_amount / res.data.total_amount)*100);
         }).catch((err) => {
           console.log(err);
         })
       },
       //商品图片、商品列表
-      getGoodsDetails() {
+      getGoodsDetails(){
         axios({
           method: "GET",
-          url: `${cardURL}/v1/assets-transfer/asset/packid/${this.id}`,
+          url: `${cardURL}/v1/assets-transfer/asset/packid/1`,
           headers: {
             "Content-Type": "application/json",
           }
@@ -426,136 +384,132 @@
           this.activeImg = res.data.data[0].url;
           //获取商品数据
           this.goodsList = res.data.data;
+          /*this.goodsList =  [
+            {
+              "id": "1",
+              "apikey": "zyclq",
+              "name": "中央处理器",
+              "url": "http://pic42.photophoto.cn/20170311/1155117159645226_b.jpg",
+              "status": 1,
+              "total_num": 10,
+              "price": 2000
+            },
+            {
+              "id": "2",
+              "apikey": "ncnco",
+              "name": "内存",
+              "url": "http://pic44.photophoto.cn/20170726/0017029157836055_b.jpg",
+              "status": 0,
+              "total_num": 10,
+              "price": 888
+            },
+            {
+              "id": "3",
+              "apikey": "xpxpo",
+              "name": "芯片",
+              "url": "http://pic43.photophoto.cn/20170602/1190121114784731_b.jpg",
+              "status": 1,
+              "total_num": 10,
+              "price": 1000
+            },
+            {
+              "id": "4",
+              "apikey": "iosbo",
+              "name": "IO设备",
+              "url": "http://pic44.photophoto.cn/20170729/0008118023308172_b.jpg",
+              "status": 0,
+              "total_num": 8,
+              "price": 1666
+            },
+            {
+              "id": "5",
+              "apikey": "dyuan",
+              "name": "电源",
+              "url": "http://pic44.photophoto.cn/20170725/0017029572630842_b.jpg",
+              "status": 0,
+              "total_num": 4,
+              "price": 500
+            }
+          ];*/
+
           //判断首次出现"0未完成"位置，并添加isChecked属性
           let unDoneList = [];
-          this.goodsList.forEach((value) => {
-            value.isChecked = false;
-            if(value.total_number - value.complete_number === 0){
-              value.status = 1
-            }
-            if (value.status === 0) {
-              unDoneList.push(value)
+          //let j=0;
+          this.goodsList.forEach((good)=>{
+            good.isChecked = false;
+            if(good.status == 0){
+              unDoneList.push(good)
             }
           });
-          for (let i = 0; i < this.goodsList.length; i++) {
-            if (this.goodsList[i].id === unDoneList[0].id) {
-              this.firstCheckedIndex = i;
+          for (let i=0;i<this.goodsList.length;i++){
+            if(this.goodsList[i].id == unDoneList[0].id){
+              this.firstCheckedIndex=i;
             }
           }
           this.goodsList[this.firstCheckedIndex].isChecked = true;
+
           this.getSingleGood(this.goodsList[this.firstCheckedIndex])
         }).catch((err) => {
           console.log(err);
         })
       },
       //点击单个商品
-      getSingleGood(val) {
-        this.goodsList.forEach((good) => {
+      getSingleGood(data){
+        this.goodsList.forEach((good)=>{
           good.isChecked = false;
         });
-        val.isChecked = true;
+        data.isChecked = true;
+
         axios({
           method: "GET",
-          url: `${cardURL}/v1/assets-transfer/asset/id/${val.id}/${val.apikey}`,
+          url: `${cardURL}/v1/assets-transfer/asset/id/${data.id}/${data.apikey}`,
           headers: {
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          this.num = 1;
-          this.max = res.data.total_number - res.data.complete_number;
-          this.singleGood = res.data;
+          this.complete_num = res.data.complete_num;
+          this.total_num = res.data.total_num;
+          this.price = res.data.price;
         }).catch((err) => {
           console.log(err);
         })
       },
-      //创建订单
-      buy(val) {
-        if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
-          let buyInfoObj = val;
-          this.apiKey = buyInfoObj.apikey;
-          this.assetId = buyInfoObj.id;
-          this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-          let data = {};
-          data.account = this.userId;
-          data.apikey = this.apiKey;
-          data.asset_id = this.assetId;
-          data.count = this.num;
-          axios({
-            method: "POST",
-            url: `${cardURL}/v1/assets-transfer/record/insert`,
-            data: querystring.stringify(data),
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-              "X-Access-Token": this.token,
-            }
-          }).then((res) => {
-            buyInfoObj = res.data;
-            this.getBuy(buyInfoObj);
-            window.location.href="/checkOrder"
-          }).catch((err) => {
-            console.log(err);
-          })
-        } else {
-          this.open()
-        }
-      },
-      //提示框
-      open() {
-        this.$confirm('此操作需要先登录, 是否登录?', '提示', {
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          type: 'warning',
-          center: true
-        }).then(() => {
-          window.location.href = "/login"
-        }).catch(() => {
-        });
-      },
-      getBuy(val) {
-        this.$store.commit("changeBuy", val);
-      },
-      //分页变化
-      handleCurrentChange(val){
-        this.currentPage = val;
-        this.getRecordList();
-      },
       //获取认购列表
-      getRecordList() {
+      getRecordList(){
         axios({
           method: "GET",
-          url: `${cardURL}/v1/assets-transfer/record/${this.id}/2?page=${this.currentPage}&limit=${this.pageSize}`,
+          url: `${cardURL}/v1/assets-transfer/record/1/2?page=&limit=`,
           headers: {
             "Content-Type": "application/json",
           }
         }).then((res) => {
           this.recordList = res.data.data;
-          this.total = res.data.count;
           this.recordList.forEach((record)=>{
-            record.updated_at = utils.formatDate(new Date(record.updated_at),'yyyy-MM-dd hh:mm:ss')
+            record.buy_time = utils.formatDate(new Date(record.buy_time),'yyyy-MM-dd hh:mm:ss')
           })
         }).catch((err) => {
           console.log(err);
         })
       },
       //获取弹框数据
-      checkAssetsDetail(item) {
+      checkAssetsDetail(item){
         this.dialogTableVisible = true;
-        
-        console.log(item, "item")
+
+        console.log(item,"item")
         axios({
           method: "GET",
-          url: `${baseURL}/v1/asset/5ae04522cff7cb000194f2f4/9f93a461-4ece-46ea-8ff3-2b921289ab74/detail`,
+          url: `${cardURL}/v1/asset/${item.apiKey}/${item.id}/detail`,
           headers: {
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          
-          console.log(res, '111')
-          
+
+          console.log(res,'111')
+
         }).catch((err) => {
           console.log(err);
         });
-        
+
         axios({
           method: "GET",
           url: `${cardURL}/v1/transed-asset/${item.id}/apikey/${item.apiKey}?page=0&limit=1000000`,
@@ -563,13 +517,13 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          
-          console.log(res, '222')
-          
+
+          console.log(res,'222')
+
         }).catch((err) => {
           console.log(err);
         });
-        
+
         axios({
           method: "GET",
           url: `${cardURL}/v1/used-asset/${item.id}/apikey/${item.apiKey}?page=0&limit=1000000`,
@@ -577,11 +531,22 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          console.log(res, '333')
+
+          console.log(res,'333')
+
+
         }).catch((err) => {
           console.log(err);
         });
+
+
       },
+
+
+
+
+
+
     },
     watch: {},
     computed: {},
@@ -594,40 +559,35 @@
 </script>
 
 <style scoped lang="stylus">
-  .goods-banner {
-    width: 350px
-    height: 425px
+  .goods-banner{
+    width:350px
+    height:425px
     float: left
     margin-left: 30px;
     margin-top: 20px;
   }
-  
-  .show-img {
+  .show-img{
     width: 350px;
     height: 350px;
     border: solid 1px #eeeeee;
     margin-bottom: 20px;
   }
-  
-  .banner-box {
+  .banner-box{
     height: 50px;
-    width: 350px
+    width:350px
   }
-  
-  .img-list {
+  .img-list{
     height: 52px;
     width: 240px;
     margin-left: 60px;
     overflow: hidden;
   }
-  
   .banner-box ul {
     height: 52px;
     width: 900px;
     position: relative
   }
-  
-  .banner-box ul li {
+  .banner-box ul li{
     float left
     width: 50px;
     height: 50px;
@@ -635,25 +595,21 @@
     margin-right 8px
     cursor pointer
   }
-  
-  .banner-box ul li:hover img {
+  .banner-box ul li:hover img{
     border: solid 1px #d91e01;
   }
-  
-  .banner-box ul li input {
+  .banner-box ul li input{
     width: 50px;
     height: 50px;
     position relative;
-    z-index: 60;
+    z-index:60;
     cursor pointer;
     opacity 0
   }
-  
-  .banner-box ul li input:checked + img {
+  .banner-box ul li input:checked +img{
     border: solid 1px #d91e01;
   }
-  
-  .banner-box ul li img {
+  .banner-box ul li img{
     width: 50px;
     height: 49px;
     position: relative;
@@ -661,65 +617,52 @@
     border: solid 1px #eee;
     right: 1px;
   }
-  
-  .prev {
+  .prev{
     float left
     margin-top: 10px;
     cursor pointer
   }
-  
-  .next {
+  .next{
     float right
     margin-top: -42px;
     cursor pointer
   }
 </style>
 <style scoped lang="stylus">
-  .goods-container {
-    width: 1200px;
-    height: 500px;
-    margin: 45px auto;
+  .goods-container{
+    width:1200px;
+    height:500px;
+    margin:45px auto;
     background-color: #fff;
   }
-  
-  .goods-buy {
-    width: 735px;
+  .goods-buy{
+    width:735px;
     float: right;
-    margin-top: 21px;
+    margin-top: 36px;
     margin-right: 56px;
   }
-  
-  .goods-title {
+  .goods-title{
     font-size: 14px;
     color: #333333;
   }
-
-  .total-num{
-    width: 26px;
-    display: inline-block;
-  }
-
-  .goods-logo {
-    width: 88px;
+  .goods-logo{
+    width: 78px;
     height: 18px;
-    border: 1px solid #d91e01;
+    border:1px solid #d91e01;
     text-align center;
     margin-top 8px
     margin-bottom 10px
-    cursor pointer
   }
-  
-  .goods-logo span:first-child {
-    font-size: 12px;
-    width: 55px;
+  .goods-logo span:first-child{
+    font-size: 6px;
+    width: 45px;
     color: #d91e01;
     line-height: 18px;
     margin: 0 auto;
     display: inline-block;
     float: left;
   }
-  
-  .goods-logo span:last-child {
+  .goods-logo span:last-child{
     font-size: 12px;
     width: 33px;
     height: 20px;
@@ -731,40 +674,33 @@
     line-height: 20px;
     right: -1px;
   }
-  
-  .goods-details ul li {
+  .goods-details ul li{
     margin-bottom 15px
   }
-  
-  .goods-details ul li label {
+  .goods-details ul li label{
     font-size: 14px;
     color: #999999;
   }
-  
-  .money {
+  .money{
     font-size: 16px;
     color: #d91e01;
   }
-  
-  .goods-list li {
+  .goods-list li{
     float left
     margin-right 16px
     margin-bottom 10px
     font-size: 14px;
     color: #333333;
     cursor pointer
-    height: 52px
+    height:52px
   }
-  
-  .goods-list li input:disabled + div {
+  .goods-list li input:disabled + div{
     background-color: #eee;
   }
-  
-  .goods-list li input:disabled + div p {
+  .goods-list li input:disabled + div p{
     opacity: 0.5;
   }
-  
-  .goods-list li img {
+  .goods-list li img{
     width: 40px;
     height: 40px;
     float: left;
@@ -772,62 +708,52 @@
     margin-right: 10px;
     margin-left: 5px;
   }
-  
-  .goods-list li p {
+  .goods-list li p{
     line-height 52px
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     padding-right: 5px;
   }
-  
-  .goods-list label {
+  .goods-list label{
     float left
     margin-right 8px
     height: 180px;
   }
-  
-  .goods-list li input {
+  .goods-list li input{
     width: 200px;
     height: 50px;
     cursor: pointer;
     position: relative;
-    z-index: 99
+    z-index:99
     opacity 0
   }
-  
-  .radio-box {
+  .radio-box{
     width: 200px;
     height: 50px;
     border: solid 1px #eeeeee;
     position: relative;
-    bottom: 52px
+    bottom:52px
   }
-  
-  .goods-list li input:checked + .radio-box {
-    background: url("./images/red_bg.png") no-repeat center;
+  .goods-list li input:checked +.radio-box{
+    background:url("./images/red_bg.png") no-repeat center;
     background-size 100% 100%
   }
-  
-  .progress label {
+  .progress label{
     float left
   }
-  
-  .progress .progressBar {
+  .progress .progressBar{
     float left
     margin-left 6px
     margin-top: 2px;
   }
-  
   .rest {
     margin-left 36px
   }
-  
-  .rest + span {
+  .rest +span{
     color: #333
   }
-  
-  .btn button {
+  .btn button{
     width: 100px;
     height: 40px;
     border: solid 1px #d91e01;
@@ -838,18 +764,15 @@
     margin-right 20px
     cursor pointer
   }
-  
-  .btn button:first-child {
+  .btn button:first-child{
     margin-left: 76px;
     margin-top: 18px;
   }
-  
-  .btn button:last-child {
+  .btn button:last-child{
     background-color #d91e01
     color: #fff
   }
-  
-  .number label:first-child {
+  .number label:first-child{
     width: 70px;
     display: inline-block;
     text-align: right;
@@ -857,19 +780,17 @@
   }
 </style>
 <style scoped lang="stylus">
-  .assets-container {
+  .assets-container{
     width: 1200px;
-    height: 420px;
+    height: 360px;
     background-color #fff
-    margin: 0 auto
+    margin:0 auto
   }
-  
-  .tabs_nav {
+  .tabs_nav{
     height: 48px;
     border-bottom: solid 1px #d91e01;
   }
-  
-  .tabs li {
+  .tabs li{
     width: 92px;
     height: 48px;
     float left;
@@ -879,47 +800,39 @@
     color: #333333;
     cursor pointer
   }
-  
-  .nav-avtive {
+  .nav-avtive{
     color: #fff !important
     background-color: #d91e01;
   }
-  
-  .table {
-    width: 1200px
+  .table{
+    width:1200px
     text-align center
   }
-  
-  .table thead {
+  .table thead{
     font-size: 14px;
     color: #333333;
   }
-  
-  .table tbody {
+  .table tbody{
     color: #666666;
   }
-  
-  .table thead th {
+  .table thead th{
     border-right: solid 1px #eeeeee;
     border-bottom: solid 1px #eeeeee;
     height 50px
     line-height 50px
     width: 300px;
   }
-  
-  .table tbody td {
+  .table tbody td{
     border-right: solid 1px #eeeeee;
     border-bottom: solid 1px #eeeeee;
     height 36px
     line-height 36px
     cursor pointer
   }
-  
-  .table tbody tr:hover {
+  .table tbody tr:hover{
     color: #d91e01;
   }
-  
-  .dot {
+  .dot{
     width: 6px;
     height: 6px;
     display inline-block
@@ -928,35 +841,30 @@
     margin-right: 6px;
     margin-bottom: 2px;
   }
-  
-  .lock {
+  .lock{
     margin: 0 auto;
     display: inherit;
     margin-top: 20px;
     margin-bottom 80px
   }
-  
-  .title {
+  .title{
     font-size: 14px;
     color: #333333;
-    border-left: 1px solid #d91e01;
+    border-left:1px solid #d91e01;
     padding-left 8px
     margin-bottom: 16px;
   }
-  
-  .details-container {
+  .details-container{
     margin-bottom 16px
   }
-  
-  .details-container img {
+  .details-container img{
     width: 80px;
     height: 80px;
     border: solid 1px #eeeeee;
     float left
     margin-left: 10px;
   }
-  
-  .box1-tips span {
+  .box1-tips span{
     width: 60px;
     height: 25px;
     display inline-block;
@@ -967,46 +875,37 @@
     margin-right 4px
     margin-bottom: 4px;
   }
-  
-  .box1-tips span:nth-child(1) {
+  .box1-tips span:nth-child(1){
     background-color: #ffa195;
     margin-left 10px
     margin-top: 6px;
   }
-  
-  .box1-tips span:nth-child(2) {
+  .box1-tips span:nth-child(2){
     background-color: #ffdc8f;
   }
-  
-  .box1-tips span:nth-child(3) {
+  .box1-tips span:nth-child(3){
     background-color: #8bc8ff;
   }
-  
-  .details-container ul li {
+  .details-container ul li{
     float left;
     margin: 5px
     margin-left 10px
     font-size: 14px;
     width: 286px;
   }
-  
-  .details-container ul li label {
+  .details-container ul li label{
     color: #999999;
   }
-  
-  .details-container ul li span {
+  .details-container ul li span{
     color: #666666;
   }
-  
-  .record-container1 .scroll-box {
+  .record-container1 .scroll-box{
     height: 85px;
   }
-  
-  .record-container2 .scroll-box {
+  .record-container2 .scroll-box{
     height: 220px;
   }
-  
-  .scroll-box {
+  .scroll-box{
     line-height normal;
     font-size: 12px;
     color: #999;
@@ -1018,29 +917,25 @@
     overflow-x: hidden;
     margin-bottom: 16px;
   }
-  
-  .scroll-box p:first-child {
+  .scroll-box p:first-child{
     margin-top 15px
   }
-  
-  .scroll-box p:last-child {
+  .scroll-box p:last-child{
     margin-bottom 15px
   }
-  
+
   /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
   .scroll-box::-webkit-scrollbar {
     width: 4px;
     height: 16px;
     background-color: #fff;
   }
-  
   /*定义滚动条轨道 内阴影+圆角*/
   .scroll-box::-webkit-scrollbar-track {
     /*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);*/
     border-radius: 10px;
     background-color: #fff;
   }
-  
   /*定义滑块 内阴影+圆角*/
   .scroll-box::-webkit-scrollbar-thumb {
     border-radius: 2px;
@@ -1049,25 +944,15 @@
   }
 </style>
 <style>
-  .info-dialog .el-dialog__title {
+  .info-dialog .el-dialog__title{
     text-align: center;
     display: inherit;
   }
-  
-  .info-dialog .el-dialog__body {
+  .info-dialog .el-dialog__body{
     padding-top: 0;
   }
-  
-  .info-dialog .el-dialog {
+  .info-dialog .el-dialog{
     border-radius: 30px;
     padding: 0 10px;
-  }
-
-  .goods-buy .el-input-number--mini{
-    width: 80px;
-  }
-
-  .goods-buy .el-input-number.is-controls-right .el-input__inner{
-    padding-left: 20px;
   }
 </style>
