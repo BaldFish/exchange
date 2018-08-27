@@ -89,7 +89,7 @@
           type: 'warning',
           center: true
         }).then(() => {
-          window.location.href="/login"
+          this.$router.push("/login")
         }).catch(() => {
         });
       },
@@ -189,7 +189,7 @@
           }).then((res) => {
             buyInfoObj=res.data;
             this.getBuy(buyInfoObj);
-            window.location.href="/checkOrder"
+            this.$router.push("/checkOrder")
           }).catch((err) => {
             console.log(err);
           })

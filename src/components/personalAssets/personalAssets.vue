@@ -122,7 +122,7 @@
           type: 'warning',
           center: true
         }).then(() => {
-          window.location.href="/login"
+          this.$router.push("/login")
         }).catch(() => {
         });
       },
@@ -193,10 +193,10 @@
       turnDetails(apiKey, assetId) {
         if (apiKey === "5a6be74a55aaf50001a5e250") {
           this.getCaseDetails(assetId);
-          window.location.href = "/caseDetails"
+          this.$router.push("/caseDetails")
         } else if (apiKey === "5ae04522cff7cb000194f2f4") {
           this.getFacilityDetails(assetId);
-          window.location.href = "/facilityDetails"
+          this.$router.push("/facilityDetails")
         }
       },
       getCaseDetails(val) {

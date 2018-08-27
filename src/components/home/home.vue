@@ -396,7 +396,7 @@
               -webkit-box-orient: vertical;
               -webkit-line-clamp: 3;
               overflow: hidden;
-              span {
+              span:first-child {
                 font-size 16px
                 color #222222;
               }

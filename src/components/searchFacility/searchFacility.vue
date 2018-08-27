@@ -12,7 +12,7 @@
     </div>
     <div class="facility_list">
       <div class="fl facility_info" v-for="(item,index) of searchFacilityList" :key="item.id">
-        <a href="/facilityDetails" @click="getFacilityDetails(item.id)"><h4>{{item.assetname}}</h4></a>
+        <a href="/facilityDetails" @click="getFacilityDetails(item.id)"><h4 v-html="item.assetname"></h4></a>
         <div class="belong">
           <a href="/facilityDetails" @click="getFacilityDetails(item.id)">
             <span>所属人：</span>{{item.assetowner}}
@@ -76,15 +76,15 @@
       this.acquireSearchFacilityList();
     },
     computed: {
-      facilityValue:function () {
-        return this.$store.state.facilityValue
+      searchValue:function () {
+        return this.$store.state.searchValue
       },
-      facilityInput:function () {
-        return this.$store.state.facilityInput
+      searchInput:function () {
+        return this.$store.state.searchInput
       }
     },
     watch: {
-      facilityInput:function () {
+      searchInput:function () {
         this.acquireSearchFacilityList();
       }
     },
@@ -93,7 +93,7 @@
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
           axios({
             method: "GET",
-            url: `${baseURL}/v1/asset/device/search?key=${this.facilityInput}&page=${this.facilityPage}&limit=${this.facilityLimit}&userid=${this.userId}`,
+            url: `${baseURL}/v1/asset/device/search?key=${this.searchInput}&page=${this.facilityPage}&limit=${this.facilityLimit}&userid=${this.userId}`,
             headers: {
               "Content-Type": "application/json",
             }
@@ -101,6 +101,8 @@
             this.total=res.data.count;
             for(let v of res.data.data){
               v.sell_at=utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+              v.assetname=utils.searchHighlight(v.assetname,this.searchInput,"color","#c6351e");
+              v.assetcontent=utils.searchHighlight(v.assetcontent,this.searchInput,"color","#c6351e");
             }
             this.searchFacilityList = res.data.data
           }).catch((err) => {
@@ -117,6 +119,8 @@
             this.total=res.data.count;
             for(let v of res.data.data){
               v.sell_at=utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+              v.assetname=utils.searchHighlight(v.assetname,this.searchInput,"color","#c6351e");
+              v.assetcontent=utils.searchHighlight(v.assetcontent,this.searchInput,"color","#c6351e");
             }
             this.searchFacilityList = res.data.data
           }).catch((err) => {

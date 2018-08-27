@@ -6,7 +6,7 @@
     <table class="order_nav">
       <tr>
         <td>
-          <el-select class="my_select" v-model="value" placeholder="请选择" @change="selectChange">
+          <el-select class="order_select" v-model="value" placeholder="请选择" @change="selectChange">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -14,8 +14,8 @@
               :value="item.value">
             </el-option>
           </el-select>
-          <span>订单详情</span>
         </td>
+        <td>订单详情</td>
         <td>权益</td>
         <td>数量</td>
         <td>小计</td>
@@ -23,26 +23,20 @@
       </tr>
     </table>
     <div class="nav_content_table" v-for="(item,index) in dataList">
+      <div class="pay_type">支付方式：{{item.pay_method_value}}</div>
+      <div class="table_title">
+        <span>{{item.apiname}}</span>
+        <span>订单号： {{item.orderNum}}</span>
+        <span>下单日期：{{item.created_at}}</span>
+      </div>
       <table>
-        <thead>
-        <tr class="img_thead">
-          <th class="payment" style="width: 600px">支付方式：{{item.pay_method_value}}</th>
-        </tr>
-        <tr class="th_classify">
-          <th>{{item.apiname}}
-            <span>订单号： {{item.orderNum}}</span>
-          </th>
-          <th colspan="4">下单日期：{{item.created_at}}</th>
-        </tr>
-        </thead>
-        <tbody>
         <tr class="img_tbody">
-          <td v-if="item.apikey==='5ae04522cff7cb000194f2f4'">
+          <td v-if="item.apikey==='5ae04522cff7cb000194f2f4'" @click="turnDetails(item.apikey,item.assetid)">
             <img :src="item.asseturl" alt="">
             <p>{{item.assetname}}</p>
           </td>
-          <td v-if="item.apikey !== '5ae04522cff7cb000194f2f4'">
-            <p class="no_img_p">{{item.assetname}}</p>
+          <td v-if="item.apikey!=='5ae04522cff7cb000194f2f4'" @click="turnDetails(item.apikey,item.assetid)">
+            <p>{{item.assetname}}</p>
           </td>
           <td>{{item.sell_type}}</td>
           <td>{{item.count}}</td>
@@ -59,7 +53,6 @@
             <router-link to="" @click.native="pay(item.orderNum)">去支付 ></router-link>
           </td>
         </tr>
-        </tbody>
       </table>
     </div>
     <div class="clearfix paging">
@@ -108,7 +101,7 @@
         end: "",//结束时间
       }
     },
-    mounted: function () {
+    mounted() {
       //获取用户信息
       let logInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
       axios({
@@ -136,7 +129,6 @@
           }
           this.dataList = res.data.data;
           this.total = res.data.count;
-          console.log(this.dataList)
         }).catch(error => {
           console.log(error);
         });
@@ -213,223 +205,208 @@
             return o.orderNum === val
           });
           this.getPay(buyInfoObj);
-          window.location.href = "/checkOrder"
+          this.$router.push("/checkOrder")
         }
       },
       getPay(val) {
         this.$store.commit("changeBuy", val);
-      }
+      },
+      turnDetails(apiKey, assetId) {
+        if (apiKey === "5a6be74a55aaf50001a5e250") {
+          this.getCaseDetails(assetId);
+          //this.$router.push("/caseDetails");
+          window.open("/caseDetails", "_blank");
+        } else if (apiKey === "5ae04522cff7cb000194f2f4") {
+          this.getFacilityDetails(assetId);
+          //this.$router.push("/facilityDetails");
+          window.open("/facilityDetails", "_blank");
+        }
+      },
+      getCaseDetails(val) {
+        this.$store.commit("changeCaseDetails", _.find(this.dataList, function (o) {
+          return o.assetid === val
+        }));
+      },
+      getFacilityDetails(val) {
+        this.$store.commit("changeFacilityDetails", _.find(this.dataList, function (o) {
+          return o.assetid === val
+        }));
+      },
     },
   }
 </script>
-<style scoped>
-  .paging {
-    width: 1080px;
-    margin: 0 auto;
-    text-align: center
-  }
-  
+<style scoped lang="stylus">
   .nav_content {
-    width: 1078px;
-    float: right;
-  }
-  
-  .nav_content_title {
-    width: 1078px;
-    height: 50px;
-    background-color: #ffffff;
-    border: solid 1px #bfbfbf;
-    line-height: 50px;
-    font-size: 18px;
-    color: #222222;
-  }
-  
-  .nav_content_title span {
-    padding-left: 20px;
-  }
-  
-  .nav_content_table {
-    margin-top: 12px;
-    width: 1078px;
-    background-color: #ffffff;
-    border: solid 1px #bfbfbf;
-  }
-  
-  .nav_content_table thead th {
-    font-size: 16px;
-    color: #222222;
-  }
-  
-  .nav_content_table tbody td {
-    font-size: 14px;
-    color: #666666;
-  }
-  
-  .nav_content_table tbody tr {
-    border-bottom: 1px solid #d2d2d2;
-    text-align: center;
-    height: 90px;
-  }
-  
-  .nav_content_table tbody tr td {
-    vertical-align: middle;
-  }
-  
-  .nav_content_table tbody tr:last-child {
-    border-bottom: none;
-  }
-  
-  .no_img_thead {
-    height: 50px;
-    line-height: 50px;
-  }
-  
-  .no_img_thead th:nth-child(1) {
-    width: 480px;
-    text-align: left;
-    padding-left: 46px;
-  }
-  
-  .no_img_thead th {
-    width: 154px;
-  }
-  
-  .th_classify {
     width: 1080px;
-    height: 40px;
-    background-color: #f6f7fa;
-    text-align: left;
-    line-height: 40px;
-  }
-  
-  .th_classify span {
-    margin-left: 50px;
-  }
-  
-  .th_classify th:nth-child(1) {
-    padding-left: 46px;
-    width: 100px !important;
-  }
-  
-  .no_img_tbody td:nth-child(1) {
-    text-align: left;
-    padding-left: 46px;
-    line-height: 20px;
-  }
-  
-  .no_img_tbody td {
-    width: 160px;
-  }
-  
-  .no_img_lastTd a {
-    font-size: 14px;
-    color: #c6351e;
-    margin-top: 10px;
-    display: inline-block;
-    margin-left: 14px;
-  }
-  
-  .img_lastTd p:last-child {
-    margin-top: 10px;
-    color: #666666;
-  }
-  
-  .img_thead {
-    height: 50px;
-    line-height: 50px;
-  }
-  
-  .img_thead th:first-child {
-    padding-left: 46px;
-    text-align: left;
-    width: 452px;
-  }
-  
-  .img_thead th:nth-child(2) {
-    text-align: left;
-    width: 370px;
-  }
-  
-  .img_thead th {
-    width: 152px;
-  }
-  
-  .img_tbody td {
-    width: 145px;
-    text-align: center;
-  }
-  
-  .img_tbody td:first-child img {
-    width: 54px;
-    height: 54px;
-    border: solid 1px #bfbfbf;
-    display: inline-block;
-    float: left;
-    margin-left: 45px;
-  }
-  
-  .img_tbody td:first-child p {
-    width: 360px;
     float: right;
-    text-align: left;
-    line-height: 20px;
-    margin-top: 6px;
-  }
-  
-  .order_nav {
-    width: 1080px;
-    height: 40px;
-    background-color: #f6f7fa;
-    border: solid 1px #bfbfbf;
-    margin-top: 16px;
-    font-size: 16px;
-    color: #222222;
-    line-height: 40px;
-    text-align: center;
-  }
-  
-  .order_nav td {
-    width: 160px;
-  }
-  
-  .order_nav td:nth-child(1) {
-    width: 536px;
-    text-align: left;
-  }
-  
-  .order_nav td:nth-child(1) span {
-    margin-left: 90px;
-  }
-  
-  .order_nav .my_select {
-    width: 145px;
-    margin-left: 32px;
-  }
-  
-  .order_amount {
-    width: 170px !important;
-    text-align: left;
-  }
-  
-  .order_amount span {
-    color: #c6351e;
-  }
-  
-  .no_img_p {
-    padding-left: 46px;
-    float: none !important;
-  }
-  
-  .icon_currency {
-    position: relative;
-    top: 4px;
-    width: 13px;
-    height: 18px;
+    .nav_content_title {
+      box-sizing border-box
+      width: 1080px;
+      height: 50px;
+      background-color: #ffffff;
+      border: solid 1px #bfbfbf;
+      line-height: 50px;
+      font-size: 18px;
+      color: #222222;
+      padding-left 20px
+    }
+    .order_nav {
+      box-sizing border-box
+      width: 1080px;
+      height: 40px;
+      background-color: #f6f7fa;
+      border: solid 1px #bfbfbf;
+      margin-top: 16px;
+      font-size: 16px;
+      color: #222222;
+      line-height: 40px;
+      text-align: center;
+      tr {
+        td {
+          width: 135px;
+        }
+        td:nth-child(1) {
+          width 25%
+          text-align: left;
+          .order_select {
+            width: 160px;
+            margin-left: 30px;
+            vertical-align top
+            border: none;
+          }
+        }
+        td:nth-child(2) {
+          width 25%
+        }
+      }
+    }
+    
+    .nav_content_table {
+      box-sizing border-box
+      margin-top: 12px;
+      width: 1080px;
+      background-color: #ffffff;
+      border: solid 1px #bfbfbf;
+      .pay_type {
+        height 50px
+        line-height 50px
+        font-size: 16px;
+        color: #222222;
+        padding-left 46px
+      }
+      .table_title {
+        box-sizing border-box
+        width 100%
+        height 40px
+        line-height 40px
+        background-color #f6f7fa;
+        font-size 0
+        padding-left 46px
+        span {
+          display inline-block
+          font-size: 16px;
+          color: #222222;
+        }
+        span:nth-child(1) {
+          width 300px
+        }
+        span:nth-child(2) {
+          width 400px
+        }
+        span:nth-child(3) {
+          width 300px
+        }
+      }
+      table {
+        tr {
+          text-align: center;
+          height: 90px;
+          td {
+            font-size: 14px;
+            color: #666666;
+            vertical-align: middle;
+            width: 135px;
+            text-align: center;
+            .icon_currency {
+              position: relative;
+              top: 4px;
+              width: 13px;
+              height: 18px;
+            }
+          }
+          td:nth-child(1) {
+            box-sizing border-box
+            width 50%
+            cursor: pointer;
+            font-size 0
+            text-align left
+            padding-left 46px
+            img {
+              width: 54px;
+              height: 54px;
+              border: solid 1px #bfbfbf;
+              display: inline-block;
+              vertical-align: middle;
+              margin-right 46px
+            }
+            p {
+              width: 350px;
+              text-align: left;
+              line-height: 20px;
+              vertical-align: middle;
+              display: inline-block;
+              font-size: 14px;
+            }
+          }
+          .no_img_lastTd {
+            a {
+              font-size: 14px;
+              color: #c6351e;
+              margin-top: 10px;
+              display: inline-block;
+              margin-left: 14px;
+            }
+          }
+          
+          .img_lastTd {
+            p:last-child {
+              margin-top: 10px;
+              color: #666666;
+            }
+          }
+        }
+      }
+    }
+    
+    .paging {
+      width: 1080px;
+      margin: 0 auto;
+      text-align: center
+    }
+    
   }
 </style>
-<style>
-  .order_nav .el-input--suffix .el-input__inner {
-    height: 40px !important;
-    background-color: #f6f7fa;
+<style lang="stylus">
+  .order_select {
+    .el-input--suffix .el-input__inner {
+      border: none;
+      height: 40px !important;
+      background-color: #f6f7fa;
+      color #222222
+      font-size: 16px;
+    }
+    .el-input .el-select__caret {
+      color #222222
+      border: none;
+    }
+    el-select-dropdown__item .selected {
+      color #c6351e;
+      span {
+        color #c6351e;
+      }
+      
+    }
   }
+
+
 </style>

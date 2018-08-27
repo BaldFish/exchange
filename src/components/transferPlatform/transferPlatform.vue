@@ -125,7 +125,8 @@
         this.$store.commit("changePropertyDetails", _.find(this.propertyList, function (o) {
           return o.id === val
         }));
-        window.location.href="/transferDetails"
+        //this.$router.push("/transferDetails")
+        window.open("/transferDetails","_blank")
       },
     },
   }

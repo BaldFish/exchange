@@ -10,8 +10,8 @@
         <div class="login" v-if="isLogin" @mouseleave="leaveUl">
           <div @click.capture="toggle">{{userName}} <img src="./down.png" alt=""></div>
           <ul v-if="switchover">
-            <li><a href="/personalAssets">个人中心</a></li>
-            <li><a href="/securityCenter">安全中心</a></li>
+            <li><a href="/personalAssets" target="_blank">个人中心</a></li>
+            <li><a href="/securityCenter" target="_blank">安全中心</a></li>
             <li @click="dropOut">退出</li>
           </ul>
         </div>

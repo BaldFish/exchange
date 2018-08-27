@@ -24,12 +24,10 @@ const store = new Vuex.Store({
     facilityDetails: {},
     facilitySource: {},
     propertyDetails:{},
-    caseValue: "",
-    caseInput: "",
-    facilityValue: "",
-    facilityInput: "",
     favoriteCount: 0,
     buyInfoObj: {},
+    searchValue:"",
+    searchInput:"",
   },
   mutations: {
     changeCaseDetails(state, params) {
@@ -52,13 +50,9 @@ const store = new Vuex.Store({
       state.propertyDetails = params;
       window.sessionStorage.setItem("propertyDetails", JSON.stringify(state.propertyDetails))
     },
-    changeCaseInput(state, params) {
-      state.caseValue = params.value;
-      state.caseInput = params.input;
-    },
-    changeFacilityInput(state, params) {
-      state.facilityInput = params.value;
-      state.facilityInput = params.input;
+    changeSearch(state, params) {
+      state.searchValue = params.value;
+      state.searchInput = params.input;
     },
     addCollection(state, params) {
       state.favoriteCount++
