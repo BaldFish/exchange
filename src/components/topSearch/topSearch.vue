@@ -40,7 +40,11 @@
         }, {
           value: '2',
           label: '共享维修设备'
-        },],
+        },
+          {
+            value: '3',
+            label: '诊断报告'
+          },],
         value: '1',
         input: '',
         userId: '',
@@ -108,6 +112,8 @@
           this.$router.push('/searchCase')
         }else if(this.value==='2'){
           this.$router.push('/searchFacility')
+        }else if(this.value==='3'){
+          this.$router.push('/searchReport')
         }
       },
       getSearch(searchObj){

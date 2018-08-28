@@ -19,6 +19,7 @@ import '@/common/js/validate.js'
 /* eslint-disable no-new */
 const store = new Vuex.Store({
   state: {
+    reportDetails:{},
     caseDetails: {},
     caseSource: {},
     facilityDetails: {},
@@ -30,6 +31,10 @@ const store = new Vuex.Store({
     searchInput:"",
   },
   mutations: {
+    changeReportDetails(state, params) {
+      state.reportDetails = params;
+      window.sessionStorage.setItem("reportDetails", JSON.stringify(state.reportDetails))
+    },
     changeCaseDetails(state, params) {
       state.caseDetails = params;
       window.sessionStorage.setItem("caseDetails", JSON.stringify(state.caseDetails))

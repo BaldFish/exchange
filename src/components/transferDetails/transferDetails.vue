@@ -1,7 +1,7 @@
 <template>
   <div>
     <my-topSearch></my-topSearch>
-    <my-toggle></my-toggle>
+    <my-toggle :nowIndex=1></my-toggle>
     <div class="goods-container">
       <div class="goods-banner">
         <img class="show-img" :src="activeImg" alt="">

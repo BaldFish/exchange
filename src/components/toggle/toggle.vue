@@ -1,12 +1,7 @@
 <template>
   <div class="toggle">
     <ul>
-      <li>
-        <router-link to="/home">资产交易平台</router-link>
-      </li>
-      <li>
-        <router-link to="/transferPlatform">资产转让平台</router-link>
-      </li>
+      <li v-for="(item,index) of toggleParam" @click="toggle(index)" :class="{active:index===toggleIndex}">{{item}}</li>
     </ul>
   </div>
 </template>
@@ -16,7 +11,15 @@
     name: "toggle",
     components: {},
     data() {
-      return {}
+      return {
+        toggleParam:["交易平台","转让平台"],
+      }
+    },
+    props:{
+      toggleIndex:{
+        type:Number,
+        default:0
+      },
     },
     created() {
     },
@@ -24,34 +27,42 @@
     },
     watch: {},
     computed: {},
-    methods: {},
+    methods: {
+      toggle(index){
+        if(index===0){
+          this.$router.push("/home")
+        }else if(index===1){
+          this.$router.push("/transferPlatform")
+        }
+      }
+    },
   }
 </script>
 
 <style scoped lang="stylus">
   .toggle {
     width 100%
-    height 26px
-    border-bottom 2px solid #d91e01
-    vertical-align top
-    padding-left 34px
+    border 1px solid #d91e01
+    background-color #d91e01
     ul {
       width 1212px
       margin 0 auto
       font-size 0
+      padding-left 34px
       li {
         display inline-block
-        margin-right 46px
-        a {
-          font-size: 14px;
-          color: #333333;
-        }
+        margin-right 20px
+        text-align center
+        width 106px
+        height 48px
+        line-height 48px
+        font-size: 16px;
+        color: #f3f3f3;
+        cursor pointer
       }
-      li:nth-child(2){
-        a{
-          font-size: 14px;
-          color:#d91e01;
-        }
+      .active{
+        background-color #ffffff
+        color:#d91e01;
       }
     }
   }

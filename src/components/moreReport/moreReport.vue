@@ -1,5 +1,5 @@
 <template>
-  <div class="moreCase">
+  <div class="moreReport">
     <my-topSearch></my-topSearch>
     <my-toggle :toggleIndex="toggleIndex"></my-toggle>
     <div class="site_box">
@@ -8,39 +8,39 @@
           <li>当前位置 ：</li>
           <li><a href="/">首页</a></li>
           <li>&nbsp;>&nbsp;</li>
-          <li><a href="/moreCase">维修案例</a></li>
+          <li><a href="/moreReport">诊断报告</a></li>
         </ul>
       </div>
     </div>
-    <div class="case_list">
-      <div class="fr_case" v-for="(item,index) of caseList" :key="item.id">
-        <h4><a href="/caseDetails" @click="getCaseDetails(item.id)">{{item.assetname}}</a></h4>
+    <div class="report_list">
+      <div class="fr_report" v-for="(item,index) of reportList" :key="item._id">
+        <h4><a href="/reportDetails" @click="getReportDetails(item._id)">{{item.theme}}</a></h4>
         <div class="attestation">
           <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
           <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
           <span class="trust" v-if="item.creditlevel!=='未认证'">{{item.creditlevel}}</span>
         </div>
         <div class="putaway">
-          <a class="time" href="/caseDetails" @click="getCaseDetails(item.id)"><span>上架时间：</span>{{item.sell_at}}</a>
-          <a class="equity" href="/caseDetails" @click="getCaseDetails(item.id)"><span>权益：</span>{{item.sell_type}}</a>
+          <a class="time" href="/reportDetails" @click="getReportDetails(item._id)"><span>报告生成时间：</span>{{item.generate_time}}</a>
+          <a class="data" href="/reportDetails" @click="getReportDetails(item._id)"><span>数据来源：</span>{{item.resource}}</a>
         </div>
-        <div class="belong">
-          <a href="/caseDetails" @click="getCaseDetails(item.id)">
-            <span>所属人：</span>{{item.assetowner}}
-          </a>
+        <div class="putaway">
+          <a class="vin" href="/reportDetails" @click="getReportDetails(item._id)"><span>VIN码：</span>{{item.vin}}</a>
+          <a class="breakdown" href="/reportDetails" @click="getReportDetails(item._id)"><span>故障码个数：</span>{{item.fault_n}}个</a>
+          <a class="equity" href="/reportDetails" @click="getReportDetails(item._id)"><span>权益：</span>{{item.sell_type}}</a>
         </div>
-        <div class="fault">
+        <!--<div class="fault">
           <p>
             <a href="/caseDetails" @click="getCaseDetails(item.id)">
               <span>故障现象：</span>{{item.assetcontent}}
             </a>
           </p>
         </div>
-        <div :class="item.shopcart_id?'like':'dislike'" @click="toggleLike(item.id)">收藏</div>
+        <div :class="item.shopcart_id?'like':'dislike'" @click="toggleLike(item.id)">收藏</div>-->
         <div class="price_box">
-          <a href="/caseDetails" @click="getCaseDetails(item.id)"><p class="price">{{item.price}}</p></a>
-          <a href="/caseSource" @click="getCaseSource(item.id)"><p class="tracing">可信溯源</p></a>
-          <a href="javascript:void(0)" @click="buy(item.id)"><p class="buy">一键购买</p></a>
+          <a href="/reportDetails" @click="getReportDetails(item._id)"><p class="price">{{item.price}}</p></a>
+          <a href="/reportDetails" @click="getReportDetails(item._id)"><p class="tracing">可信溯源</p></a>
+          <a href="javascript:void(0)" @click="buy(item._id)"><p class="buy">一键购买</p></a>
         </div>
       </div>
     </div>
@@ -49,8 +49,8 @@
                      layout="prev, pager, next"
                      :background=true
                      :total=total
-                     :page-size=caseLimit
-                     :current-page.sync=casePage
+                     :page-size=reportLimit
+                     :current-page.sync=reportPage
                      @current-change="handleCurrentChange">
       </el-pagination>
     </div>
@@ -68,14 +68,18 @@
   const querystring = require('querystring');
   
   export default {
-    name: "moreCase",
+    name: "moreReport",
+    components: {
+      myTopSearch,
+      myToggle,
+    },
     data() {
       return {
         toggleIndex: 0,
-        casePage: 1,
-        caseLimit: 10,
+        reportPage:1,
+        reportLimit:10,
         total: 10,
-        caseList: [],
+        reportList:[],
         userId:"",
         token:"",
         apiKey:"",
@@ -88,8 +92,10 @@
         this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
         this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
       }
-      this.acquireCaseList()
+      this.acquireReportList()
     },
+    watch: {},
+    computed: {},
     methods: {
       open() {
         this.$confirm('此操作需要先登录, 是否登录?', '提示', {
@@ -144,7 +150,30 @@
           this.open()
         }
       },
-      acquireCaseList() {
+      //获取诊断报告列表
+      acquireReportList() {
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/asset/diagnoseReport?page=${this.reportPage}&limit=${this.reportLimit}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          for (let v of res.data.data) {
+            v.generate_time = utils.formatDate(new Date(v.generate_time), "yyyy-MM-dd hh:mm:ss");
+          }
+          this.reportList = res.data.data;
+          console.log(this.reportList)
+        }).catch((err) => {
+          console.log(err)
+        })
+      },
+      getReportDetails(val){
+        this.$store.commit("changeReportDetails", _.find(this.reportList, function (o) {
+          return o._id === val
+        }));
+      },
+      /*acquireCaseList() {
         //获取维修案例列表
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
           axios({
@@ -179,12 +208,12 @@
             console.log(err);
           })
         }
-      },
+      },*/
       handleCurrentChange(val){
-        this.casePage=val;
-        this.acquireCaseList()
+        this.reportPage=val;
+        this.acquireReportList()
       },
-      getCaseDetails(val) {
+      /*getCaseDetails(val) {
         this.$store.commit("changeCaseDetails",_.find(this.caseList,function (o) {
           return o.id===val
         }));
@@ -193,7 +222,7 @@
         this.$store.commit("changeCaseSource",_.find(this.caseList,function (o) {
           return o.id===val
         }));
-      },
+      },*/
       addCollection(){
         this.$store.commit("addCollection")
       },
@@ -202,8 +231,8 @@
       },
       buy(val){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-          let buyInfoObj=_.find(this.caseList,function (o) {
-            return o.id===val
+          let buyInfoObj=_.find(this.reportList,function (o) {
+            return o._id===val
           });
           this.apiKey=buyInfoObj.apikey;
           this.assetId=buyInfoObj.assetid;
@@ -232,15 +261,11 @@
         this.$store.commit("changeBuy",val);
       }
     },
-    components: {
-      myTopSearch,
-      myToggle,
-    },
   }
 </script>
 
 <style scoped lang="stylus">
-  .moreCase {
+  .moreReport{
     .site_box {
       width 100%
       background-color: #e7e7e7;
@@ -263,11 +288,11 @@
         }
       }
     }
-    .case_list {
+    .report_list {
       width 1212px
       margin 0 auto
       padding-top 30px
-      .fr_case {
+      .fr_report {
         margin-bottom 18px
         position relative
         box-sizing border-box
@@ -313,13 +338,16 @@
           }
         }
         .putaway {
+          padding-bottom 20px
+          font-size 0
           a {
+            display inline-block
             padding-left 26px
             padding-top 2px
             padding-bottom 2px
             color #666666;
             font-size 14px
-            margin-right 43px
+            margin-right 34px
             background-repeat: no-repeat;
             background-position: top left;
             line-height 22px
@@ -330,6 +358,18 @@
           }
           .time {
             background-image: url('./images/time.png');
+            width 250px
+          }
+          .data{
+            background-image: url('./images/data.png');
+          }
+          .vin{
+            background-image: url('./images/vin.png');
+            width 250px
+          }
+          .breakdown{
+            background-image: url('./images/breakdown.png');
+            width 120px
           }
           .equity {
             background-image: url('./images/Profit.png');
@@ -438,4 +478,3 @@
     }
   }
 </style>
-
