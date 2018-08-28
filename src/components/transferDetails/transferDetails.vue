@@ -6,7 +6,7 @@
       <div class="goods-banner">
         <img class="show-img" :src="activeImg" alt="">
         <div class="banner-box">
-          <img class="prev" @click="prevImg" :src="prev" alt="">
+          <span class="prev" @click="prevImg"></span>
           <div class="img-list">
             <ul v-bind:style="{right: toRight + 'px' }">
               <li v-for="item in bannerList" @click="showImg(item.url)">
@@ -15,7 +15,7 @@
               </li>
             </ul>
           </div>
-          <img class="next" @click="nextImg" :src="next" alt="">
+          <span class="next" @click="nextImg"></span>
         </div>
       </div>
       <div class="goods-buy">
@@ -28,13 +28,14 @@
         </div>
         <div class="goods-details">
           <ul>
-            <li>
+            <li class="price">
+              <span class="triangle_border_nw"></span>
               <label>认购金额：</label>
               <span class="money">￥{{singleGood.price}}</span>
             </li>
             <li class="goods-list">
               <label>选择设备：</label>
-              <ul>
+              <ul class="goods-list-radio">
                 <li v-for="item in goodsList" @click="getSingleGood(item)">
                   <input type="radio" name="radio" :disabled="item.status == 1?true:false" :checked="item.isChecked">
                   <div class="radio-box">
@@ -56,8 +57,8 @@
               <template>
                 <el-input-number v-model="num" size="mini" controls-position="right" @change="handleChange" :min="min" :max="max"></el-input-number>
               </template>
-              <label class="rest">剩余：</label>
-              <span>{{max}}/{{singleGood.total_number}}</span>
+              <!--<label class="rest">剩余：</label>
+              <span>{{max}}/{{singleGood.total_number}}</span>-->
             </li>
             <li class="progress">
               <label>当前进度：</label>
@@ -257,8 +258,6 @@
         assetSource: [],
         usageRecord: [],
         facilityDetails: {},
-        prev: require("./images/pre.png"),//上一张
-        next: require("./images/next.png"),//下一张
         total: 10,
         pageSize: 10,
         currentPage: 1,
@@ -288,8 +287,6 @@
         if (this.toRight === (this.goodsList.length - 4) * 60 || this.goodsList.length <= 4) {
           return false
         } else {
-          this.prev = require("./images/right_mr.png");
-          this.next = require("./images/next.png");
           this.toRight = this.toRight + 60
         }
       },
@@ -298,8 +295,6 @@
         if (this.toRight == 0) {
           return false
         } else {
-          this.prev = require("./images/pre.png");
-          this.next = require("./images/left_dj.png");
           this.toRight = this.toRight - 60
         }
       },
@@ -448,10 +443,10 @@
       //获取弹框数据
       checkAssetsDetail(item) {
         this.dialogTableVisible = true;
-        //let apiKey = item.apiKey;
-        //let id = item.id;
-        let apiKey = "5ae04522cff7cb000194f2f4";
-        let id = "9f93a461-4ece-46ea-8ff3-2b921289ab74";
+        let apiKey = item.apiKey;
+        let id = item.id;
+        //let apiKey = "5ae04522cff7cb000194f2f4";
+        //let id = "9f93a461-4ece-46ea-8ff3-2b921289ab74";
         this.acquireAssetDetails(apiKey, id);
         this.acquireUsageRecord(apiKey, id);
         this.acquireAssetSource(apiKey, id);
@@ -529,7 +524,11 @@
     border: solid 1px #eeeeee;
     margin-bottom: 20px;
   }
-  
+
+  .show-img:hover{
+    border: 1px solid red;
+  }
+
   .banner-box {
     height: 50px;
     width: 350px
@@ -584,15 +583,33 @@
   }
   
   .prev {
+    width: 30px
+    height: 30px
+    display inline-block
+    background:url("./images/pre.png") no-repeat center;
+    background-size 100% 100%
     float left
     margin-top: 10px;
     cursor pointer
   }
-  
+
+  .prev:hover{
+    background:url("./images/right_mr.png") no-repeat center;
+  }
+
   .next {
+    width: 30px
+    height: 30px
+    display inline-block
+    background:url("./images/next.png") no-repeat center;
+    background-size 100% 100%
     float right
     margin-top: -42px;
     cursor pointer
+  }
+
+  .next:hover{
+    background:url("./images/left_dj.png") no-repeat center;
   }
 </style>
 <style scoped lang="stylus">
@@ -611,22 +628,23 @@
   }
   
   .goods-title {
-    font-size: 14px;
+    font-size: 16px;
     color: #333333;
+    font-weight: bold;
   }
   
   .total-num {
     width: 26px;
     display: inline-block;
   }
-  
+
   .goods-logo {
     width: 88px;
     height: 18px;
     border: 1px solid #d91e01;
     text-align center;
-    margin-top 8px
-    margin-bottom 10px
+    margin-top: 15px;
+    margin-bottom: 12px;
     cursor pointer
   }
   
@@ -661,9 +679,10 @@
     font-size: 14px;
     color: #999999;
   }
-  
+
+
   .money {
-    font-size: 16px;
+    font-size: 18px;
     color: #d91e01;
   }
   
@@ -705,7 +724,7 @@
   .goods-list label {
     float left
     margin-right 8px
-    height: 180px;
+    /*height: 180px;*/
   }
   
   .goods-list li input {
@@ -716,7 +735,18 @@
     z-index: 99
     opacity 0
   }
-  
+
+
+  .goods-list-radio li:nth-child(4){
+    margin-left 78px
+  }
+  .goods-list-radio li:nth-child(7){
+    margin-left 78px
+  }
+  .goods-list-radio li:nth-child(10){
+    margin-left 78px
+  }
+
   .radio-box {
     width: 200px;
     height: 50px;
@@ -724,10 +754,23 @@
     position: relative;
     bottom: 52px
   }
-  
+
+  .goods-details ul input:hover + .radio-box{
+    border:1px solid #666666
+  }
+
+  .goods-list li input:checked + .radio-box{
+    border: solid 1px #eee;
+  }
+
+  .goods-list li input:disabled + .radio-box{
+    border: solid 1px #eee;
+  }
+
   .goods-list li input:checked + .radio-box {
     background: url("./images/red_bg.png") no-repeat center;
     background-size 100% 100%
+    border: solid 1px #fff;
   }
   
   .progress label {
@@ -739,7 +782,7 @@
     margin-left 6px
     margin-top: 2px;
   }
-  
+
   .rest {
     margin-left 36px
   }
@@ -759,7 +802,11 @@
     margin-right 20px
     cursor pointer
   }
-  
+
+  .btn button:hover{
+    box-shadow:0 3px 30px 5px #eee;
+  }
+
   .btn button:first-child {
     margin-left: 76px;
     margin-top: 18px;
@@ -776,7 +823,27 @@
     text-align: right;
     margin-right: 3px;
   }
+
+  .price {
+    height: 40px;
+    background-color: #e9e9e9;
+    width: 716px;
+    line-height: 40px;
+  }
+
+  .triangle_border_nw{
+    width: 0;
+    height: 0;
+    border-width: 12px 12px 0 0;
+    border-style: solid;
+    border-color: #d91e01 transparent transparent transparent;
+    margin: 40px auto;
+    position: relative;
+    top: 0.5px;
+    margin-right: 5px;
+  }
 </style>
+
 <style scoped lang="stylus">
   .assets-container {
     width: 1200px;
@@ -808,7 +875,6 @@
   
   .table {
     width: 1200px
-    text-align center
   }
   
   .table thead {
@@ -834,9 +900,17 @@
     height 36px
     line-height 36px
     cursor pointer
+    padding-left: 128px;
+  }
+
+  .offer-list .table{
+    text-align center
+  }
+  .offer-list .table tbody td{
+    padding-left: 0;
   }
   
-  .table tbody tr:hover {
+  .assets-table .table tbody tr:hover {
     color: #d91e01;
   }
   
@@ -1002,4 +1076,9 @@
   .goods-buy .el-input-number.is-controls-right .el-input__inner {
     padding-left: 20px;
   }
+
+  .progress .progress_bar_box{
+    width: 625px !important;
+  }
+
 </style>
