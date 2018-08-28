@@ -1,16 +1,7 @@
 <template>
   <div class="home">
     <my-topSearch></my-topSearch>
-    <div class="toggle">
-      <ul>
-        <li>
-          <router-link to="/home">资产交易平台</router-link>
-        </li>
-        <li>
-          <router-link to="/transferPlatform">资产转让平台</router-link>
-        </li>
-      </ul>
-    </div>
+    <my-toggle :toggleIndex="toggleIndex"></my-toggle>
     <div class="carousel">
       <el-carousel :interval="3000" arrow="always">
         <el-carousel-item v-for="item in bannerList" :key="item.link_url">
@@ -19,6 +10,90 @@
       </el-carousel>
     </div>
     <div class="list">
+      <div class="headline" style="margin-top: 30px">
+        <p></p>
+        <span>诊断报告</span>
+        <p></p>
+      </div>
+      <div class="report clearfix">
+        <div class="fl fl_bg">
+          <h3>诊断报告</h3>
+          <a href="/moreReport">查看更多</a>
+        </div>
+        <div class="fr fr_report" v-for="(item,index) of reportList" :key="item._id" >
+          <h4><a href="/reportDetails" @click="getReportDetails(item._id)">{{item.theme}}</a></h4>
+          <div class="attestation">
+            <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
+            <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
+            <span class="trust" v-if="item.creditlevel!=='未认证'">{{item.creditlevel}}</span>
+          </div>
+          <div class="putaway">
+            <a class="time" href="/reportDetails" @click="getReportDetails(item._id)"><span>报告生成时间：</span>{{item.generate_time}}</a>
+            <a class="data" href="/reportDetails" @click="getReportDetails(item._id)"><span>数据来源：</span>{{item.resource}}</a>
+          </div>
+          <div class="putaway">
+            <a class="vin" href="/reportDetails" @click="getReportDetails(item._id)"><span>VIN码：</span>{{item.vin}}</a>
+            <a class="breakdown" href="/reportDetails" @click="getReportDetails(item._id)"><span>故障码个数：</span>{{item.fault_n}}个</a>
+            <a class="equity" href="/reportDetails" @click="getReportDetails(item._id)"><span>权益：</span>{{item.sell_type}}</a>
+          </div>
+          <!--<div class="belong">
+            <a href="/reportDetails" @click="getReportDetails(item.id)"><span>所属人：</span>{{item.assetowner}}</a>
+          </div>-->
+          <!--<div class="fault">
+            <p>
+              <a href="/caseDetails" @click="getCaseDetails(item.id)">
+                <span>故障现象：</span>{{item.assetcontent}}
+              </a>
+            </p>
+          </div>-->
+          <div class="price_box">
+            <a href="/caseDetails" @click="getReportDetails(item._id)"><p class="price">{{item.price}}</p></a>
+            <a href="/caseSource" @click="getReportDetails(item._id)"><p class="tracing">可信溯源</p></a>
+          </div>
+        </div>
+      </div>
+      <div class="headline">
+        <p></p>
+        <span>维修设备</span>
+        <p></p>
+      </div>
+      <div class="facility clearfix">
+        <div class="fl fl_bg">
+          <h3>维修设备</h3>
+          <a href="/moreFacility">查看更多</a>
+        </div>
+        <div class="fr fr_facility">
+          <div class="fl facility_info" v-for="(item,index) of facilityList" :key="item.id">
+            <a href="/facilityDetails" @click="getFacilityDetails(item.id)"><h4>{{item.assetname}}</h4></a>
+            <div class="belong">
+              <a href="/facilityDetails" @click="getFacilityDetails(item.id)">
+                <span>所属人：</span>{{item.assetowner}}
+              </a>
+            </div>
+            <div class="putaway">
+              <a class="time" href="/facilityDetails" @click="getFacilityDetails(item.id)"><span>上架时间：</span>{{item.sell_at}}</a>
+              <a class="equity" href="/facilityDetails" @click="getFacilityDetails(item.id)"><span>权益：</span>{{item.sell_type}}</a>
+            </div>
+            <div class="fl price_box">
+              <a href="/facilityDetails" @click="getFacilityDetails(item.id)"><p class="price">{{item.price}}</p></a>
+              <a href="/facilitySource" @click="getFacilitySource(item.id)"><p class="tracing">可信溯源</p></a>
+            </div>
+            <div class="fr facility_img">
+              <a href="/facilityDetails" @click="getFacilityDetails(item.id)"><img :src="item.asseturl" alt=""></a>
+            </div>
+            <div class="attestation clearfix">
+              <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
+              <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
+              <span class="trust" v-if="item.creditlevel!=='未认证'">{{item.creditlevel}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="headline">
+        <p></p>
+        <span>维修案例</span>
+        <p></p>
+      </div>
       <div class="case clearfix">
         <div class="fl fl_bg">
           <h3>维修案例</h3>
@@ -50,38 +125,6 @@
           <div class="price_box">
             <a href="/caseDetails" @click="getCaseDetails(item.id)"><p class="price">{{item.price}}</p></a>
             <a href="/caseSource" @click="getCaseSource(item.id)"><p class="tracing">可信溯源</p></a>
-          </div>
-        </div>
-      </div>
-      <div class="facility clearfix">
-        <div class="fl fl_bg">
-          <h3>维修设备</h3>
-          <a href="/moreFacility">查看更多</a>
-        </div>
-        <div class="fr fr_facility">
-          <div class="fl facility_info" v-for="(item,index) of facilityList" :key="item.id">
-            <a href="/facilityDetails" @click="getFacilityDetails(item.id)"><h4>{{item.assetname}}</h4></a>
-            <div class="belong">
-              <a href="/facilityDetails" @click="getFacilityDetails(item.id)">
-                <span>所属人：</span>{{item.assetowner}}
-              </a>
-            </div>
-            <div class="putaway">
-              <a class="time" href="/facilityDetails" @click="getFacilityDetails(item.id)"><span>上架时间：</span>{{item.sell_at}}</a>
-              <a class="equity" href="/facilityDetails" @click="getFacilityDetails(item.id)"><span>权益：</span>{{item.sell_type}}</a>
-            </div>
-            <div class="fl price_box">
-              <a href="/facilityDetails" @click="getFacilityDetails(item.id)"><p class="price">{{item.price}}</p></a>
-              <a href="/facilitySource" @click="getFacilitySource(item.id)"><p class="tracing">可信溯源</p></a>
-            </div>
-            <div class="fr facility_img">
-              <a href="/facilityDetails" @click="getFacilityDetails(item.id)"><img :src="item.asseturl" alt=""></a>
-            </div>
-            <div class="attestation clearfix">
-              <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
-              <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
-              <span class="trust" v-if="item.creditlevel!=='未认证'">{{item.creditlevel}}</span>
-            </div>
           </div>
         </div>
       </div>
@@ -120,17 +163,23 @@
   import {baseURL, cardURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
   import myTopSearch from "../topSearch/topSearch"
+  import myToggle from "../toggle/toggle"
+  
   export default {
     name: "home",
     components: {
       myTopSearch,
+      myToggle,
     },
     data() {
       return {
+        reportPage:1,
+        reportLimit:3,
         casePage: 1,
         caseLimit: 3,
         facilityPage: 1,
         facilityLimit: 6,
+        reportList:[],
         caseList: [],
         facilityList: [],
         userId: "",
@@ -140,9 +189,11 @@
           {link_url: 'javascript:void(0)', picture_url: require('./images/banner.png')},
           {link_url: '/publicityPage', picture_url: require('./images/banner_002.png')},
         ],
+        toggleIndex: 0,
       }
     },
     mounted() {
+      this.acquireReportList();
       this.acquireCaseList();
       this.acquireFacilityList();
       //获取banner图
@@ -158,19 +209,20 @@
     watch: {},
     computed: {},
     methods: {
-      //获取维修案例列表
-      acquireCaseList() {
+      //获取诊断报告列表
+      acquireReportList() {
         axios({
           method: "GET",
-          url: `${baseURL}/v1/asset/casus?page=${this.casePage}&limit=${this.caseLimit}`,
+          url: `${baseURL}/v1/asset/diagnoseReport?page=${this.reportPage}&limit=${this.reportLimit}`,
           headers: {
             "Content-Type": "application/json",
           }
         }).then((res) => {
           for (let v of res.data.data) {
-            v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+            v.generate_time = utils.formatDate(new Date(v.generate_time), "yyyy-MM-dd hh:mm:ss");
           }
-          this.caseList = res.data.data;
+          this.reportList = res.data.data;
+          console.log(this.reportList)
         }).catch((err) => {
           console.log(err)
         })
@@ -189,6 +241,23 @@
           }
           this.facilityList = res.data.data
         }).catch((err) => {
+        })
+      },
+      //获取维修案例列表
+      acquireCaseList() {
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/asset/casus?page=${this.casePage}&limit=${this.caseLimit}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          for (let v of res.data.data) {
+            v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+          }
+          this.caseList = res.data.data;
+        }).catch((err) => {
+          console.log(err)
         })
       },
       getCaseDetails(val) {
@@ -211,54 +280,53 @@
           return o.id === val
         }));
       },
+      getReportDetails(val){
+        this.$store.commit("changeReportDetails", _.find(this.reportList, function (o) {
+          return o._id === val
+        }));
+      },
     },
   }
 </script>
 
 <style scoped lang="stylus">
   .home {
-    .banner {
-      box-sizing border-box
-      height 600px
-      background-image: url('./images/banner.png');
-      background-position: top center;
-      background-repeat: no-repeat;
-      background-size: cover;
-      /*background-size:contain;*/
-      /*background-size:auto;*/
-    }
-    .toggle {
-      width 100%
-      height 26px
-      border-bottom 2px solid #d91e01
-      vertical-align top
-      padding-left 34px
-      ul {
-        width 1212px
-        margin 0 auto
-        font-size 0
-        li {
-          display inline-block
-          margin-right 46px
-          a {
-            font-size: 14px;
-            color: #333333;
-          }
-        }
-        li:nth-child(1){
-          a{
-            font-size: 14px;
-            color:#d91e01;
-          }
-        }
-      }
-    }
-  
+    /*    .banner {
+          box-sizing border-box
+          height 600px
+          background-image: url('./images/banner.png');
+          background-position: top center;
+          background-repeat: no-repeat;
+          background-size: cover;
+          !*background-size:contain;*!
+          !*background-size:auto;*!
+        }*/
     .list {
       width 1212px
       margin 0 auto
-      margin-top 32px
       padding-bottom 88px
+      .headline {
+        font-size 0;
+        color: #333333;
+        text-align center
+        height 22px
+        line-height 22px
+        margin-bottom 30px
+        p {
+          display inline-block
+          width: 40px;
+          height: 2px;
+          background-color: #333333
+          vertical-align middle
+        }
+        span {
+          font-family: PangMenZhengDao;
+          font-size: 22px;
+          display inline-block
+          padding 0 15px
+          vertical-align middle
+        }
+      }
       .fl_bg {
         width 346px
         background-position: top center;
@@ -275,6 +343,12 @@
           padding 5px 0
           color #ffffff
           border-bottom 1px solid #ffffff
+        }
+      }
+      .report {
+        .fl_bg {
+          height 734px
+          background-image: url('./images/04.png');
         }
       }
       .case {
@@ -299,7 +373,7 @@
           }
         }
       }
-      .fr_case {
+      .fr_report {
         margin-bottom 18px
         position relative
         box-sizing border-box
@@ -344,13 +418,16 @@
           }
         }
         .putaway {
+          padding-bottom 20px
+          font-size 0
           a {
+            display inline-block
             padding-left 26px
             padding-top 2px
             padding-bottom 2px
             color #666666;
             font-size 14px
-            margin-right 43px
+            margin-right 34px
             background-repeat: no-repeat;
             background-position: top left;
             line-height 22px
@@ -361,6 +438,18 @@
           }
           .time {
             background-image: url('./images/time.png');
+            width 250px
+          }
+          .data{
+            background-image: url('./images/data.png');
+          }
+          .vin{
+            background-image: url('./images/vin.png');
+            width 250px
+          }
+          .breakdown{
+            background-image: url('./images/breakdown.png');
+            width 120px
           }
           .equity {
             background-image: url('./images/Profit.png');
@@ -429,6 +518,9 @@
             line-height 18px
           }
         }
+      }
+      .fr_report:hover{
+        box-shadow: 0px 0px 9px 1px rgba(0, 0, 0, 0.34);
       }
       .fr_facility {
         width 854px
@@ -568,6 +660,142 @@
         .facility_info:nth-child(3n) {
           margin-right 0
         }
+        .facility_info:hover {
+          box-shadow: -1px 1px 25px 2px rgba(98, 98, 98, 0.19);
+        }
+      }
+      .fr_case {
+        margin-bottom 18px
+        position relative
+        box-sizing border-box
+        width 854px
+        height 220px
+        background-color rgba(255, 255, 255, 0.8)
+        padding 15px 20px
+        h4 {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          a {
+            color: #222222;
+            font-size: 20px;
+          }
+        }
+        .attestation {
+          width 850px
+          height 74px
+          font-size 0px
+          span {
+            text-align center
+            color #ffffff
+            font-size 14px
+            display inline-block
+            width 70px
+            height 30px
+            line-height 30px
+            margin-right 14px
+            margin-top 14px
+            margin-bottom 30px
+          }
+          .trust {
+            background-color #99c7ff
+          }
+          .person {
+            background-color #ffdd99
+          }
+          .merchant {
+            background-color #ffa799
+          }
+        }
+        .putaway {
+          a {
+            padding-left 26px
+            padding-top 2px
+            padding-bottom 2px
+            color #666666;
+            font-size 14px
+            margin-right 43px
+            background-repeat: no-repeat;
+            background-position: top left;
+            line-height 22px
+            span {
+              color #222222;
+              font-size 16px
+            }
+          }
+          .time {
+            background-image: url('./images/time.png');
+          }
+          .equity {
+            background-image: url('./images/Profit.png');
+          }
+        }
+        .belong {
+          a {
+            display block
+            line-height 22px
+            padding-left 26px
+            background-image: url('./images/person.png');
+            background-repeat: no-repeat;
+            background-position: top left;
+            color #666666;
+            font-size 14px;
+            span {
+              color #222222;
+              font-size 16px
+            }
+          }
+        }
+        .fault {
+          p {
+            padding-top 4px
+            width 562px
+            height 54px
+            line-height 18px
+            a {
+              color #666666;
+              font-size 14px
+              display block
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 3;
+              overflow: hidden;
+              span:first-child {
+                font-size 16px
+                color #222222;
+              }
+            }
+          }
+        }
+        .price_box {
+          position absolute
+          top 78px
+          left 700px
+          .price {
+            min-width 18px
+            height 24px
+            font-size: 24px;
+            color: #c6351e;
+            background-image: url('./images/currency.png');
+            background-repeat: no-repeat;
+            background-position: top left;
+            padding-left 26px
+            margin-bottom 8px
+          }
+          .tracing {
+            color: #f3b43f;
+            font-size 14px
+            background-image: url('./images/credible.png');
+            background-repeat: no-repeat;
+            background-position: top left;
+            padding-left 26px
+            height 18px
+            line-height 18px
+          }
+        }
+      }
+      .fr_case:hover{
+        box-shadow: 2px 1px 17px 1px rgba(98, 98, 98, 0.28);
       }
       .fr_partner {
         width 854px
@@ -641,6 +869,6 @@
       }
     }
   }
-  
+
 
 </style>

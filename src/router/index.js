@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import myHome from '@/components/home/home'
+import myMoreReport from '@/components/moreReport/moreReport'
 import myMoreCase from '@/components/moreCase/moreCase'
 import myCaseDetails from '@/components/caseDetails/caseDetails'
 import myCaseSource from '@/components/caseSource/caseSource'
@@ -18,6 +19,7 @@ import myNoAssets from '@/components/noAssets/noAssets'
 import myCheckOrder from '@/components/checkOrder/checkOrder'
 import myOrderHistory from '@/components/orderHistory/orderHistory'
 import mySecurityCenter from '@/components/securityCenter/securityCenter'
+import mySearchReport from '@/components/searchReport/searchReport'
 import mySearchCase from '@/components/searchCase/searchCase'
 import mySearchFacility from '@/components/searchFacility/searchFacility'
 import myPublicityPage from '@/components/publicityPage/publicityPage'
@@ -39,6 +41,11 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: myHome
+    },
+    {
+      path: '/moreReport',
+      name: 'moreReport',
+      component: myMoreReport
     },
     {
       path: '/moreCase',
@@ -129,6 +136,11 @@ export default new Router({
           component: myCheckOrder
         },
       ]
+    },
+    {
+      path: '/searchReport',
+      name: 'searchReport',
+      component: mySearchReport
     },
     {
       path: '/searchCase',

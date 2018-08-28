@@ -1,7 +1,7 @@
 <template>
   <div class="transferPlatform">
     <my-topSearch></my-topSearch>
-    <my-toggle></my-toggle>
+    <my-toggle :toggleIndex="toggleIndex"></my-toggle>
     <div class="carousel">
       <el-carousel :interval="3000" arrow="never" indicator-position="none">
         <el-carousel-item v-for="item in bannerList" :key="item.link_url">
@@ -69,6 +69,7 @@
         propertySum: 0,
         finishedList:[],
         finishedSum: 0,
+        toggleIndex:1,
       }
     },
     created() {
