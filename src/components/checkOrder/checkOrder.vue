@@ -18,7 +18,8 @@
         </thead>
         <tbody>
         <tr class="img_tbody">
-          <td @click="turnDetails(buyInfoObj.apikey,buyInfoObj.assetid)"><img :src="buyInfoObj.asseturl" alt="" v-if="buyInfoObj.apikey==='5ae04522cff7cb000194f2f4'">{{buyInfoObj.assetname}}</td>
+          <td @click="turnDetails(buyInfoObj.apikey,buyInfoObj.assetid,buyInfoObj.packageId)"><img :src="buyInfoObj.asseturl" alt=""
+                                                                               v-if="buyInfoObj.apikey==='5ae04522cff7cb000194f2f4'">{{buyInfoObj.assetname}}</td>
           <td>{{buyInfoObj.sell_type}}</td>
           <td>{{buyInfoObj.count}}</td>
           <td>{{total}}</td>
@@ -316,15 +317,19 @@
         }).catch(() => {
         });
       },
-      turnDetails(apiKey, assetId) {
-        if (apiKey === "5a6be74a55aaf50001a5e250") {
-          this.getCaseDetails(assetId);
-          //this.$router.push("/caseDetails");
-          window.open("/caseDetails","_blank");
-        } else if (apiKey === "5ae04522cff7cb000194f2f4") {
-          this.getFacilityDetails(assetId);
-          //this.$router.push("/facilityDetails");
-          window.open("/facilityDetails","_blank");
+      turnDetails(apiKey, assetId,packageId) {
+        if(packageId===""){
+          if (apiKey === "5a6be74a55aaf50001a5e250") {
+            this.getCaseDetails(assetId);
+            //this.$router.push("/caseDetails");
+            window.open("/caseDetails","_blank");
+          } else if (apiKey === "5ae04522cff7cb000194f2f4") {
+            this.getFacilityDetails(assetId);
+            //this.$router.push("/facilityDetails");
+            window.open("/facilityDetails","_blank");
+          }
+        }else{
+          this.getPropertyDetails(packageId);
         }
       },
       getCaseDetails(val) {
@@ -332,6 +337,11 @@
       },
       getFacilityDetails(val) {
         this.$store.commit("changeFacilityDetails", this.buyInfoObj);
+      },
+      getPropertyDetails(val){
+        this.$store.commit("changePropertyDetails", this.buyInfoObj);
+        //this.$router.push("/transferDetails")
+        window.open("/transferDetails","_blank")
       },
     },
   }

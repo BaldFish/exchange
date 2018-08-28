@@ -27,7 +27,7 @@
           <td colspan="5">维修案例</td>
         </tr>
         <tr class="content_tbody" v-for="(item,index) of caseList" :key="item._id">
-          <td @click="turnDetails(item.apikey,item.assetid)">{{item.assetname}}</td>
+          <td @click="turnDetails(item.apikey,item.assetid,item.packageId)">{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
           <td>{{item.count}}</td>
           <td>{{item.price}}</td>
@@ -190,13 +190,17 @@
           console.log(err);
         });
       },
-      turnDetails(apiKey, assetId) {
-        if (apiKey === "5a6be74a55aaf50001a5e250") {
-          this.getCaseDetails(assetId);
-          this.$router.push("/caseDetails")
-        } else if (apiKey === "5ae04522cff7cb000194f2f4") {
-          this.getFacilityDetails(assetId);
-          this.$router.push("/facilityDetails")
+      turnDetails(apiKey, assetId,packageId) {
+        if(packageId===""){
+          if (apiKey === "5a6be74a55aaf50001a5e250") {
+            this.getCaseDetails(assetId);
+            this.$router.push("/caseDetails")
+          } else if (apiKey === "5ae04522cff7cb000194f2f4") {
+            this.getFacilityDetails(assetId);
+            this.$router.push("/facilityDetails")
+          }
+        }else{
+          this.getPropertyDetails(packageId)
         }
       },
       getCaseDetails(val) {
@@ -208,6 +212,13 @@
         this.$store.commit("changeFacilityDetails", _.find(this.assetList, function (o) {
           return o.assetid === val
         }));
+      },
+      getPropertyDetails(val){
+        this.$store.commit("changePropertyDetails", _.find(this.dataList, function (o) {
+          return o.packageId === val
+        }));
+        //this.$router.push("/transferDetails")
+        window.open("/transferDetails","_blank")
       },
     },
   }
