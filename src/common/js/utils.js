@@ -92,6 +92,18 @@ let utils = {
   */
   padLeftZero: function (str) {
     return ("00" + str).substr(str.length);
+  },
+  /*
+  函数：搜索关键字高亮函数
+  说明：
+  参数：string：需要匹配的数据（string类型），searchInput：搜索的关键字（string类型），attribute：css样式属性（）,value：css相对应的属性值
+  调用：
+  返回值：
+  */
+  searchHighlight:function (string,searchInput,attribute,value) {
+    let replaceReg=new RegExp(searchInput, 'ig');
+    let replaceString=`<span style=${attribute+":"+value}>${searchInput}</span>`;
+    return string.replace(replaceReg,replaceString)
   }
 };
 export default utils

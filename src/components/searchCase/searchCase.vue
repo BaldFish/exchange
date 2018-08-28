@@ -12,7 +12,7 @@
     </div>
     <div class="case_list">
       <div class="fr_case" v-for="(item,index) of searchCaseList" :key="item.id">
-        <h4><a href="/caseDetails" @click="getCaseDetails(item.id)">{{item.assetname}}</a></h4>
+        <h4><a href="/caseDetails" @click="getCaseDetails(item.id)"v-html="item.assetname"></a></h4>
         <div class="attestation">
           <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
           <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
@@ -30,7 +30,7 @@
         <div class="fault">
           <p>
             <a href="/caseDetails" @click="getCaseDetails(item.id)">
-              <span>故障现象：</span>{{item.assetcontent}}
+              <span>故障现象：</span><span v-html="item.assetcontent"></span>
             </a>
           </p>
         </div>
@@ -86,15 +86,15 @@
       this.acquireSearchCaseList();
     },
     computed: {
-      caseValue:function () {
-        return this.$store.state.caseValue
+      searchValue:function () {
+        return this.$store.state.searchValue
       },
-      caseInput:function () {
-        return this.$store.state.caseInput
+      searchInput:function () {
+        return this.$store.state.searchInput
       }
     },
     watch: {
-      caseInput:function () {
+      searchInput:function () {
         this.acquireSearchCaseList();
       }
     },
@@ -106,7 +106,7 @@
           type: 'warning',
           center: true
         }).then(() => {
-          window.location.href="/login"
+          this.$router.push("/login")
         }).catch(() => {
         });
       },
@@ -157,7 +157,7 @@
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
           axios({
             method: "GET",
-            url: `${baseURL}/v1/asset/casus/search?key=${this.caseInput}&page=${this.casePage}&limit=${this.caseLimit}&userid=${this.userId}`,
+            url: `${baseURL}/v1/asset/casus/search?key=${this.searchInput}&page=${this.casePage}&limit=${this.caseLimit}&userid=${this.userId}`,
             headers: {
               "Content-Type": "application/json",
             }
@@ -165,6 +165,8 @@
             this.total=res.data.count;
             for(let v of res.data.data){
               v.sell_at=utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+              v.assetname=utils.searchHighlight(v.assetname,this.searchInput,"color","#c6351e");
+              v.assetcontent=utils.searchHighlight(v.assetcontent,this.searchInput,"color","#c6351e");
             }
             this.searchCaseList = res.data.data;
           }).catch((err) => {
@@ -173,7 +175,7 @@
         }else{
           axios({
             method: "GET",
-            url: `${baseURL}/v1/asset/casus/search?key=${this.caseInput}&page=${this.casePage}&limit=${this.caseLimit}`,
+            url: `${baseURL}/v1/asset/casus/search?key=${this.searchInput}&page=${this.casePage}&limit=${this.caseLimit}`,
             headers: {
               "Content-Type": "application/json",
             }
@@ -181,6 +183,8 @@
             this.total=res.data.count;
             for(let v of res.data.data){
               v.sell_at=utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+              v.assetname=utils.searchHighlight(v.assetname,this.searchInput,"color","#c6351e");
+              v.assetcontent=utils.searchHighlight(v.assetcontent,this.searchInput,"color","#c6351e");
             }
             this.searchCaseList = res.data.data;
           }).catch((err) => {
@@ -228,7 +232,7 @@
           }).then((res) => {
             buyInfoObj=res.data;
             this.getBuy(buyInfoObj);
-            window.location.href="/checkOrder"
+            this.$router.push("/checkOrder")
           }).catch((err) => {
             console.log(err);
           })
@@ -373,7 +377,7 @@
               -webkit-box-orient: vertical;
               -webkit-line-clamp: 3;
               overflow: hidden;
-              span {
+              span:first-child {
                 font-size 16px
                 color #222222;
               }

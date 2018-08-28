@@ -72,7 +72,7 @@
           type: 'warning',
           center: true
         }).then(() => {
-          window.location.href="/login"
+          this.$router.push("/login")
         }).catch(() => {
         });
       },
@@ -94,28 +94,24 @@
       },
       turnFavorite(){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-          window.location.href="/favorite"
+          this.$router.push("/favorite")
         }else{
           this.open()
         }
       },
       search(val,int){
-        let inputValue={};
-        inputValue.value=this.value;
-        inputValue.input=this.input;
+        let searchObj={};
+        searchObj.value=this.value;
+        searchObj.input=this.input;
+        this.getSearch(searchObj);
         if(this.value==='1'){
-          this.getCaseInput(inputValue);
-          window.location.href="/searchCase"
+          this.$router.push('/searchCase')
         }else if(this.value==='2'){
-          this.getFacilityInput(inputValue);
-          window.location.href="/searchFacility"
+          this.$router.push('/searchFacility')
         }
       },
-      getCaseInput(inputValue){
-        this.$store.commit("changeCaseInput",inputValue);
-      },
-      getFacilityInput(inputValue){
-        this.$store.commit("changeFacilityInput",inputValue);
+      getSearch(searchObj){
+        this.$store.commit("changeSearch",searchObj);
       },
     },
     components: {},
@@ -256,6 +252,7 @@
     }
     .el-input .el-select__caret{
       color #333333
+      vertical-align middle
       }
   }
   .el-input.my_input{

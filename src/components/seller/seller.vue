@@ -84,7 +84,6 @@
           }
           this.allList = res.data.data;
           this.sum = res.data.count;
-          console.log(res.data)
         }).catch((err) => {
         })
       },

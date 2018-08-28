@@ -8,7 +8,6 @@
         <thead>
         <tr class="img_thead">
           <th>订单详情</th>
-          <th></th>
           <th>权益</th>
           <th>数量</th>
           <th>小计</th>
@@ -19,11 +18,8 @@
         </thead>
         <tbody>
         <tr class="img_tbody">
-          <td v-if="buyInfoObj.apikey==='5ae04522cff7cb000194f2f4'">
-            <img :src="buyInfoObj.asseturl" alt="">
-          </td>
-          <td>{{buyInfoObj.assetname}}</td>
-          <td v-if="buyInfoObj.apikey!=='5ae04522cff7cb000194f2f4'"></td>
+          <td @click="turnDetails(buyInfoObj.apikey,buyInfoObj.assetid,buyInfoObj.packageId)"><img :src="buyInfoObj.asseturl" alt=""
+                                                                               v-if="buyInfoObj.apikey==='5ae04522cff7cb000194f2f4'">{{buyInfoObj.assetname}}</td>
           <td>{{buyInfoObj.sell_type}}</td>
           <td>{{buyInfoObj.count}}</td>
           <td>{{total}}</td>
@@ -105,7 +101,7 @@
           <p>支付成功！</p>
           <router-link to="/personalAssets" class="to_see">查看资产</router-link>
         </div>
-        <div class="code_box">
+        <div class="code_box" v-if="walletAddress===''">
           <p>您还未绑定钱包地址，请下载钱包APP生成钱包地址后，并绑定，方便在手机上查阅！</p>
           <ul class="code">
             <li>
@@ -247,8 +243,8 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          console.log(res.data.orderStatus)
-          if(res.data.orderStatus === 0){
+          console.log(res.data);
+          if (res.data.orderStatus === 0) {
             clearTimeout(this.timer);
             return
           } else if (res.data.orderStatus === 1) {
@@ -317,9 +313,35 @@
           type: 'warning',
           center: true
         }).then(() => {
-          window.location.href = "/securityCenter"
+          this.$router.push("/securityCenter")
         }).catch(() => {
         });
+      },
+      turnDetails(apiKey, assetId,packageId) {
+        if(packageId===""){
+          if (apiKey === "5a6be74a55aaf50001a5e250") {
+            this.getCaseDetails(assetId);
+            //this.$router.push("/caseDetails");
+            window.open("/caseDetails","_blank");
+          } else if (apiKey === "5ae04522cff7cb000194f2f4") {
+            this.getFacilityDetails(assetId);
+            //this.$router.push("/facilityDetails");
+            window.open("/facilityDetails","_blank");
+          }
+        }else{
+          this.getPropertyDetails(packageId);
+        }
+      },
+      getCaseDetails(val) {
+        this.$store.commit("changeCaseDetails", this.buyInfoObj);
+      },
+      getFacilityDetails(val) {
+        this.$store.commit("changeFacilityDetails", this.buyInfoObj);
+      },
+      getPropertyDetails(val){
+        this.$store.commit("changePropertyDetails", this.buyInfoObj);
+        //this.$router.push("/transferDetails")
+        window.open("/transferDetails","_blank")
       },
     },
   }
@@ -426,28 +448,25 @@
   .img_thead th:first-child {
     padding-left: 46px;
     text-align: left;
-    width: 100px;
+    width: 470px;
   }
-  
-  .img_thead th:nth-child(2) {
-    text-align: left;
-    width: 370px;
-  }
-  
   .img_thead th {
-    width: 152px;
+    width: 150px;
   }
   
-  .img_tbody td:nth-child(2) {
+  .img_tbody td:nth-child(1) {
+    padding-left: 46px;
     text-align: left;
-    line-height: 20px;
+    cursor: pointer;
   }
   
-  .img_tbody td:first-child img {
+  .img_tbody td:nth-child(1) img {
     width: 54px;
     height: 54px;
     border: solid 1px #bfbfbf;
     display: inline-block;
+    vertical-align: middle;
+    margin-right: 46px;
   }
   
   .order_amount {

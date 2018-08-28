@@ -16,7 +16,7 @@
     </div>
     <div class="tabs_content" v-show="nowIndex===0">
       <ul class="content">
-        <li v-for="item of propertyList" :key="item.id" @click="getPropertyDetails(item.id)">
+        <li v-for="item of propertyList" :key="item.packageId" @click="getPropertyDetails(item.packageId)">
           <div class="content_img">
             <img :src="item.url" alt="">
           </div>
@@ -99,6 +99,7 @@
           }
           this.propertyList = res.data.data;
           this.propertySum = res.data.count
+          console.log(this.propertyList)
         }).catch((err) => {
         })
       },
@@ -125,7 +126,8 @@
         this.$store.commit("changePropertyDetails", _.find(this.propertyList, function (o) {
           return o.id === val
         }));
-        window.location.href="/transferDetails"
+        //this.$router.push("/transferDetails")
+        window.open("/transferDetails","_blank")
       },
     },
   }
