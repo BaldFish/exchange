@@ -42,6 +42,7 @@
           <a href="/caseSource" @click="getCaseSource(item.id)"><p class="tracing">可信溯源</p></a>
           <a href="javascript:void(0)" @click="buy(item.id)"><p class="buy">一键购买</p></a>
         </div>
+        <div class="bar"></div>
       </div>
     </div>
     <div class="clearfix paging">
@@ -434,6 +435,17 @@
             text-align center
           }
         }
+        .bar{
+          width 10px
+          height 100%
+          background-color #ff3b0b
+          position absolute
+          top 0
+          right 0
+        }
+      }
+      .fr_case:hover{
+        box-shadow: 2px 1px 17px 1px rgba(98, 98, 98, 0.28);
       }
     }
   }

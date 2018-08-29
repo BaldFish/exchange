@@ -6,17 +6,39 @@
         <p>已有账号，立即<router-link to="/login" class="to_login">登录</router-link></p>
       </section>
     </div>
-    <div class="forget_psw_nav">
+    <!--<div class="forget_psw_nav">
+      <div class="site_box">
+        <div class="site">
+          <ul>
+            <li>当前位置 ：</li>
+            <li><a href="/">首页</a></li>
+            <li>&nbsp;>&nbsp;</li>
+            <li><a href="/moreCase">登录</a></li>
+            <li>&nbsp;>&nbsp;</li>
+            <li>注册</li>
+          </ul>
+        </div>
+      </div>
       <div class="psw_nav_details">
         当前位置：
         <router-link to="/home" class="to_home">首页</router-link> >
         <router-link to="/login" class="to_home">登录</router-link> >
         免费注册
       </div>
-    </div>
+    </div>-->
+    <my-toggle :toggleIndex="toggleIndex"></my-toggle>
     <div class="forget_psw_body">
+      <div class="site_box">
+        <div class="site">
+          <ul>
+            <li>当前位置 ：</li>
+            <li><a href="/">首页</a></li>
+            <li>&nbsp;>&nbsp;</li>
+            <li><a href="/register">注册</a></li>
+          </ul>
+        </div>
+      </div>
       <div class="forget_psw_content">
-
         <section class="forget_psw_sec" v-if="stepOne">
           <div class="sec_step">
             <img src="./images/register_step01.png" alt="">
@@ -25,7 +47,6 @@
             <span>实名认证</span>
             <span>注册成功</span>
           </div>
-
           <div class="sec_input">
             <ul>
               <li>
@@ -60,7 +81,6 @@
           </div>
           <div :class="{ 'next_btn_top': showNotice, 'next_btn': !showNotice}" @click="nextStep(2)"><span>下一步</span></div>
         </section>
-
         <section class="forget_psw_sec" v-if="stepTwo">
           <div class="sec_step">
             <img src="./images/register_step02.png" alt="">
@@ -85,7 +105,6 @@
           </div>
           <div class="next_btn step_two_btn" @click="nextStep(3)"><span>下一步</span></div>
         </section>
-
         <section class="forget_psw_sec" v-if="stepThree">
           <div class="sec_step">
             <img src="./images/register_step03.png" alt="">
@@ -112,7 +131,6 @@
           <div class="next_btn skip_btn" @click="skipToStep"><span>跳过</span></div>
           <div class="next_btn step_two_btn skip_btn_next" @click="nextStep(4)"><span>下一步</span></div>
         </section>
-
         <section class="forget_psw_sec" v-if="stepFour">
           <div class="sec_step">
             <img src="./images/register_step04.png" alt="">
@@ -126,22 +144,25 @@
             <router-link to="/home"></router-link>
           </div>
         </section>
-
-
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
   import axios from "axios";
   import {baseURL} from '@/common/js/public.js';
+  import myToggle from "../toggle/toggle"
   const querystring = require('querystring');
 
   export default{
+    name: "login",
+    components: {
+      myToggle,
+    },
     data(){
       return {
+        toggleIndex: 0,
         codeValue:true,
         second:60, //发送验证码倒计时
         stepOne:true,
@@ -164,7 +185,7 @@
         idcard:"" //身份证号
       };
     },
-    mounted: function() {
+    mounted() {
       //这个是钩子函数
       //如果getCaptcha函数要执行，必须先执行钩子函数
       //这个钩子函数完成了对getCaptcha函数的调用
@@ -173,6 +194,7 @@
         this.getCaptcha()
       })
     },
+    watch: {},
     computed:{
       uuid() {
         var s = [];
@@ -668,5 +690,29 @@
   }
   .contract_a{
     color: #c7361e;
+  }
+</style>
+<style scoped lang="stylus">
+  .site_box {
+    width 100%
+    background-color: #e7e7e7;
+    .site {
+      width 1212px
+      height 34px
+      line-height 34px
+      margin 0 auto
+      ul {
+        padding-left 8px
+        font-size 0
+        li {
+          vertical-align top
+          display inline-block
+          font-size 14px
+          a{
+            color: #666666;
+          }
+        }
+      }
+    }
   }
 </style>

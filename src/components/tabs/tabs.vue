@@ -1,6 +1,7 @@
 <template>
   <div class="tabs">
     <my-topSearch></my-topSearch>
+    <my-toggle :toggleIndex="toggleIndex"></my-toggle>
     <div class="nav_body">
       <div class="nav_mid">
         <nav class="nav_tab">
@@ -39,12 +40,15 @@
 
 <script>
   import myTopSearch from "../topSearch/topSearch"
+  import myToggle from "../toggle/toggle"
   import myPaging from "../paging/paging"
   import {baseURL,cardURL} from '@/common/js/public.js';
   export default {
     name: "tabs",
     data() {
-      return {}
+      return {
+        toggleIndex: 0,
+      }
     },
     created() {
     },
@@ -54,7 +58,9 @@
     watch: {},
     computed: {},
     components: {
-      myTopSearch,myPaging
+      myTopSearch,
+      myPaging,
+      myToggle
     },
   }
 </script>
@@ -62,6 +68,7 @@
 <style scoped lang="stylus">
   .nav_body{
     background-color: #f3f3f3;
+    padding-top 20px
   }
   .nav_mid{
     width: 1212px;

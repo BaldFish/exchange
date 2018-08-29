@@ -31,11 +31,11 @@
       </div>
       <table>
         <tr class="img_tbody">
-          <td v-if="item.apikey!=='5a6be74a55aaf50001a5e250'" @click="turnDetails(item.apikey,item.assetid,item.packageId)">
+          <td v-if="item.apikey!=='5a6be74a55aaf50001a5e250||5b18a5b9cff7cb000194f2f7'" @click="turnDetails(item.apikey,item.assetid,item.packageId)">
             <img :src="item.asseturl" alt="">
             <p>{{item.assetname}}</p>
           </td>
-          <td v-if="item.apikey==='5a6be74a55aaf50001a5e250'" @click="turnDetails(item.apikey,item.assetid,item.packageId)">
+          <td v-if="item.apikey==='5a6be74a55aaf50001a5e250||5b18a5b9cff7cb000194f2f7'" @click="turnDetails(item.apikey,item.assetid,item.packageId)">
             <p>{{item.assetname}}</p>
           </td>
           <td>{{item.sell_type}}</td>

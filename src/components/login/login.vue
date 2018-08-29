@@ -1,5 +1,4 @@
 <template>
-
   <div class="login-container">
     <div class="login-header">
       <div class="login-header-cont">
@@ -8,6 +7,7 @@
         </router-link>
       </div>
     </div>
+    <my-toggle :toggleIndex="toggleIndex"></my-toggle>
     <div class="login-content">
       <div class="content-box">
         <div class="content-mid">
@@ -84,12 +84,18 @@
 <script>
   import axios from "axios";
   import {baseURL} from '@/common/js/public.js';
+  import myToggle from "../toggle/toggle"
 
   const querystring = require('querystring');
 
   export default {
+    name: "login",
+    components: {
+      myToggle,
+    },
     data() {
       return {
+        toggleIndex: 0,
         loginWay: true,
         codeValue: true,
         isDisabled: true,
@@ -109,6 +115,7 @@
         codeErrors:""
       };
     },
+    watch: {},
     computed: {
       uuid() {
         var s = [];
@@ -123,7 +130,7 @@
         return uuid;
       }
     },
-    mounted: function () {
+    mounted () {
       //这个是钩子函数
       //如果getCaptcha函数要执行，必须先执行钩子函数
       //这个钩子函数完成了对getCaptcha函数的调用
@@ -141,7 +148,6 @@
         console.log(error)
       })
     },
-
     methods: {
       tabChange() {
         this.loginWay = !this.loginWay
@@ -363,18 +369,14 @@
         });
       },
     }
-
-
   }
-
-
 </script>
 <style scoped>
   .login-header {
     width: 100%;
     height: 122px;
     background-color: #f3f3f3;
-    border-bottom: 4px solid #c7361e;
+    //border-bottom: 4px solid #c7361e;
   }
 
   .login-header-cont {

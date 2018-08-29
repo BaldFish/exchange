@@ -23,10 +23,10 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="classify" v-if="caseList.length>0">
-          <td colspan="5">维修案例</td>
+        <tr class="classify" v-if="reportList.length>0">
+          <td colspan="5">诊断报告</td>
         </tr>
-        <tr class="content_tbody" v-for="(item,index) of caseList" :key="item._id">
+        <tr class="content_tbody" v-for="(item,index) of reportList" :key="item.id">
           <td @click="turnDetails(item.apikey,item.assetid,item.packageId)">{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
           <td>{{item.count}}</td>
@@ -38,8 +38,20 @@
         <tr class="classify" v-if="facilityList.length>0">
           <td colspan="5">维修设备</td>
         </tr>
-        <tr class="content_tbody" v-for="(item,index) of facilityList" :key="item._id">
+        <tr class="content_tbody" v-for="(item,index) of facilityList" :key="item.id">
           <td @click="turnDetails(item.apikey,item.assetid)"><span><img :src="item.asseturl" alt=""></span>{{item.assetname}}</td>
+          <td>{{item.sell_type}}</td>
+          <td>{{item.count}}</td>
+          <td>{{item.price}}</td>
+          <td class="quick_buy_td">
+            <button>查看</button>
+          </td>
+        </tr>
+        <tr class="classify" v-if="caseList.length>0">
+          <td colspan="5">维修案例</td>
+        </tr>
+        <tr class="content_tbody" v-for="(item,index) of caseList" :key="item.id">
+          <td @click="turnDetails(item.apikey,item.assetid,item.packageId)">{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
           <td>{{item.count}}</td>
           <td>{{item.price}}</td>
@@ -67,7 +79,6 @@
         <router-link to="/" class="to_buy">去购买 ></router-link>
       </div>
     </div>
-  
   </div>
 </template>
 
@@ -95,6 +106,11 @@
       }
     },
     computed:{
+      reportList: function () {
+        return this.assetList.filter(function (value, index, array) {
+          return value.apikey==="5b18a5b9cff7cb000194f2f7"
+        })
+      },
       caseList: function () {
         return this.assetList.filter(function (value, index, array) {
           return value.apikey==="5a6be74a55aaf50001a5e250"

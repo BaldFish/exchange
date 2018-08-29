@@ -20,21 +20,21 @@
           <h3>诊断报告</h3>
           <a href="/moreReport">查看更多</a>
         </div>
-        <div class="fr fr_report" v-for="(item,index) of reportList" :key="item._id" >
-          <h4><a href="/reportDetails" @click="getReportDetails(item._id)">{{item.theme}}</a></h4>
+        <div class="fr fr_report" v-for="(item,index) of reportList" :key="item.id" >
+          <h4><a href="/reportDetails" @click="getReportDetails(item._id)">{{item.assetname}}</a></h4>
           <div class="attestation">
             <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
             <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
             <span class="trust" v-if="item.creditlevel!=='未认证'">{{item.creditlevel}}</span>
           </div>
           <div class="putaway">
-            <a class="time" href="/reportDetails" @click="getReportDetails(item._id)"><span>报告生成时间：</span>{{item.generate_time}}</a>
-            <a class="data" href="/reportDetails" @click="getReportDetails(item._id)"><span>数据来源：</span>{{item.resource}}</a>
+            <a class="time" href="/reportDetails" @click="getReportDetails(item.id)"><span>报告生成时间：</span>{{item.generate_time}}</a>
+            <a class="data" href="/reportDetails" @click="getReportDetails(item.id)"><span>数据来源：</span>{{item.resource}}</a>
           </div>
           <div class="putaway">
-            <a class="vin" href="/reportDetails" @click="getReportDetails(item._id)"><span>VIN码：</span>{{item.vin}}</a>
-            <a class="breakdown" href="/reportDetails" @click="getReportDetails(item._id)"><span>故障码个数：</span>{{item.fault_n}}个</a>
-            <a class="equity" href="/reportDetails" @click="getReportDetails(item._id)"><span>权益：</span>{{item.sell_type}}</a>
+            <a class="vin" href="/reportDetails" @click="getReportDetails(item.id)"><span>VIN码：</span>{{item.vin}}</a>
+            <a class="breakdown" href="/reportDetails" @click="getReportDetails(item.id)"><span>故障码个数：</span>{{item.fault_n}}个</a>
+            <a class="equity" href="/reportDetails" @click="getReportDetails(item.id)"><span>权益：</span>{{item.sell_type}}</a>
           </div>
           <!--<div class="belong">
             <a href="/reportDetails" @click="getReportDetails(item.id)"><span>所属人：</span>{{item.assetowner}}</a>
@@ -47,9 +47,10 @@
             </p>
           </div>-->
           <div class="price_box">
-            <a href="/caseDetails" @click="getReportDetails(item._id)"><p class="price">{{item.price}}</p></a>
-            <a href="/caseSource" @click="getReportDetails(item._id)"><p class="tracing">可信溯源</p></a>
+            <a href="/reportDetails" @click="getReportDetails(item.id)"><p class="price">{{item.price}}</p></a>
+            <a href="/reportDetails" @click="getReportDetails(item.id)"><p class="tracing">可信溯源</p></a>
           </div>
+          <div class="bar"></div>
         </div>
       </div>
       <div class="headline">
@@ -126,6 +127,7 @@
             <a href="/caseDetails" @click="getCaseDetails(item.id)"><p class="price">{{item.price}}</p></a>
             <a href="/caseSource" @click="getCaseSource(item.id)"><p class="tracing">可信溯源</p></a>
           </div>
+          <div class="bar"></div>
         </div>
       </div>
       <div class="partner clearfix">
@@ -218,10 +220,10 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          for (let v of res.data.data) {
+          for (let v of res.data) {
             v.generate_time = utils.formatDate(new Date(v.generate_time), "yyyy-MM-dd hh:mm:ss");
           }
-          this.reportList = res.data.data;
+          this.reportList = res.data;
           console.log(this.reportList)
         }).catch((err) => {
           console.log(err)
@@ -240,6 +242,7 @@
             v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
           }
           this.facilityList = res.data.data
+          console.log(this.facilityList)
         }).catch((err) => {
         })
       },
@@ -256,6 +259,7 @@
             v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
           }
           this.caseList = res.data.data;
+          console.log(this.caseList)
         }).catch((err) => {
           console.log(err)
         })
@@ -282,7 +286,7 @@
       },
       getReportDetails(val){
         this.$store.commit("changeReportDetails", _.find(this.reportList, function (o) {
-          return o._id === val
+          return o.id === val
         }));
       },
     },
@@ -350,205 +354,91 @@
           height 734px
           background-image: url('./images/04.png');
         }
-      }
-      .case {
-        .fl_bg {
-          height 734px
-          background-image: url('./images/01.png');
-        }
-      }
-      .facility {
-        .fl_bg {
-          height 734px
-          background-image: url('./images/02.png');
-        }
-      }
-      .partner {
-        .fl_bg {
-          height 330px
-          background-image: url('./images/cooperation.png');
-          background-position: top left 16px;
-          h3 {
-            margin-top 132px
-          }
-        }
-      }
-      .fr_report {
-        margin-bottom 18px
-        position relative
-        box-sizing border-box
-        width 854px
-        height 220px
-        background-color rgba(255, 255, 255, 0.8)
-        /*opacity: 0.8;*/
-        padding 15px 20px
-        h4 {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          a {
-            color: #222222;
-            font-size: 20px;
-          }
-        }
-        .attestation {
-          width 850px
-          height 74px
-          font-size 0px
-          span {
-            text-align center
-            color #ffffff
-            font-size 14px
-            display inline-block
-            width 70px
-            height 30px
-            line-height 30px
-            margin-right 14px
-            margin-top 14px
-            margin-bottom 30px
-          }
-          .trust {
-            background-color #99c7ff
-          }
-          .person {
-            background-color #ffdd99
-          }
-          .merchant {
-            background-color #ffa799
-          }
-        }
-        .putaway {
-          padding-bottom 20px
-          font-size 0
-          a {
-            display inline-block
-            padding-left 26px
-            padding-top 2px
-            padding-bottom 2px
-            color #666666;
-            font-size 14px
-            margin-right 34px
-            background-repeat: no-repeat;
-            background-position: top left;
-            line-height 22px
-            span {
-              color #222222;
-              font-size 16px
-            }
-          }
-          .time {
-            background-image: url('./images/time.png');
-            width 250px
-          }
-          .data{
-            background-image: url('./images/data.png');
-          }
-          .vin{
-            background-image: url('./images/vin.png');
-            width 250px
-          }
-          .breakdown{
-            background-image: url('./images/breakdown.png');
-            width 120px
-          }
-          .equity {
-            background-image: url('./images/Profit.png');
-          }
-        }
-        .belong {
-          a {
-            display block
-            line-height 22px
-            padding-left 26px
-            background-image: url('./images/person.png');
-            background-repeat: no-repeat;
-            background-position: top left;
-            color #666666;
-            font-size 14px;
-            span {
-              color #222222;
-              font-size 16px
-            }
-          }
-        }
-        .fault {
-          p {
-            padding-top 4px
-            width 562px
-            height 54px
-            line-height 18px
+        .fr_report {
+          margin-bottom 18px
+          position relative
+          box-sizing border-box
+          width 854px
+          height 220px
+          background-color rgba(255, 255, 255, 0.8)
+          /*opacity: 0.8;*/
+          padding 15px 20px
+          h4 {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             a {
+              color: #222222;
+              font-size: 20px;
+            }
+          }
+          .attestation {
+            width 850px
+            height 74px
+            font-size 0px
+            span {
+              text-align center
+              color #ffffff
+              font-size 14px
+              display inline-block
+              width 70px
+              height 30px
+              line-height 30px
+              margin-right 14px
+              margin-top 14px
+              margin-bottom 30px
+            }
+            .trust {
+              background-color #99c7ff
+            }
+            .person {
+              background-color #ffdd99
+            }
+            .merchant {
+              background-color #ffa799
+            }
+          }
+          .putaway {
+            padding-bottom 20px
+            font-size 0
+            a {
+              display inline-block
+              padding-left 26px
+              padding-top 2px
+              padding-bottom 2px
               color #666666;
               font-size 14px
-              display block
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 3;
-              overflow: hidden;
-              span:first-child {
-                font-size 16px
+              margin-right 34px
+              background-repeat: no-repeat;
+              background-position: top left;
+              line-height 22px
+              span {
                 color #222222;
+                font-size 16px
               }
             }
-          }
-        }
-        .price_box {
-          position absolute
-          top 78px
-          left 700px
-          .price {
-            min-width 18px
-            height 24px
-            font-size: 24px;
-            color: #c6351e;
-            background-image: url('./images/currency.png');
-            background-repeat: no-repeat;
-            background-position: top left;
-            padding-left 26px
-            margin-bottom 8px
-          }
-          .tracing {
-            color: #f3b43f;
-            font-size 14px
-            background-image: url('./images/credible.png');
-            background-repeat: no-repeat;
-            background-position: top left;
-            padding-left 26px
-            height 18px
-            line-height 18px
-          }
-        }
-      }
-      .fr_report:hover{
-        box-shadow: 0px 0px 9px 1px rgba(0, 0, 0, 0.34);
-      }
-      .fr_facility {
-        width 854px
-        .facility_info {
-          margin-bottom 20px
-          margin-right 12px
-          box-sizing border-box
-          width 276px
-          height 340px
-          padding 22px 15px 0
-          background-color #ffffff
-          h4 {
-            color: #222222;
-            font-size: 18px;
-            height 40px
-            line-height 20px
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            overflow: hidden;
+            .time {
+              background-image: url('./images/time.png');
+              width 250px
+            }
+            .data{
+              background-image: url('./images/data.png');
+            }
+            .vin{
+              background-image: url('./images/vin.png');
+              width 250px
+            }
+            .breakdown{
+              background-image: url('./images/breakdown.png');
+              width 140px
+            }
+            .equity {
+              background-image: url('./images/Profit.png');
+            }
           }
           .belong {
             a {
-              width 210px
               display block
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              overflow: hidden;
               line-height 22px
               padding-left 26px
               background-image: url('./images/person.png');
@@ -562,36 +452,32 @@
               }
             }
           }
-          .putaway {
-            margin-top 12px
-            a {
-              display block
-              padding-left 26px
-              padding-top 2px
-              padding-bottom 2px
-              color #666666;
-              font-size 14px
-              background-repeat: no-repeat;
-              background-position: top left;
-              span {
-                color #222222;
-                font-size 16px
+          .fault {
+            p {
+              padding-top 4px
+              width 562px
+              height 54px
+              line-height 18px
+              a {
+                color #666666;
+                font-size 14px
+                display block
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 3;
+                overflow: hidden;
+                span:first-child {
+                  font-size 16px
+                  color #222222;
+                }
               }
-            }
-            .time {
-              background-image: url('./images/time.png');
-              padding-bottom 12px
-            }
-            .equity {
-              background-image: url('./images/Profit.png');
             }
           }
           .price_box {
-            margin-top 43px
+            position absolute
+            top 78px
+            left 700px
             .price {
-              a {
-                display block
-              }
               min-width 18px
               height 24px
               font-size: 24px;
@@ -600,7 +486,7 @@
               background-repeat: no-repeat;
               background-position: top left;
               padding-left 26px
-              margin-bottom 10px
+              margin-bottom 8px
             }
             .tracing {
               color: #f3b43f;
@@ -613,26 +499,192 @@
               line-height 18px
             }
           }
-          .facility_img {
-            display: table-cell;
-            vertical-align: middle;
-            text-align: center;
-            img {
-              vertical-align: middle;
-              position: relative;
-              top: 50%;
-              transform: translateY(-50%);
-              max-width 90px
-              max-height 90px
+          .bar{
+            width 10px
+            height 100%
+            background-color #e25d07
+            position absolute
+            top 0
+            right 0
+          }
+        }
+        .fr_report:hover{
+          box-shadow: 0px 0px 9px 1px rgba(0, 0, 0, 0.34);
+        }
+      }
+      .facility {
+        .fl_bg {
+          height 734px
+          background-image: url('./images/02.png');
+        }
+        .fr_facility {
+          width 854px
+          .facility_info {
+            margin-bottom 20px
+            margin-right 12px
+            box-sizing border-box
+            width 276px
+            height 340px
+            padding 22px 15px 0
+            background-color #ffffff
+            h4 {
+              color: #222222;
+              font-size: 18px;
+              height 40px
+              line-height 20px
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              overflow: hidden;
             }
+            .belong {
+              a {
+                width 210px
+                display block
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                line-height 22px
+                padding-left 26px
+                background-image: url('./images/person.png');
+                background-repeat: no-repeat;
+                background-position: top left;
+                color #666666;
+                font-size 14px;
+                span {
+                  color #222222;
+                  font-size 16px
+                }
+              }
+            }
+            .putaway {
+              margin-top 12px
+              a {
+                display block
+                padding-left 26px
+                padding-top 2px
+                padding-bottom 2px
+                color #666666;
+                font-size 14px
+                background-repeat: no-repeat;
+                background-position: top left;
+                span {
+                  color #222222;
+                  font-size 16px
+                }
+              }
+              .time {
+                background-image: url('./images/time.png');
+                padding-bottom 12px
+              }
+              .equity {
+                background-image: url('./images/Profit.png');
+              }
+            }
+            .price_box {
+              margin-top 43px
+              .price {
+                a {
+                  display block
+                }
+                min-width 18px
+                height 24px
+                font-size: 24px;
+                color: #c6351e;
+                background-image: url('./images/currency.png');
+                background-repeat: no-repeat;
+                background-position: top left;
+                padding-left 26px
+                margin-bottom 10px
+              }
+              .tracing {
+                color: #f3b43f;
+                font-size 14px
+                background-image: url('./images/credible.png');
+                background-repeat: no-repeat;
+                background-position: top left;
+                padding-left 26px
+                height 18px
+                line-height 18px
+              }
+            }
+            .facility_img {
+              display: table-cell;
+              vertical-align: middle;
+              text-align: center;
+              img {
+                vertical-align: middle;
+                position: relative;
+                top: 50%;
+                transform: translateY(-50%);
+                max-width 90px
+                max-height 90px
+              }
+              a {
+                display block
+                width 92px
+                height 92px
+                border 1px solid #eeeeee
+              }
+            }
+            .attestation {
+              font-size 0px
+              span {
+                text-align center
+                color #ffffff
+                font-size 14px
+                display inline-block
+                width 70px
+                height 30px
+                line-height 30px
+                margin-right 14px
+                margin-top 30px
+                margin-bottom 30px
+              }
+              .trust {
+                background-color #99c7ff
+              }
+              .person {
+                background-color #ffdd99
+              }
+              .merchant {
+                background-color #ffa799
+              }
+            }
+          }
+          .facility_info:nth-child(3n) {
+            margin-right 0
+          }
+          .facility_info:hover {
+            box-shadow: -1px 1px 25px 2px rgba(98, 98, 98, 0.19);
+          }
+        }
+      }
+      .case {
+        .fl_bg {
+          height 734px
+          background-image: url('./images/01.png');
+        }
+        .fr_case {
+          margin-bottom 18px
+          position relative
+          box-sizing border-box
+          width 854px
+          height 220px
+          background-color rgba(255, 255, 255, 0.8)
+          padding 15px 20px
+          h4 {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             a {
-              display block
-              width 92px
-              height 92px
-              border 1px solid #eeeeee
+              color: #222222;
+              font-size: 20px;
             }
           }
           .attestation {
+            width 850px
+            height 74px
             font-size 0px
             span {
               text-align center
@@ -643,7 +695,7 @@
               height 30px
               line-height 30px
               margin-right 14px
-              margin-top 30px
+              margin-top 14px
               margin-bottom 30px
             }
             .trust {
@@ -656,170 +708,139 @@
               background-color #ffa799
             }
           }
-        }
-        .facility_info:nth-child(3n) {
-          margin-right 0
-        }
-        .facility_info:hover {
-          box-shadow: -1px 1px 25px 2px rgba(98, 98, 98, 0.19);
-        }
-      }
-      .fr_case {
-        margin-bottom 18px
-        position relative
-        box-sizing border-box
-        width 854px
-        height 220px
-        background-color rgba(255, 255, 255, 0.8)
-        padding 15px 20px
-        h4 {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          a {
-            color: #222222;
-            font-size: 20px;
-          }
-        }
-        .attestation {
-          width 850px
-          height 74px
-          font-size 0px
-          span {
-            text-align center
-            color #ffffff
-            font-size 14px
-            display inline-block
-            width 70px
-            height 30px
-            line-height 30px
-            margin-right 14px
-            margin-top 14px
-            margin-bottom 30px
-          }
-          .trust {
-            background-color #99c7ff
-          }
-          .person {
-            background-color #ffdd99
-          }
-          .merchant {
-            background-color #ffa799
-          }
-        }
-        .putaway {
-          a {
-            padding-left 26px
-            padding-top 2px
-            padding-bottom 2px
-            color #666666;
-            font-size 14px
-            margin-right 43px
-            background-repeat: no-repeat;
-            background-position: top left;
-            line-height 22px
-            span {
-              color #222222;
-              font-size 16px
-            }
-          }
-          .time {
-            background-image: url('./images/time.png');
-          }
-          .equity {
-            background-image: url('./images/Profit.png');
-          }
-        }
-        .belong {
-          a {
-            display block
-            line-height 22px
-            padding-left 26px
-            background-image: url('./images/person.png');
-            background-repeat: no-repeat;
-            background-position: top left;
-            color #666666;
-            font-size 14px;
-            span {
-              color #222222;
-              font-size 16px
-            }
-          }
-        }
-        .fault {
-          p {
-            padding-top 4px
-            width 562px
-            height 54px
-            line-height 18px
+          .putaway {
             a {
+              padding-left 26px
+              padding-top 2px
+              padding-bottom 2px
               color #666666;
               font-size 14px
-              display block
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 3;
-              overflow: hidden;
-              span:first-child {
-                font-size 16px
+              margin-right 43px
+              background-repeat: no-repeat;
+              background-position: top left;
+              line-height 22px
+              span {
                 color #222222;
+                font-size 16px
+              }
+            }
+            .time {
+              background-image: url('./images/time.png');
+            }
+            .equity {
+              background-image: url('./images/Profit.png');
+            }
+          }
+          .belong {
+            a {
+              display block
+              line-height 22px
+              padding-left 26px
+              background-image: url('./images/person.png');
+              background-repeat: no-repeat;
+              background-position: top left;
+              color #666666;
+              font-size 14px;
+              span {
+                color #222222;
+                font-size 16px
               }
             }
           }
+          .fault {
+            p {
+              padding-top 4px
+              width 562px
+              height 54px
+              line-height 18px
+              a {
+                color #666666;
+                font-size 14px
+                display block
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 3;
+                overflow: hidden;
+                span:first-child {
+                  font-size 16px
+                  color #222222;
+                }
+              }
+            }
+          }
+          .price_box {
+            position absolute
+            top 78px
+            left 700px
+            .price {
+              min-width 18px
+              height 24px
+              font-size: 24px;
+              color: #c6351e;
+              background-image: url('./images/currency.png');
+              background-repeat: no-repeat;
+              background-position: top left;
+              padding-left 26px
+              margin-bottom 8px
+            }
+            .tracing {
+              color: #f3b43f;
+              font-size 14px
+              background-image: url('./images/credible.png');
+              background-repeat: no-repeat;
+              background-position: top left;
+              padding-left 26px
+              height 18px
+              line-height 18px
+            }
+          }
+          .bar{
+            width 10px
+            height 100%
+            background-color #ff3b0b
+            position absolute
+            top 0
+            right 0
+          }
         }
-        .price_box {
-          position absolute
-          top 78px
-          left 700px
-          .price {
-            min-width 18px
-            height 24px
-            font-size: 24px;
-            color: #c6351e;
-            background-image: url('./images/currency.png');
-            background-repeat: no-repeat;
-            background-position: top left;
-            padding-left 26px
-            margin-bottom 8px
-          }
-          .tracing {
-            color: #f3b43f;
-            font-size 14px
-            background-image: url('./images/credible.png');
-            background-repeat: no-repeat;
-            background-position: top left;
-            padding-left 26px
-            height 18px
-            line-height 18px
-          }
+        .fr_case:hover{
+          box-shadow: 2px 1px 17px 1px rgba(98, 98, 98, 0.28);
         }
       }
-      .fr_case:hover{
-        box-shadow: 2px 1px 17px 1px rgba(98, 98, 98, 0.28);
-      }
-      .fr_partner {
-        width 854px
-        .partner_img {
-          box-sizing border-box
-          background-color: #ffffff;
-          margin-bottom 14px
-          margin-right 12px
-          display: table-cell;
-          width: 276px;
-          height: 158px;
-          vertical-align: middle;
-          text-align: center;
-          img {
+      .partner {
+        .fl_bg {
+          height 330px
+          background-image: url('./images/cooperation.png');
+          background-position: top left 16px;
+          h3 {
+            margin-top 132px
+          }
+        }
+        .fr_partner {
+          width 854px
+          .partner_img {
+            box-sizing border-box
+            background-color: #ffffff;
+            margin-bottom 14px
+            margin-right 12px
+            display: table-cell;
+            width: 276px;
+            height: 158px;
             vertical-align: middle;
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
+            text-align: center;
+            img {
+              vertical-align: middle;
+              position: relative;
+              top: 50%;
+              transform: translateY(-50%);
+            }
+          }
+          .partner_img:nth-child(3n) {
+            margin-right 0
           }
         }
-        .partner_img:nth-child(3n) {
-          margin-right 0
-        }
       }
+      
     }
     
   }
@@ -869,6 +890,5 @@
       }
     }
   }
-
-
+  
 </style>

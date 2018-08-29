@@ -13,21 +13,21 @@
       </div>
     </div>
     <div class="report_list">
-      <div class="fr_report" v-for="(item,index) of reportList" :key="item._id">
-        <h4><a href="/reportDetails" @click="getReportDetails(item._id)">{{item.theme}}</a></h4>
+      <div class="fr_report" v-for="(item,index) of reportList" :key="item.id">
+        <h4><a href="/reportDetails" @click="getReportDetails(item.id)">{{item.assetname}}</a></h4>
         <div class="attestation">
           <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
           <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
           <span class="trust" v-if="item.creditlevel!=='未认证'">{{item.creditlevel}}</span>
         </div>
         <div class="putaway">
-          <a class="time" href="/reportDetails" @click="getReportDetails(item._id)"><span>报告生成时间：</span>{{item.generate_time}}</a>
-          <a class="data" href="/reportDetails" @click="getReportDetails(item._id)"><span>数据来源：</span>{{item.resource}}</a>
+          <a class="time" href="/reportDetails" @click="getReportDetails(item.id)"><span>报告生成时间：</span>{{item.generate_time}}</a>
+          <a class="data" href="/reportDetails" @click="getReportDetails(item.id)"><span>数据来源：</span>{{item.resource}}</a>
         </div>
         <div class="putaway">
-          <a class="vin" href="/reportDetails" @click="getReportDetails(item._id)"><span>VIN码：</span>{{item.vin}}</a>
-          <a class="breakdown" href="/reportDetails" @click="getReportDetails(item._id)"><span>故障码个数：</span>{{item.fault_n}}个</a>
-          <a class="equity" href="/reportDetails" @click="getReportDetails(item._id)"><span>权益：</span>{{item.sell_type}}</a>
+          <a class="vin" href="/reportDetails" @click="getReportDetails(item.id)"><span>VIN码：</span>{{item.vin}}</a>
+          <a class="breakdown" href="/reportDetails" @click="getReportDetails(item.id)"><span>故障码个数：</span>{{item.fault_n}}个</a>
+          <a class="equity" href="/reportDetails" @click="getReportDetails(item.id)"><span>权益：</span>{{item.sell_type}}</a>
         </div>
         <!--<div class="fault">
           <p>
@@ -38,10 +38,11 @@
         </div>
         <div :class="item.shopcart_id?'like':'dislike'" @click="toggleLike(item.id)">收藏</div>-->
         <div class="price_box">
-          <a href="/reportDetails" @click="getReportDetails(item._id)"><p class="price">{{item.price}}</p></a>
-          <a href="/reportDetails" @click="getReportDetails(item._id)"><p class="tracing">可信溯源</p></a>
-          <a href="javascript:void(0)" @click="buy(item._id)"><p class="buy">一键购买</p></a>
+          <a href="/reportDetails" @click="getReportDetails(item.id)"><p class="price">{{item.price}}</p></a>
+          <a href="/reportDetails" @click="getReportDetails(item.id)"><p class="tracing">可信溯源</p></a>
+          <a href="javascript:void(0)" @click="buy(item.id)"><p class="buy">一键购买</p></a>
         </div>
+        <div class="bar"></div>
       </div>
     </div>
     <div class="clearfix paging">
@@ -159,10 +160,10 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          for (let v of res.data.data) {
+          for (let v of res.data) {
             v.generate_time = utils.formatDate(new Date(v.generate_time), "yyyy-MM-dd hh:mm:ss");
           }
-          this.reportList = res.data.data;
+          this.reportList = res.data;
           console.log(this.reportList)
         }).catch((err) => {
           console.log(err)
@@ -170,59 +171,13 @@
       },
       getReportDetails(val){
         this.$store.commit("changeReportDetails", _.find(this.reportList, function (o) {
-          return o._id === val
+          return o.id === val
         }));
       },
-      /*acquireCaseList() {
-        //获取维修案例列表
-        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-          axios({
-            method: "GET",
-            url: `${baseURL}/v1/asset/casus?page=${this.casePage}&limit=${this.caseLimit}&userid=${this.userId}`,
-            headers: {
-              "Content-Type": "application/json",
-            }
-          }).then((res) => {
-            for(let v of res.data.data){
-              v.sell_at=utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
-            }
-            this.total=res.data.count;
-            this.caseList = res.data.data;
-          }).catch((err) => {
-            console.log(err);
-          })
-        }else {
-          axios({
-            method: "GET",
-            url: `${baseURL}/v1/asset/casus?page=${this.casePage}&limit=${this.caseLimit}`,
-            headers: {
-              "Content-Type": "application/json",
-            }
-          }).then((res) => {
-            for(let v of res.data.data){
-              v.sell_at=utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
-            }
-            this.total=res.data.count;
-            this.caseList = res.data.data;
-          }).catch((err) => {
-            console.log(err);
-          })
-        }
-      },*/
       handleCurrentChange(val){
         this.reportPage=val;
         this.acquireReportList()
       },
-      /*getCaseDetails(val) {
-        this.$store.commit("changeCaseDetails",_.find(this.caseList,function (o) {
-          return o.id===val
-        }));
-      },
-      getCaseSource(val) {
-        this.$store.commit("changeCaseSource",_.find(this.caseList,function (o) {
-          return o.id===val
-        }));
-      },*/
       addCollection(){
         this.$store.commit("addCollection")
       },
@@ -232,7 +187,7 @@
       buy(val){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
           let buyInfoObj=_.find(this.reportList,function (o) {
-            return o._id===val
+            return o.id===val
           });
           this.apiKey=buyInfoObj.apikey;
           this.assetId=buyInfoObj.assetid;
@@ -369,7 +324,7 @@
           }
           .breakdown{
             background-image: url('./images/breakdown.png');
-            width 120px
+            width 140px
           }
           .equity {
             background-image: url('./images/Profit.png');
@@ -474,6 +429,17 @@
             text-align center
           }
         }
+        .bar{
+          width 10px
+          height 100%
+          background-color #e25d07
+          position absolute
+          top 0
+          right 0
+        }
+      }
+      .fr_report:hover{
+        box-shadow: 0px 0px 13px 1px rgba(218, 44, 89, 0.4);
       }
     }
   }

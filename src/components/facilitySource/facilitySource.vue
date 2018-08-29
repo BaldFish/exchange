@@ -1,12 +1,15 @@
 <template>
   <div class="facilitySource">
     <my-topSearch></my-topSearch>
+    <my-toggle :toggleIndex="toggleIndex"></my-toggle>
     <div class="site_box">
       <div class="site">
         <ul>
           <li>当前位置 ：</li>
-          <li><a href="/">首页></a></li>
-          <li><a href="/moreFacility">维修设备></a></li>
+          <li><a href="/">首页</a></li>
+          <li>&nbsp;>&nbsp;</li>
+          <li><a href="/moreFacility">维修设备</a></li>
+          <li>&nbsp;>&nbsp;</li>
           <li>{{facilityDetails.assetname}}</li>
         </ul>
       </div>
@@ -73,6 +76,7 @@
 <script>
   import axios from "axios";
   import myTopSearch from "../topSearch/topSearch"
+  import myToggle from "../toggle/toggle"
   import {baseURL, cardURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
   const querystring = require('querystring');
@@ -81,6 +85,7 @@
     name: "facilitySource",
     data() {
       return {
+        toggleIndex: 0,
         facilityDetails: {},
         facilitySourceTitle: "",
         facilitySource: [],
@@ -300,7 +305,8 @@
     watch: {},
     computed: {},
     components: {
-      myTopSearch
+      myTopSearch,
+      myToggle
     },
   }
 </script>
@@ -309,29 +315,22 @@
   .facilitySource {
     .site_box {
       width 100%
-      background-color #7d7d7d;
+      background-color: #e7e7e7;
       .site {
         width 1212px
-        height 40px
-        line-height 40px
+        height 34px
+        line-height 34px
         margin 0 auto
         ul {
           padding-left 8px
           font-size 0
-          color #ffffff
           li {
             vertical-align top
             display inline-block
-            font-size 20px
+            font-size 14px
             a{
-              color #ffffff
+              color: #666666;
             }
-          }
-          li:last-child {
-            width 500px
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
           }
         }
       }
