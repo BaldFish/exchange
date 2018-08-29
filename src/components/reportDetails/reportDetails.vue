@@ -1,29 +1,32 @@
 <template>
-  <div class="caseDetails">
+  <div class="reportDetails">
     <my-topSearch></my-topSearch>
+    <my-toggle :toggleIndex="toggleIndex"></my-toggle>
     <div class="site_box">
       <div class="site">
         <ul>
           <li>当前位置 ：</li>
-          <li><a href="/">首页></a></li>
-          <li><a href="#">诊断报告></a></li>
+          <li><a href="/">首页</a></li>
+          <li>&nbsp;>&nbsp;</li>
+          <li><a href="/moreReport">诊断报告</a></li>
+          <li>&nbsp;>&nbsp;</li>
           <li>诊断报告详情</li>
         </ul>
       </div>
     </div>
     <div class="details">
-      <h4>{{caseDetails.assetname}}</h4>
+      <h4>{{reportDetails.assetname}}</h4>
       <div class="attestation">
-        <span class="merchant" v-if="caseDetails.authtype==='认证商家'">{{caseDetails.authtype}}</span>
-        <span class="person" v-if="caseDetails.authtype==='认证个人'">{{caseDetails.authtype}}</span>
-        <span class="trust" v-if="caseDetails.creditlevel!=='未认证'">{{caseDetails.creditlevel}}</span>
+        <span class="merchant" v-if="reportDetails.authtype==='认证商家'">{{reportDetails.authtype}}</span>
+        <span class="person" v-if="reportDetails.authtype==='认证个人'">{{reportDetails.authtype}}</span>
+        <span class="trust" v-if="reportDetails.creditlevel!=='未认证'">{{reportDetails.creditlevel}}</span>
       </div>
-      <div :class="caseDetails.shopcart_id?'like':'dislike'" @click="toggleLike(caseDetails.id)">收藏</div>
+      <div :class="reportDetails.shopcart_id?'like':'dislike'" @click="toggleLike(reportDetails.id)">收藏</div>
       <div class="price">
         <span class="triangle_border_nw"></span>
         <label>此诊断报告价格：</label>
         <span class="money">{{666}}</span>
-        <a href="javascript:void(0)" @click="buy(caseDetails.id)"><p class="buy">一键购买</p></a>
+        <a href="javascript:void(0)" @click="buy(reportDetails.id)"><p class="buy">一键购买</p></a>
       </div>
       <div class="details-box">
         <div class="details-left">
@@ -113,15 +116,17 @@
 <script>
   import axios from "axios";
   import myTopSearch from "../topSearch/topSearch"
+  import myToggle from "../toggle/toggle"
   import {baseURL,cardURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
   const querystring = require('querystring');
 
   export default {
-    name: "caseDetails",
+    name: "reportDetails",
     data() {
       return {
-        caseDetails:{},
+        toggleIndex: 0,
+        reportDetails:{},
         userId:"",
         token:"",
         apiKey:"",
@@ -134,9 +139,9 @@
         this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
         this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
       }
-      this.apiKey=JSON.parse(sessionStorage.getItem("caseDetails")).apikey;
-      this.assetId=JSON.parse(sessionStorage.getItem("caseDetails")).assetid;
-      this.acquireCaseDetails()
+      this.apiKey=JSON.parse(sessionStorage.getItem("reportDetails")).apikey;
+      this.assetId=JSON.parse(sessionStorage.getItem("reportDetails")).assetid;
+      this.acquireReportDetails()
     },
     methods: {
       open() {
@@ -152,7 +157,7 @@
       },
       toggleLike(val){
         if(sessionStorage.getItem("loginInfo")){
-          let likeInfo=this.caseDetails;
+          let likeInfo=this.reportDetails;
           this.apiKey=likeInfo.apikey;
           this.assetId=likeInfo.assetid;
           this.id=likeInfo.shopcart_id;
@@ -190,7 +195,7 @@
           this.open()
         }
       },
-      acquireCaseDetails(){
+      acquireReportDetails(){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
           axios({
             method: "GET",
@@ -200,7 +205,7 @@
             }
           }).then((res) => {
             res.data.sell_at=utils.formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
-            this.caseDetails=res.data;
+            this.reportDetails=res.data;
           }).catch((err) => {
             console.log(err);
           })
@@ -213,14 +218,14 @@
             }
           }).then((res) => {
             res.data.sell_at=utils.formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
-            this.caseDetails=res.data;
+            this.reportDetails=res.data;
           }).catch((err) => {
             console.log(err);
           })
         }
       },
       getCaseSource() {
-        this.$store.commit("changeCaseSource",this.caseDetails);
+        this.$store.commit("changeCaseSource",this.reportDetails);
       },
       addCollection(){
         this.$store.commit("addCollection")
@@ -230,7 +235,7 @@
       },
       buy(val){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-          let buyInfoObj=this.caseDetails;
+          let buyInfoObj=this.reportDetails;
           this.apiKey=buyInfoObj.apikey;
           this.assetId=buyInfoObj.assetid;
           var data={};
@@ -261,38 +266,32 @@
     watch: {},
     computed: {},
     components: {
-      myTopSearch
+      myTopSearch,
+      myToggle
     },
   }
 </script>
 
 <style scoped lang="stylus">
-  .caseDetails {
+  .reportDetails {
     .site_box {
       width 100%
-      background-color #7d7d7d;
+      background-color: #e7e7e7;
       .site {
         width 1212px
-        height 40px
-        line-height 40px
+        height 34px
+        line-height 34px
         margin 0 auto
         ul {
           padding-left 8px
           font-size 0
-          color #ffffff
           li {
             vertical-align top
             display inline-block
-            font-size 20px
+            font-size 14px
             a{
-              color #ffffff
+              color: #666666;
             }
-          }
-          li:last-child{
-            width 500px
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
           }
         }
       }
