@@ -10,7 +10,7 @@
           <li>&nbsp;>&nbsp;</li>
           <li><a href="/moreReport">诊断报告</a></li>
           <li>&nbsp;>&nbsp;</li>
-          <li>诊断报告详情</li>
+          <li>{{reportDetails.assetname}}</li>
         </ul>
       </div>
     </div>
@@ -25,7 +25,7 @@
       <div class="price">
         <span class="triangle_border_nw"></span>
         <label>此诊断报告价格：</label>
-        <span class="money">{{666}}</span>
+        <span class="money">{{reportDetails.price}}</span>
         <a href="javascript:void(0)" @click="buy(reportDetails.id)"><p class="buy">一键购买</p></a>
       </div>
       <div class="details-box">
@@ -34,23 +34,23 @@
           <ul>
             <li>
               <label>资产所属人</label>
-              <span>：{{0X32345674212342345670}}</span>
+              <span>：{{reportDetails.assetowner}}</span>
             </li>
             <li>
               <label>诊断报告ID</label>
-              <span>：{{2934091234}}</span>
+              <span>：{{reportDetails.report_id}}</span>
             </li>
             <li>
               <label>数据来源</label>
-              <span>：{{66666}}</span>
+              <span>：{{reportDetails.resource}}</span>
             </li>
             <li>
               <label>故障码个数</label>
-              <span>：{{111}}</span>
+              <span>：{{reportDetails.fault_n}}</span>
             </li>
             <li>
               <label>VIN码</label>
-              <span>：{{2934091234}}</span>
+              <span>：{{reportDetails.vin}}</span>
             </li>
           </ul>
         </div>
@@ -59,19 +59,19 @@
           <ul>
             <li>
               <label>权益</label>
-              <span>：所有权</span>
+              <span>：{{reportDetails.sell_type}}</span>
             </li>
             <li>
               <label>诊断设备ID</label>
-              <span>：{{2782947982374}}</span>
+              <span>：{{reportDetails.pro_serial_no}}</span>
             </li>
             <li>
               <label>诊断用户ID</label>
-              <span>：{{2782947982374}}</span>
+              <span>：{{reportDetails.diagnostic_user_id}}</span>
             </li>
             <li>
               <label>报告生产时间</label>
-              <span>：{{2018}}</span>
+              <span>：{{reportDetails.generate_time}}</span>
             </li>
           </ul>
         </div>
@@ -81,29 +81,29 @@
         <span class="title-line"></span>
         <span class="title-text">可信溯源</span>
       </div>
-      <div class="transfer-record">
+      <div class="transfer-record" :class="{more:isShow}">
         <div class="transfer-title">
           <span class="transfer-dot"></span>
           <label>资产转让记录</label>
-          <span class="check-more">显示更多</span>
+          <span class="check-more" @click="reportSource != ''?isShow = true:isShow = false">显示更多</span>
         </div>
         <div class="transfer-container">
-          <ul>
+          <ul v-for="(item,index) of reportSource" :key="item.id">
             <li>
               <label>"交易发起方"</label>
-              <span>："0xedbff07577761936121e2ab82de3a2f3b7658b43",</span>
+              <span>："{{item.from}}",</span>
             </li>
             <li>
               <label>"交易接收方"</label>
-              <span>："0xc7fc89a3af34739f80aa4c37b9d53b342f3d4343",</span>
+              <span>："{{item.to}}",</span>
             </li>
             <li>
               <label>"交易价格"</label>
-              <span>：13,</span>
+              <span>：{{item.price}},</span>
             </li>
             <li>
               <label>"交易时间"</label>
-              <span>："2018-05-23 04:52:48"</span>
+              <span>："{{item.trans_at}}"</span>
             </li>
           </ul>
         </div>
@@ -126,12 +126,14 @@
     data() {
       return {
         toggleIndex: 0,
+        reportSource:[],
         reportDetails:{},
         userId:"",
         token:"",
         apiKey:"",
         assetId:"",
         id:"",
+        isShow:false
       }
     },
     mounted() {
@@ -141,6 +143,7 @@
       }
       this.apiKey=JSON.parse(sessionStorage.getItem("reportDetails")).apikey;
       this.assetId=JSON.parse(sessionStorage.getItem("reportDetails")).assetid;
+      this.acquireReportSource();
       this.acquireReportDetails()
     },
     methods: {
@@ -195,6 +198,26 @@
           this.open()
         }
       },
+      acquireReportSource(){
+        axios({
+          method: "GET",
+          url: `${cardURL}/v1/transed-asset/${this.assetId}/apikey/${this.apiKey}?page=0&limit=1000000`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          if (res.data.data != null) {
+            for(let v of res.data.data){
+              v.trans_at=utils.formatDate(new Date(v.trans_at), "yyyy-MM-dd hh:mm:ss");
+            }
+            this.reportSource = res.data.data
+          }else{
+            this.reportSource =[]
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
       acquireReportDetails(){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
           axios({
@@ -205,6 +228,7 @@
             }
           }).then((res) => {
             res.data.sell_at=utils.formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
+            res.data.generate_time=utils.formatDate(new Date(res.data.generate_time), "yyyy-MM-dd hh:mm:ss");
             this.reportDetails=res.data;
           }).catch((err) => {
             console.log(err);
@@ -218,14 +242,12 @@
             }
           }).then((res) => {
             res.data.sell_at=utils.formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
+            res.data.generate_time=utils.formatDate(new Date(res.data.generate_time), "yyyy-MM-dd hh:mm:ss");
             this.reportDetails=res.data;
           }).catch((err) => {
             console.log(err);
           })
         }
-      },
-      getCaseSource() {
-        this.$store.commit("changeCaseSource",this.reportDetails);
       },
       addCollection(){
         this.$store.commit("addCollection")
@@ -298,7 +320,7 @@
     }
     .details {
       width 1200px
-      padding-top 42px
+      padding-top 20px
       margin 0 auto
       position relative
       h4 {
@@ -462,13 +484,17 @@
       top: 3px;
     }
   }
+  .more{
+    height:auto !important
+  }
   .transfer-record{
     width: 1200px;
-    height: auto;
+    height: 145px;
     background-color: #ffffff;
     border-radius: 0 0 10px 10px;
     border: solid 1px #e5e5e5;
     margin-bottom 60px
+    overflow: hidden;
     .transfer-title{
       height:54px
       line-height 54px
@@ -498,14 +524,17 @@
       margin-left 30px
       line-height normal
       margin-bottom: 27px;
-      ul li{
-        label{
-          color: #333333
-          width: 84px;
-          display: inline-block;
-        }
-        span{
-          color: #666666;
+      ul{
+        margin-bottom 27px
+        li{
+          label{
+            color: #333333
+            width: 84px;
+            display: inline-block;
+          }
+          span{
+            color: #666666;
+          }
         }
       }
     }
