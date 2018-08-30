@@ -21,8 +21,8 @@
       </div>
     </div>
     <div class="favorite" @click="turnFavorite">
-        <span class="s_text">收藏夹</span>
-        <span class="s_num">{{this.$store.state.favoriteCount}}</span>
+      <span class="s_text">收藏夹</span>
+      <span class="s_num">{{this.$store.state.favoriteCount}}</span>
     </div>
   </div>
 </template>
@@ -30,6 +30,7 @@
 <script>
   import axios from "axios";
   import {baseURL, cardURL} from '@/common/js/public.js';
+  
   export default {
     name: "topSearch",
     data() {
@@ -48,23 +49,23 @@
         value: '1',
         input: '',
         userId: '',
-        token:"",
+        token: "",
       }
     },
     mounted() {
-      if(sessionStorage.getItem("loginInfo")){
+      if (sessionStorage.getItem("loginInfo")) {
         this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
         this.acquireFavoriteCount();
       }
     },
     computed: {
-      favoriteCount:function(){
+      favoriteCount: function () {
         return this.$store.state.favoriteCount
       }
     },
     watch: {
-      favoriteCount:function () {
+      favoriteCount: function () {
         this.acquireFavoriteCount();
       }
     },
@@ -80,7 +81,7 @@
         }).catch(() => {
         });
       },
-      acquireFavoriteCount(){
+      acquireFavoriteCount() {
         axios({
           method: "GET",
           url: `${baseURL}/v1/shopcart/count/${this.userId}`,
@@ -88,36 +89,36 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          this.$store.state.favoriteCount=res.data;
+          this.$store.state.favoriteCount = res.data;
         }).catch((err) => {
           console.log(err);
         })
       },
-      clearInput(){
-        this.input="";
+      clearInput() {
+        this.input = "";
       },
-      turnFavorite(){
-        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+      turnFavorite() {
+        if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
           this.$router.push("/favorite")
-        }else{
+        } else {
           this.open()
         }
       },
-      search(val,int){
-        let searchObj={};
-        searchObj.value=this.value;
-        searchObj.input=this.input;
+      search(val, int) {
+        let searchObj = {};
+        searchObj.value = this.value;
+        searchObj.input = this.input;
         this.getSearch(searchObj);
-        if(this.value==='1'){
+        if (this.value === '1') {
           this.$router.push('/searchCase')
-        }else if(this.value==='2'){
+        } else if (this.value === '2') {
           this.$router.push('/searchFacility')
-        }else if(this.value==='3'){
+        } else if (this.value === '3') {
           this.$router.push('/searchReport')
         }
       },
-      getSearch(searchObj){
-        this.$store.commit("changeSearch",searchObj);
+      getSearch(searchObj) {
+        this.$store.commit("changeSearch", searchObj);
       },
     },
     components: {},
@@ -140,7 +141,7 @@
       margin-top 30px
       margin-left 8px
       margin-right 40px
-      a{
+      a {
         display inline-block
         color #d92000
         font-size 10px
@@ -150,7 +151,7 @@
         width 226px
         height 58px
         position relative
-        p{
+        p {
           position absolute
           left 68px
           bottom 0
@@ -169,7 +170,7 @@
         line-height 34px
         border: 1px solid #c6351e;
         font-size 0
-        .line1{
+        .line1 {
           display inline-block
           width 1px
           height 20px
@@ -177,7 +178,7 @@
           background-color #bfbfbf;
           vertical-align top
         }
-        .button{
+        .button {
           display inline-block
           width 70px
           height 32px
@@ -193,17 +194,17 @@
       .keyword {
         color #acacac
         font-size 0
-        li{
+        li {
           display inline-block
           font-size 14px
           margin-right 10px
         }
-        li:first-child{
+        li:first-child {
           margin-right 0
         }
       }
     }
-    .favorite{
+    .favorite {
       cursor pointer
       box-sizing border-box
       width 202px
@@ -220,11 +221,11 @@
       color #c6351e
       font-size 0
       position relative
-      .s_text{
+      .s_text {
         display inline-block
         font-size 14px
       }
-      .s_num{
+      .s_num {
         width 20px
         height 20px
         line-height 20px
@@ -242,11 +243,11 @@
   }
 </style>
 <style lang="stylus">
-  .el-select.my_select{
+  .el-select.my_select {
     width 131px
     vertical-align top
     .el-input--suffix .el-input__inner {
-      border-radius:0
+      border-radius: 0
       color #333333
       border: none;
       height: 32px;
@@ -256,15 +257,16 @@
       padding 0
       padding-left 15px
     }
-    .el-input .el-select__caret{
+    .el-input .el-select__caret {
       color #333333
       vertical-align middle
-      }
+    }
   }
-  .el-input.my_input{
+  
+  .el-input.my_input {
     display inline-block
     width 476px
-    .el-input__inner{
+    .el-input__inner {
       border: none;
       height: 32px;
       line-height: 32px;

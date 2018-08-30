@@ -14,7 +14,7 @@
     </div>
     <div class="case_list">
       <div class="fr_case" v-for="(item,index) of searchCaseList" :key="item.id">
-        <h4><a href="/caseDetails" @click="getCaseDetails(item.id)"v-html="item.assetname"></a></h4>
+        <h4><a href="/caseDetails" @click="getCaseDetails(item.id)" v-html="item.assetname"></a></h4>
         <div class="attestation">
           <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
           <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
@@ -61,10 +61,11 @@
   import "../../common/stylus/paging.styl";
   import axios from "axios";
   import _ from "lodash";
-  import {baseURL,cardURL} from '@/common/js/public.js';
+  import {baseURL, cardURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
   import myTopSearch from "../topSearch/topSearch"
   import myToggle from "../toggle/toggle"
+  
   const querystring = require('querystring');
   export default {
     name: "searchCase",
@@ -75,30 +76,30 @@
         caseLimit: 10,
         total: 10,
         searchCaseList: [],
-        userId:"",
-        token:"",
-        apiKey:"",
-        assetId:"",
-        id:"",
+        userId: "",
+        token: "",
+        apiKey: "",
+        assetId: "",
+        id: "",
       }
     },
     mounted() {
-      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-        this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+        this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
       }
       this.acquireSearchCaseList();
     },
     computed: {
-      searchValue:function () {
+      searchValue: function () {
         return this.$store.state.searchValue
       },
-      searchInput:function () {
+      searchInput: function () {
         return this.$store.state.searchInput
       }
     },
     watch: {
-      searchInput:function () {
+      searchInput: function () {
         this.acquireSearchCaseList();
       }
     },
@@ -114,51 +115,51 @@
         }).catch(() => {
         });
       },
-      toggleLike(val){
-        if(sessionStorage.getItem("loginInfo")){
-          let likeInfo=_.find(this.searchCaseList,function (o) {
-            return o.id===val
+      toggleLike(val) {
+        if (sessionStorage.getItem("loginInfo")) {
+          let likeInfo = _.find(this.searchCaseList, function (o) {
+            return o.id === val
           });
-          this.apiKey=likeInfo.apikey;
-          this.assetId=likeInfo.assetid;
-          this.id=likeInfo.shopcart_id;
-          if(likeInfo.shopcart_id===""){
+          this.apiKey = likeInfo.apikey;
+          this.assetId = likeInfo.assetid;
+          this.id = likeInfo.shopcart_id;
+          if (likeInfo.shopcart_id === "") {
             axios({
               method: "POST",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
-                "X-Access-Token":this.token
+                "X-Access-Token": this.token
               }
             }).then((res) => {
-              this.id=res.data._id;
-              likeInfo.shopcart_id=this.id;
+              this.id = res.data._id;
+              likeInfo.shopcart_id = this.id;
               this.addCollection()
             }).catch((err) => {
               console.log(err);
             });
-          }else if(likeInfo.shopcart_id!==""){
+          } else if (likeInfo.shopcart_id !== "") {
             axios({
               method: "DELETE",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
-                "X-Access-Token":this.token
+                "X-Access-Token": this.token
               }
             }).then((res) => {
-              likeInfo.shopcart_id="";
+              likeInfo.shopcart_id = "";
               this.subtractCollection()
             }).catch((err) => {
               console.log(err);
             });
           }
-        }else {
+        } else {
           this.open()
         }
       },
       //获取搜索案例列表
       acquireSearchCaseList() {
-        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+        if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
           axios({
             method: "GET",
             url: `${baseURL}/v1/asset/casus/search?key=${this.searchInput}&page=${this.casePage}&limit=${this.caseLimit}&userid=${this.userId}`,
@@ -166,17 +167,17 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
-            this.total=res.data.count;
-            for(let v of res.data.data){
-              v.sell_at=utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
-              v.assetname=utils.searchHighlight(v.assetname,this.searchInput,"color","#c6351e");
-              v.assetcontent=utils.searchHighlight(v.assetcontent,this.searchInput,"color","#c6351e");
+            this.total = res.data.count;
+            for (let v of res.data.data) {
+              v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+              v.assetname = utils.searchHighlight(v.assetname, this.searchInput, "color", "#c6351e");
+              v.assetcontent = utils.searchHighlight(v.assetcontent, this.searchInput, "color", "#c6351e");
             }
             this.searchCaseList = res.data.data;
           }).catch((err) => {
             console.log(err);
           })
-        }else{
+        } else {
           axios({
             method: "GET",
             url: `${baseURL}/v1/asset/casus/search?key=${this.searchInput}&page=${this.casePage}&limit=${this.caseLimit}`,
@@ -184,11 +185,11 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
-            this.total=res.data.count;
-            for(let v of res.data.data){
-              v.sell_at=utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
-              v.assetname=utils.searchHighlight(v.assetname,this.searchInput,"color","#c6351e");
-              v.assetcontent=utils.searchHighlight(v.assetcontent,this.searchInput,"color","#c6351e");
+            this.total = res.data.count;
+            for (let v of res.data.data) {
+              v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+              v.assetname = utils.searchHighlight(v.assetname, this.searchInput, "color", "#c6351e");
+              v.assetcontent = utils.searchHighlight(v.assetcontent, this.searchInput, "color", "#c6351e");
             }
             this.searchCaseList = res.data.data;
           }).catch((err) => {
@@ -196,56 +197,56 @@
           })
         }
       },
-      handleCurrentChange(val){
-        this.casePage=val;
+      handleCurrentChange(val) {
+        this.casePage = val;
         this.acquireSearchCaseList()
       },
       getCaseDetails(val) {
-        this.$store.commit("changeCaseDetails",_.find(this.searchCaseList,function (o) {
-          return o.id===val
+        this.$store.commit("changeCaseDetails", _.find(this.searchCaseList, function (o) {
+          return o.id === val
         }));
       },
       getCaseSource(val) {
-        this.$store.commit("changeCaseSource",_.find(this.searchCaseList,function (o) {
-          return o.id===val
+        this.$store.commit("changeCaseSource", _.find(this.searchCaseList, function (o) {
+          return o.id === val
         }));
       },
-      addCollection(){
+      addCollection() {
         this.$store.commit("addCollection")
       },
-      subtractCollection(){
+      subtractCollection() {
         this.$store.commit("subtractCollection")
       },
-      buy(val){
-        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-          let buyInfoObj=_.find(this.caseList,function (o) {
-            return o.id===val
+      buy(val) {
+        if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+          let buyInfoObj = _.find(this.caseList, function (o) {
+            return o.id === val
           });
-          this.apiKey=buyInfoObj.apikey;
-          this.assetId=buyInfoObj.assetid;
-          var data={};
-          data.nums=1;
+          this.apiKey = buyInfoObj.apikey;
+          this.assetId = buyInfoObj.assetid;
+          var data = {};
+          data.nums = 1;
           axios({
             method: "POST",
             url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              "X-Access-Token":this.token,
+              "X-Access-Token": this.token,
             },
-            data:querystring.stringify(data),
+            data: querystring.stringify(data),
           }).then((res) => {
-            buyInfoObj=res.data;
+            buyInfoObj = res.data;
             this.getBuy(buyInfoObj);
             this.$router.push("/checkOrder")
           }).catch((err) => {
             console.log(err);
           })
-        }else{
+        } else {
           this.open()
         }
       },
-      getBuy(val){
-        this.$store.commit("changeBuy",val);
+      getBuy(val) {
+        this.$store.commit("changeBuy", val);
       }
     },
     components: {
@@ -272,7 +273,7 @@
             vertical-align top
             display inline-block
             font-size 14px
-            a{
+            a {
               color: #666666;
             }
           }
@@ -352,8 +353,8 @@
             background-image: url('./images/Profit.png');
           }
         }
-        .belong{
-          a{
+        .belong {
+          a {
             display block
             line-height 22px
             padding-left 26px
@@ -362,7 +363,7 @@
             background-position: top left;
             color #666666;
             font-size 14px;
-            span{
+            span {
               color #222222;
               font-size 16px
             }
@@ -451,6 +452,9 @@
             text-align center
           }
         }
+      }
+      .fr_case:hover{
+        box-shadow: 2px 1px 17px 1px rgba(98, 98, 98, 0.28);
       }
     }
   }

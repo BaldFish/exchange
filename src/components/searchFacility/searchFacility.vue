@@ -55,7 +55,7 @@
   import "../../common/stylus/paging.styl";
   import axios from "axios";
   import _ from "lodash";
-  import {baseURL,cardURL} from '@/common/js/public.js';
+  import {baseURL, cardURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
   import myTopSearch from "../topSearch/topSearch"
   import myToggle from "../toggle/toggle"
@@ -67,34 +67,34 @@
         toggleIndex: 0,
         facilityPage: 1,
         facilityLimit: 12,
-        total:12,
+        total: 12,
         searchFacilityList: [],
-        userId:"",
-        token:"",
-        apiKey:"",
-        assetId:"",
-        id:"",
+        userId: "",
+        token: "",
+        apiKey: "",
+        assetId: "",
+        id: "",
       }
     },
     mounted() {
       this.acquireSearchFacilityList();
     },
     computed: {
-      searchValue:function () {
+      searchValue: function () {
         return this.$store.state.searchValue
       },
-      searchInput:function () {
+      searchInput: function () {
         return this.$store.state.searchInput
       }
     },
     watch: {
-      searchInput:function () {
+      searchInput: function () {
         this.acquireSearchFacilityList();
       }
     },
     methods: {
       acquireSearchFacilityList() {
-        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+        if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
           axios({
             method: "GET",
             url: `${baseURL}/v1/asset/device/search?key=${this.searchInput}&page=${this.facilityPage}&limit=${this.facilityLimit}&userid=${this.userId}`,
@@ -102,17 +102,17 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
-            this.total=res.data.count;
-            for(let v of res.data.data){
-              v.sell_at=utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
-              v.assetname=utils.searchHighlight(v.assetname,this.searchInput,"color","#c6351e");
-              v.assetcontent=utils.searchHighlight(v.assetcontent,this.searchInput,"color","#c6351e");
+            this.total = res.data.count;
+            for (let v of res.data.data) {
+              v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+              v.assetname = utils.searchHighlight(v.assetname, this.searchInput, "color", "#c6351e");
+              v.assetcontent = utils.searchHighlight(v.assetcontent, this.searchInput, "color", "#c6351e");
             }
             this.searchFacilityList = res.data.data
           }).catch((err) => {
             console.log(err)
           })
-        }else{
+        } else {
           axios({
             method: "GET",
             url: `${baseURL}/v1/asset/device/search?key=${this.facilityInput}&page=${this.facilityPage}&limit=${this.facilityLimit}`,
@@ -120,11 +120,11 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
-            this.total=res.data.count;
-            for(let v of res.data.data){
-              v.sell_at=utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
-              v.assetname=utils.searchHighlight(v.assetname,this.searchInput,"color","#c6351e");
-              v.assetcontent=utils.searchHighlight(v.assetcontent,this.searchInput,"color","#c6351e");
+            this.total = res.data.count;
+            for (let v of res.data.data) {
+              v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+              v.assetname = utils.searchHighlight(v.assetname, this.searchInput, "color", "#c6351e");
+              v.assetcontent = utils.searchHighlight(v.assetcontent, this.searchInput, "color", "#c6351e");
             }
             this.searchFacilityList = res.data.data
           }).catch((err) => {
@@ -133,18 +133,18 @@
         }
         
       },
-      handleCurrentChange(val){
-        this.facilityPage=val;
+      handleCurrentChange(val) {
+        this.facilityPage = val;
         this.acquireSearchFacilityList()
       },
       getFacilityDetails(val) {
-        this.$store.commit("changeFacilityDetails",_.find(this.searchFacilityList,function (o) {
-          return o.id===val
+        this.$store.commit("changeFacilityDetails", _.find(this.searchFacilityList, function (o) {
+          return o.id === val
         }));
       },
       getFacilitySource(val) {
-        this.$store.commit("changeFacilitySource",_.find(this.searchFacilityList,function (o) {
-          return o.id===val
+        this.$store.commit("changeFacilitySource", _.find(this.searchFacilityList, function (o) {
+          return o.id === val
         }));
       },
     },
@@ -172,7 +172,7 @@
             vertical-align top
             display inline-block
             font-size 14px
-            a{
+            a {
               color: #666666;
             }
           }
@@ -201,13 +201,13 @@
           -webkit-line-clamp: 2;
           overflow: hidden;
         }
-        .belong{
-          a{
+        .belong {
+          a {
             width 210px
             display block
-            text-overflow:ellipsis;
-            white-space:nowrap;
-            overflow:hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
             line-height 22px
             padding-left 26px
             background-image: url('./images/person.png');
@@ -215,7 +215,7 @@
             background-position: top left;
             color #666666;
             font-size 14px;
-            span{
+            span {
               color #222222;
               font-size 16px
             }
@@ -320,6 +320,9 @@
       }
       .facility_info:nth-child(4n) {
         margin-right 0
+      }
+      .facility_info:hover {
+        box-shadow: -1px 1px 25px 2px rgba(98, 98, 98, 0.19);
       }
     }
   }

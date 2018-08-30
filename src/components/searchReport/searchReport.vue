@@ -94,7 +94,7 @@
     data() {
       return {
         territoryInput: [],
-        dateInput: "",
+        dateInput: ["", ""],
         vinInput: "",
         pca: pca,
         toggleIndex: 0,
@@ -116,7 +116,7 @@
       }
       this.acquireSearchReportList();
     },
-    /*computed: {
+    computed: {
       searchValue: function () {
         return this.$store.state.searchValue
       },
@@ -128,9 +128,9 @@
       searchInput: function () {
         this.acquireSearchReportList();
       }
-    },*/
+    },
     methods: {
-      /*acquireSearchReportList() {
+      acquireSearchReportList() {
         axios({
           method: "GET",
           url:
@@ -151,19 +151,19 @@
         }).catch((err) => {
           console.log(err);
         })
-      },*/
+      },
       getReportDetails(val) {
-        this.$store.commit("changeReportDetails", _.find(this.reportList, function (o) {
+        this.$store.commit("changeReportDetails", _.find(this.searchReportList, function (o) {
           return o.id === val
         }));
       },
       handleCurrentChange(val) {
         this.reportPage = val;
-        this.acquireReportList()
+        this.acquireSearchReportList()
       },
       buy(val) {
         if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
-          let buyInfoObj = _.find(this.reportList, function (o) {
+          let buyInfoObj = _.find(this.searchReportList, function (o) {
             return o.id === val
           });
           this.apiKey = buyInfoObj.apikey;
@@ -192,23 +192,6 @@
       getBuy(val) {
         this.$store.commit("changeBuy", val);
       },
-      acquireReportList() {
-        axios({
-          method: "GET",
-          url: `${baseURL}/v1/asset/diagnoseReport?page=${this.reportPage}&limit=${this.reportLimit}`,
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }).then((res) => {
-          for (let v of res.data) {
-            v.generate_time = utils.formatDate(new Date(v.generate_time), "yyyy-MM-dd hh:mm:ss");
-          }
-          this.reportList = res.data;
-          console.log(this.reportList)
-        }).catch((err) => {
-          console.log(err)
-        })
-      },
     },
   }
 
@@ -216,6 +199,7 @@
 
 <style scoped lang="stylus">
   .searchReport {
+    
     .site_box {
       width 100%
       background-color: #e7e7e7;
@@ -440,29 +424,6 @@
     }
   }
 </style>
-<!--<style lang="stylus">
-  search_type{
-    font-size 0
-    span{
-      display inline-block
-      font-size 14px
-    }
-    .type_territory{
-      .territory_input.area-select-wrap{
-        display inline-block
-      }
-      font-size 12px
-    }
-    .type_date{
-      display block
-      font-size 12px
-    }
-    .type_vin{
-      display inline-block
-      font-size 12px
-    }
-  }
-</style>-->
 <style lang="stylus">
   .search_type {
     font-size 0
