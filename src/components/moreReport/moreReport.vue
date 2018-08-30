@@ -248,6 +248,7 @@
       margin 0 auto
       padding-top 30px
       .fr_report {
+        margin 0 auto
         margin-bottom 18px
         position relative
         box-sizing border-box
@@ -267,7 +268,7 @@
           }
         }
         .attestation {
-          width 850px
+          width 800px
           height 74px
           font-size 0px
           span {

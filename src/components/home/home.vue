@@ -21,7 +21,7 @@
           <a href="/moreReport">查看更多</a>
         </div>
         <div class="fr fr_report" v-for="(item,index) of reportList" :key="item.id" >
-          <h4><a href="/reportDetails" @click="getReportDetails(item._id)">{{item.assetname}}</a></h4>
+          <h4><a href="/reportDetails" @click="getReportDetails(item.id)">{{item.assetname}}</a></h4>
           <div class="attestation">
             <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
             <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
@@ -355,6 +355,7 @@
           background-image: url('./images/04.png');
         }
         .fr_report {
+          margin 0 auto
           margin-bottom 18px
           position relative
           box-sizing border-box
@@ -373,7 +374,8 @@
             }
           }
           .attestation {
-            width 850px
+            box-sizing border-box
+            width 800px
             height 74px
             font-size 0px
             span {
@@ -683,7 +685,7 @@
             }
           }
           .attestation {
-            width 850px
+            width 800px
             height 74px
             font-size 0px
             span {

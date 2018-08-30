@@ -5,12 +5,18 @@ import App from './App';
 import router from './router';
 import Vuex from 'vuex';
 import $ from 'jquery';
-
 Vue.use(Vuex);
+
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-
 Vue.use(ElementUI);
+
+//引入省、市、区三级联动
+import { pca, pcaa } from 'area-data';
+import 'vue-area-linkage/dist/index.css';
+import VueAreaLinkage from 'vue-area-linkage';
+Vue.use(VueAreaLinkage);
+
 Vue.config.productionTip = false;
 
 import '@/common/js/validate.js'
