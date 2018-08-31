@@ -326,6 +326,8 @@
             this.getFacilityDetails(assetId);
             //this.$router.push("/facilityDetails");
             window.open("/facilityDetails","_blank");
+          }else if(apiKey === "5b18a5b9cff7cb000194f2f7"){
+            window.open("/reportDetails", "_blank");
           }
         }else{
           this.getPropertyDetails(packageId);
