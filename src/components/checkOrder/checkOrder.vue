@@ -243,7 +243,6 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          console.log(res.data);
           if (res.data.orderStatus === 0) {
             clearTimeout(this.timer);
             return

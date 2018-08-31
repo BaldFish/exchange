@@ -181,7 +181,7 @@
           let buyInfoObj=this.caseDetails;
           this.apiKey=buyInfoObj.apikey;
           this.assetId=buyInfoObj.assetid;
-          var data={};
+          let data={};
           data.nums=1;
           axios({
             method: "POST",

@@ -314,7 +314,7 @@
           let buyInfoObj=this.facilityDetails;
           this.apiKey=buyInfoObj.apikey;
           this.assetId=buyInfoObj.assetid;
-          var data={};
+          let data={};
           if(this.facilityDetails.sell_type==="收益权"){
             if(this.num===0){
               this.openLimited();
