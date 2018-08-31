@@ -138,6 +138,17 @@
       }
     },
     methods: {
+      open() {
+        this.$confirm('此操作需要先登录, 是否登录?', '提示', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          this.$router.push("/login")
+        }).catch(() => {
+        });
+      },
       acquireSearchReportList() {
         axios({
           method: "GET",
@@ -148,9 +159,9 @@
           }
         }).then((res) => {
           if (res.data.data === null) {
+            this.searchReportList=[]
             return
           } else {
-            console.log(res)
             this.total = res.data.count;
             for (let v of res.data.data) {
               v.generate_time = utils.formatDate(new Date(v.generate_time), "yyyy-MM-dd hh:mm:ss");
@@ -430,8 +441,8 @@
         }
       }
     }
-    .fr_report:hover {
-      box-shadow: 0px 0px 9px 1px rgba(0, 0, 0, 0.34);
+    .fr_report:hover{
+      box-shadow: 0px 0px 13px 1px rgba(218, 44, 89, 0.4);
     }
   }
 </style>
