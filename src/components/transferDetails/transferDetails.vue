@@ -267,7 +267,7 @@
     },
     mounted() {
       //获取资产包id
-      this.id = JSON.parse(sessionStorage.getItem("propertyDetails")).packageId;
+      this.id = JSON.parse(sessionStorage.getItem("propertyDetails")).id;
       //商品标题&进度条包详情信息
       this.getPropertyDetails();
       //商品图片、商品列表

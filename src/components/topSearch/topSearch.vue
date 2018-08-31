@@ -16,7 +16,7 @@
           </el-option>
         </el-select>
         <div class="line1"></div>
-        <el-input class="my_input" v-model="input" placeholder="请输入您要搜索的内容"></el-input>
+        <el-input class="my_input" v-model="input" placeholder="请输入您要搜索的内容" @change="search"></el-input>
         <div class="button" @click="search"></div>
       </div>
     </div>

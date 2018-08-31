@@ -16,7 +16,7 @@
     </div>
     <div class="tabs_content" v-show="nowIndex===0">
       <ul class="content">
-        <li v-for="item of propertyList" :key="item.packageId" @click="getPropertyDetails(item.packageId)">
+        <li v-for="item of propertyList" :key="item.packageId" @click="getPropertyDetails(item.id)">
           <div class="content_img">
             <img :src="item.url" alt="">
           </div>
@@ -100,7 +100,6 @@
           }
           this.propertyList = res.data.data;
           this.propertySum = res.data.count
-          console.log(this.propertyList)
         }).catch((err) => {
         })
       },

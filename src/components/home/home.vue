@@ -224,7 +224,6 @@
             v.generate_time = utils.formatDate(new Date(v.generate_time), "yyyy-MM-dd hh:mm:ss");
           }
           this.reportList = res.data;
-          console.log(this.reportList)
         }).catch((err) => {
           console.log(err)
         })
@@ -242,7 +241,6 @@
             v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
           }
           this.facilityList = res.data.data
-          console.log(this.facilityList)
         }).catch((err) => {
         })
       },
@@ -259,7 +257,6 @@
             v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
           }
           this.caseList = res.data.data;
-          console.log(this.caseList)
         }).catch((err) => {
           console.log(err)
         })

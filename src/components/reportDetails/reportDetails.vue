@@ -297,6 +297,7 @@
 <style scoped lang="stylus">
   .reportDetails {
     .site_box {
+      margin 0 auto
       width 100%
       background-color: #e7e7e7;
       .site {

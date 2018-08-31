@@ -208,7 +208,7 @@
           });
           this.apiKey=buyInfoObj.apikey;
           this.assetId=buyInfoObj.assetid;
-          var data={};
+          let data={};
           data.nums=1;
           axios({
             method: "POST",
@@ -243,6 +243,7 @@
 <style scoped lang="stylus">
   .moreCase {
     .site_box {
+      margin 0 auto
       width 100%
       background-color: #e7e7e7;
       .site {

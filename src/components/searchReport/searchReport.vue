@@ -15,22 +15,22 @@
     <div class="search_type">
       <div class="type_territory">
         <span class="type_span">省市：</span>
-        <area-select class="territory_input" v-model="territoryInput" :data="pca" type="text" @change=""></area-select>
+        <area-select class="territory_input" v-model="territoryInput" :data="pca" type="text" @change="acquireSearchReportList"></area-select>
       </div>
       <div class="type_date">
         <span class="type_span">时间：</span>
         <el-date-picker class="date_input" v-model="dateInput" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
-                        value-format="yyyy-MM-dd" size="small" @change="">
+                        format="yyyy-MM-dd" default-value="2018-01-01" size="small" @change="acquireSearchReportList">
         </el-date-picker>
       </div>
       <div class="type_vin">
         <span class="type_span">VIN码：</span>
-        <el-input class="vin_input" v-model="vinInput" placeholder="请输入VIN" size="small" style="width:334px"></el-input>
+        <el-input class="vin_input" v-model="vinInput" placeholder="请输入VIN" size="small" style="width:334px" @change="acquireSearchReportList"></el-input>
       </div>
     </div>
     <div class="report_list">
       <div class="fr_report" v-for="(item,index) of searchReportList" :key="item.id">
-        <h4><a href="/reportDetails" @click="getReportDetails(item.id)">{{item.assetname}}</a></h4>
+        <h4><a href="/reportDetails" @click="getReportDetails(item.id)" v-html="item.assetname"></a></h4>
         <div class="attestation">
           <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
           <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
@@ -81,9 +81,10 @@
   import myTopSearch from "../topSearch/topSearch";
   import myToggle from "../toggle/toggle"
   import utils from "@/common/js/utils.js";
+  import {pca, pcaa} from 'area-data';
   
   const querystring = require('querystring');
-  import {pca, pcaa} from 'area-data';
+  
   
   export default {
     name: "searchReport",
@@ -122,6 +123,13 @@
       },
       searchInput: function () {
         return this.$store.state.searchInput
+      },
+      newTerritoryInput:function () {
+        if (this.territoryInput.length !== 0) {
+          return this.territoryInput
+        }else{
+          return ["",""]
+        }
       }
     },
     watch: {
@@ -134,20 +142,23 @@
         axios({
           method: "GET",
           url:
-            `${baseURL}/v1/asset/diagnoseReport/search?key=${this.searchInput}&page=${this.reportPage}&limit=${this.reportLimit}&province=${this.territoryInput[0]}&city=${this.territoryInput[1]}&vin=${this.vinInput}&start_time=${this.dateInput[0]}&end_time=${this.dateInput[1]}`,
+            `${baseURL}/v1/asset/diagnoseReport/search?key=${this.searchInput}&page=${this.reportPage}&limit=${this.reportLimit}&province=${this.newTerritoryInput[0]}&city=${this.newTerritoryInput[1]}&vin=${this.vinInput}&start_time=${this.dateInput[0]}&end_time=${this.dateInput[1]}`,
           headers: {
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          console.log(res)
-          this.total = res.data.count;
-          for (let v of res.data.data) {
-            v.generate_time = utils.formatDate(new Date(v.generate_time), "yyyy-MM-dd hh:mm:ss");
-            v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
-            v.assetname = utils.searchHighlight(v.assetname, this.searchInput, "color", "#c6351e");
-            v.assetcontent = utils.searchHighlight(v.assetcontent, this.searchInput, "color", "#c6351e");
+          if (res.data.data === null) {
+            return
+          } else {
+            console.log(res)
+            this.total = res.data.count;
+            for (let v of res.data.data) {
+              v.generate_time = utils.formatDate(new Date(v.generate_time), "yyyy-MM-dd hh:mm:ss");
+              v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+              v.assetname = utils.searchHighlight(v.assetname, this.searchInput, "color", "#c6351e");
+            }
+            this.searchReportList = res.data.data;
           }
-          this.searchReportList = res.data.data;
         }).catch((err) => {
           console.log(err);
         })
@@ -168,7 +179,7 @@
           });
           this.apiKey = buyInfoObj.apikey;
           this.assetId = buyInfoObj.assetid;
-          var data = {};
+          let data = {};
           data.nums = 1;
           axios({
             method: "POST",
@@ -199,8 +210,8 @@
 
 <style scoped lang="stylus">
   .searchReport {
-    
     .site_box {
+      margin 0 auto
       width 100%
       background-color: #e7e7e7;
       .site {

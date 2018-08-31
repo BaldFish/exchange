@@ -144,6 +144,7 @@
 <style scoped lang="stylus">
   .moreFacility {
     .site_box {
+      margin 0 auto
       width 100%
       background-color: #e7e7e7;
       .site {
