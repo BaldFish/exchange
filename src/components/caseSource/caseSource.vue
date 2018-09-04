@@ -45,8 +45,6 @@
 </template>
 
 <script>
-  import myTopSearch from "../topSearch/topSearch"
-  import myToggle from "../toggle/toggle"
   import {baseURL, cardURL} from '@/common/js/public.js';
   import axios from "axios";
   import utils from "@/common/js/utils.js";
@@ -54,6 +52,7 @@
   
   export default {
     name: "trustedSource",
+    components: {},
     data() {
       return {
         toggleIndex: 0,
@@ -76,6 +75,8 @@
       this.acquireCaseSource();
       this.acquireCaseDetails();
     },
+    watch: {},
+    computed: {},
     methods: {
       open() {
         this.$confirm('此操作需要先登录, 是否登录?', '提示', {
@@ -215,12 +216,6 @@
       getBuy(val){
         this.$store.commit("changeBuy",val);
       }
-    },
-    watch: {},
-    computed: {},
-    components: {
-      myTopSearch,
-      myToggle
     },
   }
 </script>

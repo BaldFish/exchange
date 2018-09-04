@@ -1,7 +1,5 @@
 <template>
   <div class="moreReport">
-    <my-topSearch></my-topSearch>
-    <my-toggle :toggleIndex="toggleIndex"></my-toggle>
     <div class="site_box">
       <div class="site">
         <ul>
@@ -63,20 +61,14 @@
   import axios from "axios";
   import _ from "lodash";
   import {baseURL,cardURL} from '@/common/js/public.js';
-  import myTopSearch from "../topSearch/topSearch";
-  import myToggle from "../toggle/toggle"
   import utils from "@/common/js/utils.js";
   const querystring = require('querystring');
   
   export default {
     name: "moreReport",
-    components: {
-      myTopSearch,
-      myToggle,
-    },
+    components: {},
     data() {
       return {
-        toggleIndex: 0,
         reportPage:1,
         reportLimit:10,
         total: 10,

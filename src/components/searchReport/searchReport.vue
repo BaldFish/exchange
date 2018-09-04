@@ -1,7 +1,5 @@
 <template>
   <div class="searchReport">
-    <my-topSearch></my-topSearch>
-    <my-toggle :toggleIndex="toggleIndex"></my-toggle>
     <div class="site_box">
       <div class="site">
         <ul>
@@ -78,8 +76,6 @@
   import axios from "axios";
   import _ from "lodash";
   import {baseURL, cardURL} from '@/common/js/public.js';
-  import myTopSearch from "../topSearch/topSearch";
-  import myToggle from "../toggle/toggle"
   import utils from "@/common/js/utils.js";
   import {pca, pcaa} from 'area-data';
   
@@ -88,17 +84,13 @@
   
   export default {
     name: "searchReport",
-    components: {
-      myTopSearch,
-      myToggle
-    },
+    components: {},
     data() {
       return {
         territoryInput: [],
         dateInput: ["", ""],
         vinInput: "",
         pca: pca,
-        toggleIndex: 0,
         reportPage: 1,
         reportLimit: 10,
         total: 10,

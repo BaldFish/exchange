@@ -1,6 +1,5 @@
 <template>
     <div>
-      <my-topSearch></my-topSearch>
       <div class="publicity">
         <div class="title">
           <h2>
@@ -53,10 +52,10 @@
 </template>
 
 <script>
-  import myTopSearch from "../topSearch/topSearch"
 
   export default {
     name: "publicityPage",
+    components: {},
     data() {
         return {}
     },
@@ -64,12 +63,9 @@
     },
     mounted() {
     },
-    methods: {},
     watch: {},
     computed: {},
-    components: {
-      myTopSearch
-    },
+    methods: {},
   }
 </script>
 

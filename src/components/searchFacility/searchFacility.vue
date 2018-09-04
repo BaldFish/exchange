@@ -1,7 +1,5 @@
 <template>
   <div class="moreFacility">
-    <my-topSearch></my-topSearch>
-    <my-toggle :toggleIndex="toggleIndex"></my-toggle>
     <div class="site_box">
       <div class="site">
         <ul>
@@ -57,14 +55,12 @@
   import _ from "lodash";
   import {baseURL, cardURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
-  import myTopSearch from "../topSearch/topSearch"
-  import myToggle from "../toggle/toggle"
   
   export default {
     name: "searchFacility",
+    components: {},
     data() {
       return {
-        toggleIndex: 0,
         facilityPage: 1,
         facilityLimit: 12,
         total: 12,
@@ -147,10 +143,6 @@
           return o.id === val
         }));
       },
-    },
-    components: {
-      myTopSearch,
-      myToggle,
     },
   }
 </script>

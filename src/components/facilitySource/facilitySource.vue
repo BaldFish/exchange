@@ -1,7 +1,5 @@
 <template>
   <div class="facilitySource">
-    <my-topSearch></my-topSearch>
-    <my-toggle :toggleIndex="toggleIndex"></my-toggle>
     <div class="site_box">
       <div class="site">
         <ul>
@@ -83,9 +81,9 @@
   
   export default {
     name: "facilitySource",
+    components: {},
     data() {
       return {
-        toggleIndex: 0,
         facilityDetails: {},
         facilitySourceTitle: "",
         facilitySource: [],
@@ -108,6 +106,8 @@
       this.acquireFacilitySource();
       this.acquireUsageRecord();
     },
+    watch: {},
+    computed: {},
     methods: {
       open() {
         this.$confirm('此操作需要先登录, 是否登录?', '提示', {
@@ -301,12 +301,6 @@
       getBuy(val){
         this.$store.commit("changeBuy",val);
       }
-    },
-    watch: {},
-    computed: {},
-    components: {
-      myTopSearch,
-      myToggle
     },
   }
 </script>

@@ -122,16 +122,13 @@
 <script>
   import axios from "axios";
   import {baseURL, cardURL} from '@/common/js/public.js';
-  import myTopSearch from "../topSearch/topSearch"
   import {BigNumber} from 'bignumber.js';
   
   const querystring = require('querystring');
   
   export default {
     name: "checkOrder",
-    components: {
-      myTopSearch
-    },
+    components: {},
     data() {
       return {
         paymentInfo: {},

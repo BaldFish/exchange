@@ -33,6 +33,7 @@
   
   export default {
     name: "topSearch",
+    components: {},
     data() {
       return {
         options: [{
@@ -121,7 +122,6 @@
         this.$store.commit("changeSearch", searchObj);
       },
     },
-    components: {},
   }
 </script>
 

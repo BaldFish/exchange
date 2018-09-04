@@ -79,6 +79,7 @@
   export default {
     inject: ['reload'],
     name: "orderHistory",
+    components: {},
     data() {
       return {
         options: [{

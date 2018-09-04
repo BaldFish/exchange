@@ -17,11 +17,9 @@ import 'vue-area-linkage/dist/index.css';
 import VueAreaLinkage from 'vue-area-linkage';
 Vue.use(VueAreaLinkage);
 
-Vue.config.productionTip = false;
-
 import '@/common/js/validate.js'
 
-
+Vue.config.productionTip = false;
 /* eslint-disable no-new */
 const store = new Vuex.Store({
   state: {

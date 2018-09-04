@@ -24,16 +24,13 @@
 </template>
 
 <script>
-  import myTopSearch from "../topSearch/topSearch"
   export default{
     name: "noAssets",
+    components: {},
     data(){
       return {
       }
     },
-    components: {
-      myTopSearch
-    }
   }
 </script>
 <style scoped>

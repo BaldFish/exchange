@@ -1,7 +1,5 @@
 <template>
   <div class="reportDetails">
-    <my-topSearch></my-topSearch>
-    <my-toggle :toggleIndex="toggleIndex"></my-toggle>
     <div class="site_box">
       <div class="site">
         <ul>
@@ -115,17 +113,15 @@
 
 <script>
   import axios from "axios";
-  import myTopSearch from "../topSearch/topSearch"
-  import myToggle from "../toggle/toggle"
   import {baseURL,cardURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
   const querystring = require('querystring');
 
   export default {
     name: "reportDetails",
+    components: {},
     data() {
       return {
-        toggleIndex: 0,
         reportSource:[],
         reportDetails:{},
         userId:"",
@@ -146,6 +142,8 @@
       this.acquireReportSource();
       this.acquireReportDetails()
     },
+    watch: {},
+    computed: {},
     methods: {
       open() {
         this.$confirm('此操作需要先登录, 是否登录?', '提示', {
@@ -284,12 +282,6 @@
       getBuy(val){
         this.$store.commit("changeBuy",val);
       }
-    },
-    watch: {},
-    computed: {},
-    components: {
-      myTopSearch,
-      myToggle
     },
   }
 </script>

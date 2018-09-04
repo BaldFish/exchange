@@ -32,7 +32,7 @@
         if(index===0){
           this.$router.push("/home")
         }else if(index===1){
-          this.$router.push("/transferPlatform")
+          this.$router.push("/")
         }
       }
     },
@@ -59,6 +59,10 @@
         font-size: 16px;
         color: #f3f3f3;
         cursor pointer
+      }
+      li:active{
+        background-color #ffffff
+        color:#d91e01;
       }
       .active{
         background-color #ffffff
