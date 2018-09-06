@@ -31,11 +31,12 @@
       </div>
       <table>
         <tr class="img_tbody">
-          <td v-if="item.apikey!=='5a6be74a55aaf50001a5e250||5b18a5b9cff7cb000194f2f7'" @click="turnDetails(item.apikey,item.assetid,item.packageId)">
+          <td v-if="item.apikey==='5ae04522cff7cb000194f2f4'" @click="turnDetails(item.apikey,item.assetid)">
             <img :src="item.asseturl" alt="">
             <p>{{item.assetname}}</p>
           </td>
-          <td v-if="item.apikey==='5a6be74a55aaf50001a5e250||5b18a5b9cff7cb000194f2f7'" @click="turnDetails(item.apikey,item.assetid,item.packageId)">
+          <td v-if="item.apikey==='5a6be74a55aaf50001a5e250'||item.apikey==='5b18a5b9cff7cb000194f2f7'"
+              @click="turnDetails(item.apikey,item.assetid)">
             <p>{{item.assetname}}</p>
           </td>
           <td>{{item.sell_type}}</td>
@@ -212,21 +213,18 @@
       getPay(val) {
         this.$store.commit("changeBuy", val);
       },
-      turnDetails(apiKey, assetId,packageId) {
-        if(packageId===""){
-          if (apiKey === "5a6be74a55aaf50001a5e250") {
-            this.getCaseDetails(assetId);
-            //this.$router.push("/caseDetails");
-            window.open("/caseDetails", "_blank");
-          } else if (apiKey === "5ae04522cff7cb000194f2f4") {
-            this.getFacilityDetails(assetId);
-            //this.$router.push("/facilityDetails");
-            window.open("/facilityDetails", "_blank");
-          }else if(apiKey === "5b18a5b9cff7cb000194f2f7"){
-            window.open("/reportDetails", "_blank");
-          }
-        }else{
-          this.getPropertyDetails(packageId)
+      turnDetails(apiKey, assetId) {
+        if (apiKey === "5a6be74a55aaf50001a5e250") {
+          this.getCaseDetails(assetId);
+          //this.$router.push("/caseDetails");
+          window.open("/caseDetails", "_blank");
+        } else if (apiKey === "5ae04522cff7cb000194f2f4") {
+          this.getFacilityDetails(assetId);
+          //this.$router.push("/facilityDetails");
+          window.open("/facilityDetails", "_blank");
+        } else if (apiKey === "5b18a5b9cff7cb000194f2f7") {
+          this.getReportDetails(assetId);
+          window.open("/reportDetails", "_blank");
         }
       },
       getCaseDetails(val) {
@@ -239,13 +237,18 @@
           return o.assetid === val
         }));
       },
-      getPropertyDetails(val){
+      getReportDetails(val) {
+        this.$store.commit("changeReportDetails", _.find(this.dataList, function (o) {
+          return o.assetid === val
+        }));
+      },
+      /*getPropertyDetails(val){
         this.$store.commit("changePropertyDetails", _.find(this.dataList, function (o) {
           return o.packageId === val
         }));
         //this.$router.push("/transferDetails")
         window.open("/transferDetails","_blank")
-      },
+      },*/
     },
   }
 </script>
@@ -418,7 +421,6 @@
       span {
         color #c6351e;
       }
-      
     }
   }
 

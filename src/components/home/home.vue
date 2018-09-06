@@ -195,7 +195,7 @@
         method: 'get',
         url: `${cardURL}/v1/broadcast/s?type_id=5b572fa8a4cc0d6ea8ba5484`
       }).then(res => {
-        this.bannerList = res.data
+        this.bannerList = res.data;
       }).catch(error => {
         console.log(error)
       });

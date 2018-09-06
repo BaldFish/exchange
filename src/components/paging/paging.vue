@@ -13,8 +13,7 @@
   export default {
     name: "paging",
     data() {
-      return {
-      }
+      return {}
     },
     props:{
       total:{

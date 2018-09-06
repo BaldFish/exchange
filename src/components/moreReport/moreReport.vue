@@ -60,8 +60,9 @@
   import "../../common/stylus/paging.styl";
   import axios from "axios";
   import _ from "lodash";
-  import {baseURL,cardURL} from '@/common/js/public.js';
+  import {baseURL, cardURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
+  
   const querystring = require('querystring');
   
   export default {
@@ -69,21 +70,21 @@
     components: {},
     data() {
       return {
-        reportPage:1,
-        reportLimit:10,
+        reportPage: 1,
+        reportLimit: 10,
         total: 10,
-        reportList:[],
-        userId:"",
-        token:"",
-        apiKey:"",
-        assetId:"",
-        id:"",
+        reportList: [],
+        userId: "",
+        token: "",
+        apiKey: "",
+        assetId: "",
+        id: "",
       }
     },
     mounted() {
-      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-        this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+        this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
       }
       this.acquireReportList()
     },
@@ -100,48 +101,6 @@
           this.$router.push("/login")
         }).catch(() => {
         });
-      },
-      toggleLike(val){
-        if(sessionStorage.getItem("loginInfo")){
-          let likeInfo=_.find(this.caseList,function (o) {
-            return o.id===val
-          });
-          this.apiKey=likeInfo.apikey;
-          this.assetId=likeInfo.assetid;
-          this.id=likeInfo.shopcart_id;
-          if(likeInfo.shopcart_id===""){
-            axios({
-              method: "POST",
-              url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "X-Access-Token":this.token
-              }
-            }).then((res) => {
-              this.id=res.data._id;
-              likeInfo.shopcart_id=res.data._id;
-              this.addCollection()
-            }).catch((err) => {
-              console.log(err);
-            });
-          }else if(likeInfo.shopcart_id!==""){
-            axios({
-              method: "DELETE",
-              url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "X-Access-Token":this.token
-              }
-            }).then((res) => {
-              likeInfo.shopcart_id="";
-              this.subtractCollection()
-            }).catch((err) => {
-              console.log(err);
-            });
-          }
-        }else {
-          this.open()
-        }
       },
       //获取诊断报告列表
       acquireReportList() {
@@ -160,58 +119,100 @@
           console.log(err)
         })
       },
-      getReportDetails(val){
+      getReportDetails(val) {
         this.$store.commit("changeReportDetails", _.find(this.reportList, function (o) {
           return o.id === val
         }));
       },
-      handleCurrentChange(val){
-        this.reportPage=val;
+      handleCurrentChange(val) {
+        this.reportPage = val;
         this.acquireReportList()
       },
-      addCollection(){
-        this.$store.commit("addCollection")
-      },
-      subtractCollection(){
-        this.$store.commit("subtractCollection")
-      },
-      buy(val){
-        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-          let buyInfoObj=_.find(this.reportList,function (o) {
-            return o.id===val
+      buy(val) {
+        if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+          let buyInfoObj = _.find(this.reportList, function (o) {
+            return o.id === val
           });
-          this.apiKey=buyInfoObj.apikey;
-          this.assetId=buyInfoObj.assetid;
-          let data={};
-          data.nums=1;
+          this.apiKey = buyInfoObj.apikey;
+          this.assetId = buyInfoObj.assetid;
+          let data = {};
+          data.nums = 1;
           axios({
             method: "POST",
             url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              "X-Access-Token":this.token,
+              "X-Access-Token": this.token,
             },
-            data:querystring.stringify(data),
+            data: querystring.stringify(data),
           }).then((res) => {
-            buyInfoObj=res.data;
+            buyInfoObj = res.data;
             this.getBuy(buyInfoObj);
             this.$router.push("/checkOrder")
           }).catch((err) => {
             console.log(err);
           })
-        }else{
+        } else {
           this.open()
         }
       },
-      getBuy(val){
-        this.$store.commit("changeBuy",val);
-      }
+      getBuy(val) {
+        this.$store.commit("changeBuy", val);
+      },
+      toggleLike(val) {
+        if (sessionStorage.getItem("loginInfo")) {
+          let likeInfo = _.find(this.reportList, function (o) {
+            return o.id === val
+          });
+          this.apiKey = likeInfo.apikey;
+          this.assetId = likeInfo.assetid;
+          if (likeInfo.shopcart_id === "") {
+            axios({
+              method: "POST",
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token": this.token
+              }
+            }).then((res) => {
+              this.id = res.data.id;
+              likeInfo.shopcart_id = this.id;
+              this.addCollection()
+            }).catch((err) => {
+              console.log(err);
+            });
+          } else if (likeInfo.shopcart_id !== "") {
+            this.id = likeInfo.shopcart_id;
+            axios({
+              method: "DELETE",
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token": this.token
+              }
+            }).then((res) => {
+              likeInfo.shopcart_id = "";
+              this.subtractCollection()
+            }).catch((err) => {
+              console.log(err);
+            });
+          }
+        } else {
+          this.open()
+        }
+      },
+      addCollection() {
+        this.$store.commit("addCollection")
+      },
+      subtractCollection() {
+        this.$store.commit("subtractCollection")
+      },
     },
   }
 </script>
 
 <style scoped lang="stylus">
-  .moreReport{
+  .moreReport {
     .site_box {
       margin 0 auto
       width 100%
@@ -228,7 +229,7 @@
             vertical-align top
             display inline-block
             font-size 14px
-            a{
+            a {
               color: #666666;
             }
           }
@@ -308,14 +309,14 @@
             background-image: url('./images/time.png');
             width 250px
           }
-          .data{
+          .data {
             background-image: url('./images/data.png');
           }
-          .vin{
+          .vin {
             background-image: url('./images/vin.png');
             width 250px
           }
-          .breakdown{
+          .breakdown {
             background-image: url('./images/breakdown.png');
             width 140px
           }
@@ -323,8 +324,8 @@
             background-image: url('./images/Profit.png');
           }
         }
-        .belong{
-          a{
+        .belong {
+          a {
             display block
             line-height 22px
             padding-left 26px
@@ -333,7 +334,7 @@
             background-position: top left;
             color #666666;
             font-size 14px;
-            span{
+            span {
               color #222222;
               font-size 16px
             }
@@ -422,7 +423,7 @@
             text-align center
           }
         }
-        .bar{
+        .bar {
           width 10px
           height 100%
           background-color #e25d07
@@ -431,7 +432,7 @@
           right 0
         }
       }
-      .fr_report:hover{
+      .fr_report:hover {
         box-shadow: 0px 0px 13px 1px rgba(218, 44, 89, 0.4);
       }
     }

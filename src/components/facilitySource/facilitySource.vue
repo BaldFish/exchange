@@ -73,8 +73,6 @@
 
 <script>
   import axios from "axios";
-  import myTopSearch from "../topSearch/topSearch"
-  import myToggle from "../toggle/toggle"
   import {baseURL, cardURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
   const querystring = require('querystring');
@@ -126,7 +124,6 @@
           this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
           this.apiKey=likeInfo.apikey;
           this.assetId=likeInfo.assetid;
-          this.id=likeInfo.shopcart_id;
           if(likeInfo.shopcart_id===""){
             axios({
               method: "POST",
@@ -136,13 +133,14 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              this.id=res.data._id;
+              this.id=res.data.id;
               likeInfo.shopcart_id=this.id
               this.addCollection()
             }).catch((err) => {
               console.log(err);
             });
           }else if(likeInfo.shopcart_id!==""){
+            this.id=likeInfo.shopcart_id;
             axios({
               method: "DELETE",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,

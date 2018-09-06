@@ -12,13 +12,13 @@
     components: {},
     data() {
       return {
-        toggleParam:["交易平台","转让平台"],
+        toggleParam: ["交易平台", "转让平台"],
       }
     },
-    props:{
-      toggleIndex:{
-        type:Number,
-        default:0
+    props: {
+      toggleIndex: {
+        type: Number,
+        default: 0
       },
     },
     created() {
@@ -28,11 +28,23 @@
     watch: {},
     computed: {},
     methods: {
-      toggle(index){
-        if(index===0){
+      toggle(index) {
+        if (index === 0) {
           this.$router.push("/home")
-        }else if(index===1){
-          this.$router.push("/")
+        } else if (index === 1) {
+/*          if(JSON.parse(sessionStorage.getItem("loginInfo"))&&JSON.parse(sessionStorage.getItem("userName"))){
+            let info={};
+            info.loginInfo=JSON.parse(sessionStorage.getItem("loginInfo"));
+            info.userName=JSON.parse(sessionStorage.getItem("userName"));
+            console.log(info);
+            let popup = window.open('http://10.0.0.123:5001',"title");
+            setTimeout(function () {
+              popup.postMessage(info, 'http://10.0.0.123:5001');
+            }, 2000);
+          }else{
+            window.open('http://10.0.0.123:5001')
+          }*/
+          window.open('http://10.0.0.123:5001')
         }
       }
     },
@@ -60,13 +72,13 @@
         color: #f3f3f3;
         cursor pointer
       }
-      li:active{
+      li:active {
         background-color #ffffff
-        color:#d91e01;
+        color: #d91e01;
       }
-      .active{
+      .active {
         background-color #ffffff
-        color:#d91e01;
+        color: #d91e01;
       }
     }
   }

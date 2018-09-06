@@ -161,7 +161,6 @@
           let likeInfo=this.reportDetails;
           this.apiKey=likeInfo.apikey;
           this.assetId=likeInfo.assetid;
-          this.id=likeInfo.shopcart_id;
           if(likeInfo.shopcart_id===""){
             axios({
               method: "POST",
@@ -171,13 +170,14 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              this.id=res.data._id;
+              this.id=res.data.id;
               likeInfo.shopcart_id=this.id
               this.addCollection()
             }).catch((err) => {
               console.log(err);
             });
           }else if(likeInfo.shopcart_id!==""){
+            this.id=likeInfo.shopcart_id;
             axios({
               method: "DELETE",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,

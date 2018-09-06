@@ -28,7 +28,7 @@ const store = new Vuex.Store({
     caseSource: {},
     facilityDetails: {},
     facilitySource: {},
-    propertyDetails:{},
+    /*propertyDetails:{},*/
     favoriteCount: 0,
     buyInfoObj: {},
     searchValue:"",
@@ -55,10 +55,10 @@ const store = new Vuex.Store({
       state.facilitySource = params;
       window.sessionStorage.setItem("facilitySource", JSON.stringify(state.facilitySource))
     },
-    changePropertyDetails(state, params) {
+    /*changePropertyDetails(state, params) {
       state.propertyDetails = params;
       window.sessionStorage.setItem("propertyDetails", JSON.stringify(state.propertyDetails))
-    },
+    },*/
     changeSearch(state, params) {
       state.searchValue = params.value;
       state.searchInput = params.input;

@@ -27,7 +27,7 @@
           <td colspan="5">诊断报告</td>
         </tr>
         <tr class="content_tbody" v-for="(item,index) of reportList" :key="item.id">
-          <td @click="turnDetails(item.apikey,item.assetid,item.packageId)">{{item.assetname}}</td>
+          <td @click="turnDetails(item.apikey,item.assetid)">{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
           <td>{{item.count}}</td>
           <td>{{item.price}}</td>
@@ -51,7 +51,7 @@
           <td colspan="5">维修案例</td>
         </tr>
         <tr class="content_tbody" v-for="(item,index) of caseList" :key="item.id">
-          <td @click="turnDetails(item.apikey,item.assetid,item.packageId)">{{item.assetname}}</td>
+          <td @click="turnDetails(item.apikey,item.assetid)">{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
           <td>{{item.count}}</td>
           <td>{{item.price}}</td>
@@ -89,48 +89,49 @@
   import {baseURL, cardURL} from '@/common/js/public.js';
   import {BigNumber} from 'bignumber.js';
   import utils from "@/common/js/utils.js";
-  export default{
+  
+  export default {
     name: "personalAssets",
     components: {},
-    data(){
+    data() {
       return {
         total: 10,
         pageSize: 10,
         currentPage: 1,
-        assetList:[],
-        userId:"",
-        token:"",
-        phone:"",
-        walletAddress:"",
-        balance:0,
+        assetList: [],
+        userId: "",
+        token: "",
+        phone: "",
+        walletAddress: "",
+        balance: 0,
       }
     },
-    computed:{
+    computed: {
       reportList: function () {
         return this.assetList.filter(function (value, index, array) {
-          return value.apikey==="5b18a5b9cff7cb000194f2f7"
+          return value.apikey === "5b18a5b9cff7cb000194f2f7"
         })
       },
       caseList: function () {
         return this.assetList.filter(function (value, index, array) {
-          return value.apikey==="5a6be74a55aaf50001a5e250"
+          return value.apikey === "5a6be74a55aaf50001a5e250"
         })
       },
-      facilityList:function () {
+      facilityList: function () {
         return this.assetList.filter(function (value, index, array) {
-          return value.apikey==="5ae04522cff7cb000194f2f4"
+          return value.apikey === "5ae04522cff7cb000194f2f4"
         })
       },
     },
     mounted() {
-      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-        this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+        this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
         this.acquireUserInfo();
         this.acquireAssetList();
       }
     },
-    methods:{
+    methods: {
       open() {
         this.$confirm('此操作需要先登录, 是否登录?', '提示', {
           confirmButtonText: '是',
@@ -142,47 +143,47 @@
         }).catch(() => {
         });
       },
-      handleCurrentChange(val){
+      handleCurrentChange(val) {
         this.currentPage = val;
         this.acquireAssetList();
       },
-      acquireUserInfo(){
-          axios({
-            method: "GET",
-            url: `${baseURL}/v1/users/${this.userId}`,
-            headers: {
-              "Content-Type": "application/json",
-            }
-          }).then((res) => {
-            this.phone=res.data.phone.substr(3,3)+"***"+res.data.phone.substr(10,4);
-            this.walletAddress=res.data.wallet_address;
-            if(this.walletAddress){
-              this.acquireBalance()
-            }else{
-              this.balance=0
-            }
-          }).catch((err) => {
-            console.log(err);
-          });
+      acquireUserInfo() {
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/users/${this.userId}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          this.phone = res.data.phone.substr(3, 3) + "***" + res.data.phone.substr(10, 4);
+          this.walletAddress = res.data.wallet_address;
+          if (this.walletAddress) {
+            this.acquireBalance()
+          } else {
+            this.balance = 0
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
       },
-      acquireBalance(){
+      acquireBalance() {
         axios({
           method: "POST",
           url: `${cardURL}/`,
           headers: {
             "Content-Type": "application/json",
           },
-          data:{
-            "jsonrpc":"2.0",
-            "method":"eth_getBalance",
-            "params":[this.walletAddress,"latest"],
-            "id":1
+          data: {
+            "jsonrpc": "2.0",
+            "method": "eth_getBalance",
+            "params": [this.walletAddress, "latest"],
+            "id": 1
           },
         }).then((res) => {
-          if(res.data.error){
-            this.balance=0
-          }else{
-            this.balance=new BigNumber(Number(res.data.result)).dividedBy(1e+18).toFormat(2);
+          if (res.data.error) {
+            this.balance = 0
+          } else {
+            this.balance = new BigNumber(Number(res.data.result)).dividedBy(1e+18).toFormat(2);
           }
         }).catch((err) => {
           console.log(err);
@@ -197,28 +198,25 @@
           }
         }).then((res) => {
           this.total = res.data.count;
-          for(let v of res.data.data){
-            v.created_at=utils.formatDate(new Date(v.created_at), "yyyy-MM-dd hh:mm:ss");
-            v.updated_at=utils.formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
+          for (let v of res.data.data) {
+            v.created_at = utils.formatDate(new Date(v.created_at), "yyyy-MM-dd hh:mm:ss");
+            v.updated_at = utils.formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
           }
           this.assetList = res.data.data;
         }).catch((err) => {
           console.log(err);
         });
       },
-      turnDetails(apiKey, assetId,packageId) {
-        if(packageId===""){
-          if (apiKey === "5a6be74a55aaf50001a5e250") {
-            this.getCaseDetails(assetId);
-            this.$router.push("/caseDetails")
-          } else if (apiKey === "5ae04522cff7cb000194f2f4") {
-            this.getFacilityDetails(assetId);
-            this.$router.push("/facilityDetails")
-          }else if(apiKey === "5b18a5b9cff7cb000194f2f7"){
-            window.open("/reportDetails", "_blank");
-          }
-        }else{
-          this.getPropertyDetails(packageId)
+      turnDetails(apiKey, assetId) {
+        if (apiKey === "5a6be74a55aaf50001a5e250") {
+          this.getCaseDetails(assetId);
+          this.$router.push("/caseDetails")
+        } else if (apiKey === "5ae04522cff7cb000194f2f4") {
+          this.getFacilityDetails(assetId);
+          this.$router.push("/facilityDetails")
+        } else if (apiKey === "5b18a5b9cff7cb000194f2f7") {
+          this.getReportDetails(assetId);
+          window.open("/reportDetails", "_blank");
         }
       },
       getCaseDetails(val) {
@@ -231,22 +229,28 @@
           return o.assetid === val
         }));
       },
-      getPropertyDetails(val){
+      getReportDetails(val) {
+        this.$store.commit("changeReportDetails", _.find(this.assetList, function (o) {
+          return o.assetid === val
+        }));
+      },
+      /*getPropertyDetails(val) {
         this.$store.commit("changePropertyDetails", _.find(this.dataList, function (o) {
           return o.packageId === val
         }));
         //this.$router.push("/transferDetails")
-        window.open("/transferDetails","_blank")
-      },
+        window.open("/transferDetails", "_blank")
+      },*/
     },
   }
 </script>
 <style scoped>
-  .nav_content{
+  .nav_content {
     width: 1078px;
     float: right;
   }
-  .nav_content_title{
+  
+  .nav_content_title {
     width: 1078px;
     height: 50px;
     background-color: #ffffff;
@@ -255,7 +259,8 @@
     font-size: 18px;
     color: #222222;
   }
-  .assets_summary{
+  
+  .assets_summary {
     width: 1080px;
     height: 100px;
     background-color: #ffffff;
@@ -263,47 +268,57 @@
     color: #666666;
     margin-bottom: 24px;
   }
-  .assets_summary p{
+  
+  .assets_summary p {
     font-size: 14px;
     color: #666666;
     margin-left: 20px;
   }
-  .assets_summary p:first-child{
+  
+  .assets_summary p:first-child {
     font-size: 18px;
     color: #222222;
     padding: 16px 0;
   }
-  .assets_summary p:nth-child(2){
+  
+  .assets_summary p:nth-child(2) {
     margin-bottom: 10px;
   }
-  .to_bind{
+  
+  .to_bind {
     font-size: 14px;
     color: #c6351e;
     margin-left: 10px;
   }
+  
   .nav_content_title span {
     padding-left: 20px;
   }
+  
   .nav_content_table {
     margin-top: 12px;
     width: 1078px;
     background-color: #ffffff;
     border: solid 1px #bfbfbf;
   }
+  
   .content_thead {
     font-size: 16px;
     color: #222222;
     height: 50px;
     line-height: 50px;
   }
+  
   .content_thead th {
     width: 110px;
   }
+  
   .content_thead th:first-child {
     text-align: left;
     padding-left: 46px;
     width: 640px;
   }
+  
   .classify td {
     background-color: #f6f7fa;
     text-align: left;
@@ -312,9 +327,11 @@
     font-size: 16px;
     color: #222222;
   }
-  .content_tbody{
+  
+  .content_tbody {
     border-bottom: 1px solid #d2d2d2;
   }
+  
   .content_tbody td {
     font-size: 14px;
     color: #666666;
@@ -322,7 +339,8 @@
     height: 90px;
     vertical-align: middle;
   }
-  .content_tbody td span{
+  
+  .content_tbody td span {
     box-sizing: border-box;
     display: inline-block;
     width: 54px;
@@ -331,7 +349,8 @@
     border: solid 1px #bfbfbf;
     margin-right: 40px;
   }
-  .content_tbody td span img{
+  
+  .content_tbody td span img {
     vertical-align: middle;
     position: relative;
     top: 50%;
@@ -339,17 +358,21 @@
     max-width: 52px;
     max-height: 52px;
   }
-  .content_tbody td:first-child{
+  
+  .content_tbody td:first-child {
     text-align: left;
     padding-left: 46px;
     cursor: pointer;
   }
+  
   tbody tr:first-child {
     border-top: 1px solid #d2d2d2;
   }
+  
   tbody tr:last-child {
     border-bottom: none;
   }
+  
   .quick_buy_td button {
     box-sizing: border-box;
     width: 80px;
@@ -363,9 +386,8 @@
     color: #c6351e;
     margin: 0 10px;
   }
-
-
-  .no_assets_content{
+  
+  .no_assets_content {
     margin-top: 12px;
     width: 1078px;
     height: 542px;
@@ -373,24 +395,28 @@
     border: solid 1px #bfbfbf;
     margin-bottom: 40px;
   }
-  .no_assets_box img{
+  
+  .no_assets_box img {
     float: left;
   }
-  .no_assets_box{
+  
+  .no_assets_box {
     width: 186px;
-    height:70px;
+    height: 70px;
     margin: 0 auto;
     position: relative;
     top: 236px;
   }
-  .no_assets_box p{
+  
+  .no_assets_box p {
     font-size: 18px;
     color: #222222;
-    float:right;
+    float: right;
     padding: 14px 0;
     padding-top: 8px;
   }
-  .to_buy{
+  
+  .to_buy {
     font-size: 18px;
     color: #c6351e;
     margin-left: 12px;

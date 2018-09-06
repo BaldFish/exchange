@@ -206,6 +206,54 @@
       getBuy(val) {
         this.$store.commit("changeBuy", val);
       },
+      toggleLike(val) {
+        if (sessionStorage.getItem("loginInfo")) {
+          let likeInfo = _.find(this.searchReportList, function (o) {
+            return o.id === val
+          });
+          this.apiKey = likeInfo.apikey;
+          this.assetId = likeInfo.assetid;
+          if (likeInfo.shopcart_id === "") {
+            axios({
+              method: "POST",
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token": this.token
+              }
+            }).then((res) => {
+              this.id = res.data.id;
+              likeInfo.shopcart_id = this.id;
+              this.addCollection()
+            }).catch((err) => {
+              console.log(err);
+            });
+          } else if (likeInfo.shopcart_id !== "") {
+            this.id = likeInfo.shopcart_id;
+            axios({
+              method: "DELETE",
+              url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Access-Token": this.token
+              }
+            }).then((res) => {
+              likeInfo.shopcart_id = "";
+              this.subtractCollection()
+            }).catch((err) => {
+              console.log(err);
+            });
+          }
+        } else {
+          this.open()
+        }
+      },
+      addCollection() {
+        this.$store.commit("addCollection")
+      },
+      subtractCollection() {
+        this.$store.commit("subtractCollection")
+      },
     },
   }
 

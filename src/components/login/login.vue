@@ -84,15 +84,12 @@
 <script>
   import axios from "axios";
   import {baseURL} from '@/common/js/public.js';
-  import myToggle from "../toggle/toggle"
 
   const querystring = require('querystring');
 
   export default {
     name: "login",
-    components: {
-      myToggle,
-    },
+    components: {},
     data() {
       return {
         toggleIndex: 0,

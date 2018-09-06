@@ -13,23 +13,33 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="classify" v-if="caseList.length!==0">
-          <td colspan="5">维修案例</td>
+        <tr class="classify" v-if="reportList.length!==0">
+          <td colspan="5">诊断报告</td>
         </tr>
-        <tr class="content_tbody" v-for="(item,index) of caseList" :key="item._id">
+        <tr class="content_tbody" v-for="(item,index) of reportList" :key="item.id">
           <td @click="turnDetails(item.apikey,item.assetid)">{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
-          <td class="quick_buy_td" @click="cancel(item._id)">
+          <td class="quick_buy_td" @click="cancel(item.id)">
             <button>取消收藏</button>
           </td>
         </tr>
         <tr class="classify" v-if="facilityList.length!==0">
           <td colspan="5">维修设备</td>
         </tr>
-        <tr class="content_tbody" v-for="(item,index) of facilityList" :key="item._id">
+        <tr class="content_tbody" v-for="(item,index) of facilityList" :key="item.id">
           <td @click="turnDetails(item.apikey,item.assetid)"><span><img :src="item.asseturl" alt=""></span>{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
-          <td class="quick_buy_td" @click="cancel(item._id)">
+          <td class="quick_buy_td" @click="cancel(item.id)">
+            <button>取消收藏</button>
+          </td>
+        </tr>
+        <tr class="classify" v-if="caseList.length!==0">
+          <td colspan="5">维修案例</td>
+        </tr>
+        <tr class="content_tbody" v-for="(item,index) of caseList" :key="item.id">
+          <td @click="turnDetails(item.apikey,item.assetid)">{{item.assetname}}</td>
+          <td>{{item.sell_type}}</td>
+          <td class="quick_buy_td" @click="cancel(item.id)">
             <button>取消收藏</button>
           </td>
         </tr>
@@ -41,8 +51,8 @@
                      layout="prev, pager, next"
                      :background=true
                      :total=total
-                     :page-size=pageSize
-                     :current-page.sync=currentPage
+                     :page-size=favoriteLimit
+                     :current-page.sync=favoritePage
                      @current-change="handleCurrentChange">
       </el-pagination>
     </div>
@@ -67,8 +77,8 @@
     data() {
       return {
         total: 10,
-        pageSize: 10,
-        currentPage: 1,
+        favoriteLimit: 10,
+        favoritePage: 1,
         favoriteList: [],
         userId: '',
         id: "",
@@ -76,14 +86,19 @@
       }
     },
     computed: {
-      caseList: function () {
+      reportList: function () {
         return this.favoriteList.filter(function (value, index, array) {
-          return value.apikey === "5a6be74a55aaf50001a5e250"
+          return value.apikey === "5b18a5b9cff7cb000194f2f7"
         })
       },
       facilityList: function () {
         return this.favoriteList.filter(function (value, index, array) {
           return value.apikey === "5ae04522cff7cb000194f2f4"
+        })
+      },
+      caseList: function () {
+        return this.favoriteList.filter(function (value, index, array) {
+          return value.apikey === "5a6be74a55aaf50001a5e250"
         })
       },
     },
@@ -96,22 +111,22 @@
     },
     methods: {
       handleCurrentChange(val) {
-        this.currentPage = val;
+        this.favoritePage = val;
         this.acquireFavoriteList();
       },
       acquireFavoriteList() {
         if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
           axios({
             method: "GET",
-            url: `${baseURL}/v1/shopcart/list/${this.userId}?page=${this.currentPage}&limit=${this.pageSize}`,
+            url: `${baseURL}/v1/shopcart/list/${this.userId}?page=${this.favoritePage}&limit=${this.favoriteLimit}`,
             headers: {
               "Content-Type": "application/json",
             }
           }).then((res) => {
             this.total = res.data.count;
-            for(let v of res.data.data){
-              v.created_at=utils.formatDate(new Date(v.created_at), "yyyy-MM-dd hh:mm:ss");
-              v.updated_at=utils.formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
+            for (let v of res.data.data) {
+              v.created_at = utils.formatDate(new Date(v.created_at), "yyyy-MM-dd hh:mm:ss");
+              v.updated_at = utils.formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
             }
             this.favoriteList = res.data.data;
           }).catch((err) => {
@@ -147,6 +162,9 @@
         } else if (apiKey === "5ae04522cff7cb000194f2f4") {
           this.getFacilityDetails(assetId);
           this.$router.push("/facilityDetails")
+        } else if (apiKey === "5b18a5b9cff7cb000194f2f7") {
+          this.getReportDetails(assetId);
+          this.$router.push("/reportDetails")
         }
       },
       getCaseDetails(val) {
@@ -156,6 +174,11 @@
       },
       getFacilityDetails(val) {
         this.$store.commit("changeFacilityDetails", _.find(this.favoriteList, function (o) {
+          return o.assetid === val
+        }));
+      },
+      getReportDetails(val) {
+        this.$store.commit("changeReportDetails", _.find(this.favoriteList, function (o) {
           return o.assetid === val
         }));
       },
