@@ -44,7 +44,7 @@
           }else{
             window.open('http://10.0.0.123:5001')
           }*/
-          window.open('http://10.0.0.123:5001')
+          window.open('http://47.92.98.66:5001')
         }
       }
     },
