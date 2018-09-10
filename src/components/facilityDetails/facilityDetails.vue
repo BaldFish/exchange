@@ -221,7 +221,7 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              this.id=res.data.id;
+              this.id=res.data._id;
               likeInfo.shopcart_id=this.id;
               this.addCollection();
             }).catch((err) => {

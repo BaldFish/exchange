@@ -70,7 +70,7 @@
 </template>
 
 <script>
-  import "../../common/stylus/paging.styl";
+  import "@/common/stylus/paging.styl";
   import axios from "axios";
   import {baseURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";

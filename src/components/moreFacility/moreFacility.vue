@@ -50,7 +50,7 @@
 </template>
 
 <script>
-  import "../../common/stylus/paging.styl";
+  import "@/common/stylus/paging.styl";
   import axios from "axios";
   import _ from "lodash";
   import {baseURL,cardURL} from '@/common/js/public.js';

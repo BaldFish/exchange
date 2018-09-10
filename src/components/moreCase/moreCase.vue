@@ -57,7 +57,7 @@
 </template>
 
 <script>
-  import "../../common/stylus/paging.styl";
+  import "@/common/stylus/paging.styl";
   import axios from "axios";
   import _ from "lodash";
   import {baseURL,cardURL} from '@/common/js/public.js';
@@ -115,7 +115,7 @@
                 "X-Access-Token":this.token
               }
             }).then((res) => {
-              this.id=res.data.id;
+              this.id=res.data._id;
               likeInfo.shopcart_id=this.id;
               this.addCollection()
             }).catch((err) => {

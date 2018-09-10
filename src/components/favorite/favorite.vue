@@ -16,30 +16,30 @@
         <tr class="classify" v-if="reportList.length!==0">
           <td colspan="5">诊断报告</td>
         </tr>
-        <tr class="content_tbody" v-for="(item,index) of reportList" :key="item.id">
+        <tr class="content_tbody" v-for="(item,index) of reportList" :key="item._id">
           <td @click="turnDetails(item.apikey,item.assetid)">{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
-          <td class="quick_buy_td" @click="cancel(item.id)">
+          <td class="quick_buy_td" @click="cancel(item._id)">
             <button>取消收藏</button>
           </td>
         </tr>
         <tr class="classify" v-if="facilityList.length!==0">
           <td colspan="5">维修设备</td>
         </tr>
-        <tr class="content_tbody" v-for="(item,index) of facilityList" :key="item.id">
+        <tr class="content_tbody" v-for="(item,index) of facilityList" :key="item._id">
           <td @click="turnDetails(item.apikey,item.assetid)"><span><img :src="item.asseturl" alt=""></span>{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
-          <td class="quick_buy_td" @click="cancel(item.id)">
+          <td class="quick_buy_td" @click="cancel(item._id)">
             <button>取消收藏</button>
           </td>
         </tr>
         <tr class="classify" v-if="caseList.length!==0">
           <td colspan="5">维修案例</td>
         </tr>
-        <tr class="content_tbody" v-for="(item,index) of caseList" :key="item.id">
+        <tr class="content_tbody" v-for="(item,index) of caseList" :key="item._id">
           <td @click="turnDetails(item.apikey,item.assetid)">{{item.assetname}}</td>
           <td>{{item.sell_type}}</td>
-          <td class="quick_buy_td" @click="cancel(item.id)">
+          <td class="quick_buy_td" @click="cancel(item._id)">
             <button>取消收藏</button>
           </td>
         </tr>
@@ -67,7 +67,7 @@
 </template>
 <script>
   import axios from "axios";
-  import "../../common/stylus/paging.styl";
+  import "@/common/stylus/paging.styl";
   import {baseURL, cardURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
   
