@@ -12,7 +12,7 @@
     components: {},
     data() {
       return {
-        toggleParam: ["交易平台", "转让平台"],
+        toggleParam: ["搜索","交易平台", "转让平台"],
       }
     },
     props: {
