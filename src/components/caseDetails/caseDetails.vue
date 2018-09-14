@@ -20,36 +20,90 @@
         <span class="trust" v-if="caseDetails.creditlevel!=='未认证'">{{caseDetails.creditlevel}}</span>
       </div>
       <div :class="caseDetails.shopcart_id?'like':'dislike'" @click="toggleLike(caseDetails.id)">收藏</div>
-      <a href="/caseSource" @click="getCaseSource"><p class="tracing">可信溯源</p></a>
-      <div class="intro_list">
-        <ul>
-          <li>
-            <span>资产所属人</span>
-            <span class="holder">：{{caseDetails.assetowner}}</span>
-          </li>
-          <li>
-            <span>权益</span>
-            <span>：{{caseDetails.sell_type}}</span>
-          </li>
-          <li>
-            <span>价格</span>
-            <span>：{{caseDetails.price}}</span>
-          </li>
-          <li>
-            <span>案例ID</span>
-            <span>：{{caseDetails.id}}</span>
-          </li>
-          <li>
-            <span>上架时间</span>
-            <span>：{{caseDetails.sell_at}}</span>
-          </li>
-        </ul>
+      <!--<a href="/caseSource" @click="getCaseSource"><p class="tracing">可信溯源</p></a>-->
+      <div class="price">
+        <span class="triangle_border_nw"></span>
+        <label>此诊断报告价格：</label>
+        <span class="money">{{caseDetails.price}}</span>
         <a href="javascript:void(0)" @click="buy(caseDetails.id)"><p class="buy">一键购买</p></a>
       </div>
-      <div class="intro_text">
-        <span>案例简介</span>
-        <p style="line-height: 18px">{{caseDetails.assetcontent}}</p>
+
+      <div class="details-box">
+        <div class="details-left">
+          <span class="details-dot"></span>
+          <ul>
+            <li>
+              <label>资产所属人</label>
+              <span>：{{caseDetails.assetowner}}</span>
+            </li>
+            <li>
+              <label>权益</label>
+              <span>：{{caseDetails.sell_type}}</span>
+            </li>
+            <li>
+              <label>价格</label>
+              <span>：{{caseDetails.price}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="details-right">
+          <span class="details-dot"></span>
+          <ul>
+            <li>
+              <label>案例ID</label>
+              <span>：{{caseDetails.id}}</span>
+            </li>
+            <li>
+              <label>上架时间</label>
+              <span>：{{caseDetails.sell_at}}</span>
+            </li>
+          </ul>
+        </div>
       </div>
+      <div style="clear: both"></div>
+
+      <div class="title">
+        <span class="title-intro"></span>
+        <span class="title-text">案例简介</span>
+      </div>
+      <div class="intro_detail">
+        <p>{{caseDetails.assetcontent}}</p>
+      </div>
+
+      <div class="title">
+        <span class="title-source"></span>
+        <span class="title-text">可信溯源</span>
+        <span class="check-more" v-if="!isShow" @click="caseSource != ''?isShow = true:isShow = false">显示更多</span>
+        <span class="check-more" v-if="isShow" @click="caseSource != ''?isShow = false:isShow = true">收起更多</span>
+      </div>
+      <div class="transfer-record" :class="{more:isShow}">
+        <div class="transfer-title">
+          <span class="transfer-dot"></span>
+          <label>资产转让记录</label>
+        </div>
+        <div class="transfer-container">
+          <ul v-for="(item,index) of caseSource" :key="item.id">
+            <li>
+              <label>"交易发起方"</label>
+              <span>："{{item.from}}",</span>
+            </li>
+            <li>
+              <label>"交易接收方"</label>
+              <span>："{{item.to}}",</span>
+            </li>
+            <li>
+              <label>"交易价格"</label>
+              <span>：{{item.price}},</span>
+            </li>
+            <li>
+              <label>"交易时间"</label>
+              <span>："{{item.updated_at}}"</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
     </div>
   </div>
 </template>
@@ -67,11 +121,13 @@
       return {
         toggleIndex: 0,
         caseDetails:{},
+        caseSource:[],
         userId:"",
         token:"",
         apiKey:"",
         assetId:"",
         id:"",
+        isShow:false
       }
     },
     mounted() {
@@ -81,6 +137,7 @@
       }
       this.apiKey=JSON.parse(sessionStorage.getItem("caseDetails")).apikey;
       this.assetId=JSON.parse(sessionStorage.getItem("caseDetails")).assetid;
+      this.acquireCaseSource();
       this.acquireCaseDetails()
     },
     watch: {},
@@ -137,6 +194,26 @@
           this.open()
         }
       },
+      acquireCaseSource(){
+        axios({
+          method: "GET",
+          url: `${cardURL}/v1/transed-asset/${this.assetId}/apikey/${this.apiKey}?page=0&limit=1000000`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          if (res.data.data != null) {
+            for(let v of res.data.data){
+              v.updated_at=utils.formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
+            }
+            this.caseSource = res.data.data
+          }else{
+            this.caseSource =[]
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
       acquireCaseDetails(){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
           axios({
@@ -166,9 +243,9 @@
           })
         }
       },
-      getCaseSource() {
+/*      getCaseSource() {
         this.$store.commit("changeCaseSource",this.caseDetails);
-      },
+      },*/
       addCollection(){
         this.$store.commit("addCollection")
       },
@@ -364,4 +441,195 @@
       }
     }
   }
+  .price{
+    width: 1200px;
+    height: 60px;
+    background-color: #e9e9e9;
+    line-height 60px
+    label{
+      font-size: 16px;
+      color: #666666;
+    }
+    a{
+      outline none
+      .buy{
+        width: 160px;
+        height: 54px;
+        display inline-block;
+        background-color: #d91e01;
+        font-size: 22px;
+        color: #ffffff;
+        text-align center
+        margin-top: 3px;
+        float right
+        margin-right:3px
+      }
+    }
+    .money{
+      font-size: 24px;
+      color: #d91f00;
+    }
+    .triangle_border_nw{
+      width: 0;
+      height: 0;
+      border-width: 15px 15px 0 0;
+      border-style: solid;
+      border-color: #d91e01 transparent transparent transparent;
+      float: left;
+      margin-right: 5px;
+    }
+  }
+  .details-box{
+    ul{
+      margin-left: 30px;
+      font-size 14px
+      li{
+        margin-bottom 18px
+        label{
+          width: 110px;
+          display: inline-block;
+          color: #666;
+        }
+        span{
+          color: #222;
+        }
+      }
+    }
+    .details-left{
+      float left
+      width: 590px;
+      height: 125px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      margin-top 16px
+      margin-bottom: 20px;
+      .details-dot{
+        width: 10px;
+        height: 10px;
+        display inline-block
+        background-color: #f3f3f3;
+        border-radius 50%
+        margin:10px
+        margin-bottom 0
+      }
+    }
+    .details-right{
+      float right
+      width: 590px;
+      height: 125px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      margin-top 16px
+      margin-bottom: 20px;
+      .details-dot{
+        width: 10px;
+        height: 10px;
+        display inline-block
+        background-color: #f3f3f3;
+        border-radius 50%
+        margin:10px
+        margin-bottom 0
+      }
+    }
+  }
+  .title{
+    width: 1200px;
+    height: 45px;
+    background-color: #ffffff;
+    border-radius: 10px 10px 0 0;
+    border: solid 1px #e5e5e5;
+    margin-top 15px
+    margin-bottom 4px
+    line-height 45px
+    font-size: 18px;
+    color: #c82c13;
+    .title-intro{
+      width: 18px;
+      height: 20px;
+      background:url("./images/case.png") no-repeat center
+      display: inline-block;
+      margin-left: 10px;
+      margin-right: 3px;
+      position: relative;
+      top: 4px;
+    }
+    .title-source{
+      width: 18px;
+      height: 20px;
+      background:url("./images/belive.png") no-repeat center
+      display: inline-block;
+      margin-left: 10px;
+      margin-right: 3px;
+      position: relative;
+      top: 4px;
+    }
+    .check-more{
+      font-size: 14px;
+      color: #666666;
+      cursor pointer
+      float right
+      margin-right 24px
+    }
+  }
+  .more{
+    height:auto !important
+  }
+  .transfer-record{
+    width: 1200px;
+    height: 145px;
+    background-color: #ffffff;
+    border-radius: 0 0 10px 10px;
+    border: solid 1px #e5e5e5;
+    margin-bottom 60px
+    overflow: hidden;
+    .transfer-title{
+      height:54px
+      line-height 54px
+      .transfer-dot{
+        width: 8px;
+        height: 8px;
+        background-color: #dcdcdc;
+        display: inline-block;
+        border-radius: 50%;
+        margin-left: 18px;
+        margin-right: 2px;
+        margin-bottom: 2px;
+      }
+      label{
+        font-size: 18px;
+        color: #333333;
+      }
+    }
+    .transfer-container{
+      margin-left 30px
+      line-height normal
+      margin-bottom: 27px;
+      ul{
+        margin-bottom 27px
+        li{
+          label{
+            color: #333333
+            width: 84px;
+            display: inline-block;
+          }
+          span{
+            color: #666666;
+          }
+        }
+      }
+    }
+  }
+  .intro_detail{
+    width: 1200px;
+    height: 145px;
+    background-color: #fff;
+    border-radius: 0 0 10px 10px;
+    border: solid 1px #e5e5e5;
+    margin-bottom: 20px;
+    p{
+      line-height: 18px
+      padding: 20px 30px;
+    }
+  }
+
 </style>

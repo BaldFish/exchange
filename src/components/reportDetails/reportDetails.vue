@@ -76,14 +76,15 @@
       </div>
       <div style="clear: both"></div>
       <div class="title">
-        <span class="title-line"></span>
+        <span class="title-source"></span>
         <span class="title-text">可信溯源</span>
+        <span class="check-more" v-if="!isShow" @click="reportSource != ''?isShow = true:isShow = false">显示更多</span>
+        <span class="check-more" v-if="isShow" @click="reportSource != ''?isShow = false:isShow = true">收起更多</span>
       </div>
       <div class="transfer-record" :class="{more:isShow}">
         <div class="transfer-title">
           <span class="transfer-dot"></span>
           <label>资产转让记录</label>
-          <span class="check-more" @click="reportSource != ''?isShow = true:isShow = false">显示更多</span>
         </div>
         <div class="transfer-container">
           <ul v-for="(item,index) of reportSource" :key="item.id">
@@ -401,9 +402,7 @@
     border-width: 15px 15px 0 0;
     border-style: solid;
     border-color: #d91e01 transparent transparent transparent;
-    margin: 40px auto;
-    position: relative;
-    top: -9px;
+    float: left;
     margin-right: 5px;
   }
   .buy{
@@ -465,16 +464,23 @@
     margin-bottom 4px
     line-height 45px
     font-size: 18px;
-    color: #666666;
-    .title-line{
-      width: 2px;
-      height: 17px;
-      background-color: #d91e01;
+    color: #c82c13;
+    .title-source{
+      width: 18px;
+      height: 20px;
+      background:url("./images/belive.png") no-repeat center
       display: inline-block;
-      margin-left: 18px;
+      margin-left: 10px;
       margin-right: 3px;
       position: relative;
-      top: 3px;
+      top: 4px;
+    }
+    .check-more{
+      font-size: 14px;
+      color: #666666;
+      cursor pointer
+      float right
+      margin-right 24px
     }
   }
   .more{
@@ -504,13 +510,6 @@
       label{
         font-size: 18px;
         color: #333333;
-      }
-      .check-more{
-        font-size: 14px;
-        color: #666666;
-        cursor pointer
-        float right
-        margin-right 24px
       }
     }
     .transfer-container{
