@@ -51,7 +51,7 @@
           <div class="bar"></div>
         </div>
       </div>
-      <div class="headline">
+      <!--<div class="headline">
         <p></p>
         <span>维修设备</span>
         <p></p>
@@ -87,7 +87,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>-->
       <div class="headline">
         <p></p>
         <span>维修案例</span>
@@ -229,7 +229,6 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          console.log(res)
           for (let v of res.data.data) {
             v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
           }
