@@ -18,35 +18,35 @@
           <h3>诊断报告</h3>
           <a href="/moreReport">查看更多</a>
         </div>
-        <div class="fr fr_report" v-for="(item,index) of reportList" :key="item.id" >
-          <h4><a href="/reportDetails" @click="getReportDetails(item.id)">{{item.assetname}}</a></h4>
+        <div class="fr fr_report" v-for="(item,index) of reportList" :key="item.id" @click="getReportDetails(item.id)">
+          <h4><a href="javascript:void(0)">{{item.assetname}}</a></h4>
           <div class="attestation">
             <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
             <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
             <span class="trust" v-if="item.creditlevel!=='未认证'">{{item.creditlevel}}</span>
           </div>
           <div class="putaway">
-            <a class="time" href="/reportDetails" @click="getReportDetails(item.id)"><span>报告生成时间：</span>{{item.generate_time}}</a>
-            <a class="data" href="/reportDetails" @click="getReportDetails(item.id)"><span>数据来源：</span>{{item.resource}}</a>
+            <a class="time" href="javascript:void(0)"><span>报告生成时间：</span>{{item.generate_time}}</a>
+            <a class="data" href="javascript:void(0)"><span>数据来源：</span>{{item.resource}}</a>
           </div>
           <div class="putaway">
-            <a class="vin" href="/reportDetails" @click="getReportDetails(item.id)"><span>VIN码：</span>{{item.vin}}</a>
-            <a class="breakdown" href="/reportDetails" @click="getReportDetails(item.id)"><span>故障码个数：</span>{{item.fault_n}}个</a>
-            <a class="equity" href="/reportDetails" @click="getReportDetails(item.id)"><span>权益：</span>{{item.sell_type}}</a>
+            <a class="vin" href="javascript:void(0)"><span>VIN码：</span>{{item.vin}}</a>
+            <a class="breakdown" href="javascript:void(0)"><span>故障码个数：</span>{{item.fault_n}}个</a>
+            <a class="equity" href="javascript:void(0)"><span>权益：</span>{{item.sell_type}}</a>
           </div>
           <!--<div class="belong">
-            <a href="/reportDetails" @click="getReportDetails(item.id)"><span>所属人：</span>{{item.assetowner}}</a>
-          </div>-->
-          <!--<div class="fault">
+            <a href="javascript:void(0)"><span>所属人：</span>{{item.assetowner}}</a>
+          </div>
+          <div class="fault">
             <p>
-              <a href="/caseDetails" @click="getCaseDetails(item.id)">
+              <a href="javascript:void(0)">
                 <span>故障现象：</span>{{item.assetcontent}}
               </a>
             </p>
           </div>-->
           <div class="price_box">
-            <a href="/reportDetails" @click="getReportDetails(item.id)"><p class="price">{{item.price}}</p></a>
-            <a href="/reportDetails" @click="getReportDetails(item.id)"><p class="tracing">可信溯源</p></a>
+            <a href="javascript:void(0)"><p class="price">{{item.price}}</p></a>
+            <a href="javascript:void(0)"><p class="tracing">可信溯源</p></a>
           </div>
           <div class="bar"></div>
         </div>
@@ -98,32 +98,32 @@
           <h3>维修案例</h3>
           <a href="/moreCase">查看更多</a>
         </div>
-        <div class="fr fr_case" v-for="(item,index) of caseList" :key="item.id">
-          <h4><a href="/caseDetails" @click="getCaseDetails(item.id)">{{item.assetname}}</a></h4>
+        <div class="fr fr_case" v-for="(item,index) of caseList" :key="item.id" @click="getCaseDetails(item.id)">
+          <h4><a href="javascript:void(0)">{{item.assetname}}</a></h4>
           <div class="attestation">
             <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
             <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
             <span class="trust" v-if="item.creditlevel!=='未认证'">{{item.creditlevel}}</span>
           </div>
           <div class="putaway">
-            <a class="time" href="/caseDetails" @click="getCaseDetails(item.id)"><span>上架时间：</span>{{item.sell_at}}</a>
-            <a class="equity" href="/caseDetails" @click="getCaseDetails(item.id)"><span>权益：</span>{{item.sell_type}}</a>
+            <a class="time" href="javascript:void(0)"><span>上架时间：</span>{{item.sell_at}}</a>
+            <a class="equity" href="javascript:void(0)"><span>权益：</span>{{item.sell_type}}</a>
           </div>
           <div class="belong">
-            <a href="/caseDetails" @click="getCaseDetails(item.id)">
+            <a href="javascript:void(0)">
               <span>所属人：</span>{{item.assetowner}}
             </a>
           </div>
           <div class="fault">
             <p>
-              <a href="/caseDetails" @click="getCaseDetails(item.id)">
+              <a href="javascript:void(0)">
                 <span>故障现象：</span>{{item.assetcontent}}
               </a>
             </p>
           </div>
           <div class="price_box">
-            <a href="/caseDetails" @click="getCaseDetails(item.id)"><p class="price">{{item.price}}</p></a>
-            <a href="/caseSource" @click="getCaseSource(item.id)"><p class="tracing">可信溯源</p></a>
+            <a href="javascript:void(0)"><p class="price">{{item.price}}</p></a>
+            <a href="javascript:void(0)"><p class="tracing">可信溯源</p></a>
           </div>
           <div class="bar"></div>
         </div>
@@ -229,6 +229,7 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
+          console.log(res)
           for (let v of res.data.data) {
             v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
           }
@@ -257,6 +258,7 @@
         this.$store.commit("changeCaseDetails", _.find(this.caseList, function (o) {
           return o.id === val
         }));
+        this.$router.push("/caseDetails")
       },
       getCaseSource(val) {
         this.$store.commit("changeCaseSource", _.find(this.caseList, function (o) {
@@ -277,6 +279,7 @@
         this.$store.commit("changeReportDetails", _.find(this.reportList, function (o) {
           return o.id === val
         }));
+        this.$router.push("/reportDetails")
       },
     },
   }
@@ -344,6 +347,7 @@
           background-image: url('./images/04.png');
         }
         .fr_report {
+          cursor pointer
           margin 0 auto
           margin-bottom 18px
           position relative
@@ -657,6 +661,7 @@
           background-image: url('./images/01.png');
         }
         .fr_case {
+          cursor pointer
           margin-bottom 18px
           position relative
           box-sizing border-box

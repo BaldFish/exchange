@@ -27,21 +27,21 @@
       </div>
     </div>
     <div class="report_list">
-      <div class="fr_report" v-for="(item,index) of searchReportList" :key="item.id">
-        <h4><a href="/reportDetails" @click="getReportDetails(item.id)" v-html="item.assetname"></a></h4>
+      <div class="fr_report" v-for="(item,index) of searchReportList" :key="item.id" @click="getReportDetails(item.id)">
+        <h4><a href="javascript:void(0)" v-html="item.assetname"></a></h4>
         <div class="attestation">
           <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
           <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
           <span class="trust" v-if="item.creditlevel!=='未认证'">{{item.creditlevel}}</span>
         </div>
         <div class="putaway">
-          <a class="time" href="/reportDetails" @click="getReportDetails(item.id)"><span>报告生成时间：</span>{{item.generate_time}}</a>
-          <a class="data" href="/reportDetails" @click="getReportDetails(item.id)"><span>数据来源：</span>{{item.resource}}</a>
+          <a class="time" href="javascript:void(0)"><span>报告生成时间：</span>{{item.generate_time}}</a>
+          <a class="data" href="javascript:void(0)"><span>数据来源：</span>{{item.resource}}</a>
         </div>
         <div class="putaway">
-          <a class="vin" href="/reportDetails" @click="getReportDetails(item.id)"><span>VIN码：</span>{{item.vin}}</a>
-          <a class="breakdown" href="/reportDetails" @click="getReportDetails(item.id)"><span>故障码个数：</span>{{item.fault_n}}个</a>
-          <a class="equity" href="/reportDetails" @click="getReportDetails(item.id)"><span>权益：</span>{{item.sell_type}}</a>
+          <a class="vin" href="javascript:void(0)"><span>VIN码：</span>{{item.vin}}</a>
+          <a class="breakdown" href="javascript:void(0)"><span>故障码个数：</span>{{item.fault_n}}个</a>
+          <a class="equity" href="javascript:void(0)"><span>权益：</span>{{item.sell_type}}</a>
         </div>
         <!--<div class="fault">
           <p>
@@ -52,9 +52,9 @@
         </div>
         <div :class="item.shopcart_id?'like':'dislike'" @click="toggleLike(item.id)">收藏</div>-->
         <div class="price_box">
-          <a href="/reportDetails" @click="getReportDetails(item.id)"><p class="price">{{item.price}}</p></a>
-          <a href="/reportDetails" @click="getReportDetails(item.id)"><p class="tracing">可信溯源</p></a>
-          <a href="javascript:void(0)" @click="buy(item.id)"><p class="buy">一键购买</p></a>
+          <a href="javascript:void(0)"><p class="price">{{item.price}}</p></a>
+          <a href="javascript:void(0)"><p class="tracing">可信溯源</p></a>
+          <a href="javascript:void(0)" @click.stop="buy(item.id)"><p class="buy">一键购买</p></a>
         </div>
       </div>
     </div>
@@ -170,6 +170,7 @@
         this.$store.commit("changeReportDetails", _.find(this.searchReportList, function (o) {
           return o.id === val
         }));
+        this.$router.push("/reportDetails")
       },
       handleCurrentChange(val) {
         this.reportPage = val;
@@ -297,6 +298,7 @@
       margin 0 auto
       padding-top 30px
       .fr_report {
+        cursor pointer
         margin 0 auto
         margin-bottom 18px
         position relative

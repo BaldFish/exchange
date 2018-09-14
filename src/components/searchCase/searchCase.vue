@@ -11,34 +11,34 @@
       </div>
     </div>
     <div class="case_list">
-      <div class="fr_case" v-for="(item,index) of searchCaseList" :key="item.id">
-        <h4><a href="/caseDetails" @click="getCaseDetails(item.id)" v-html="item.assetname"></a></h4>
+      <div class="fr_case" v-for="(item,index) of searchCaseList" :key="item.id"  @click="getCaseDetails(item.id)">
+        <h4><a href="javascript:void(0)" v-html="item.assetname"></a></h4>
         <div class="attestation">
           <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
           <span class="person" v-if="item.authtype==='认证个人'">{{item.authtype}}</span>
           <span class="trust" v-if="item.creditlevel!=='未认证'">{{item.creditlevel}}</span>
         </div>
         <div class="putaway">
-          <a class="time" href="/caseDetails" @click="getCaseDetails(item.id)"><span>上架时间：</span>{{item.sell_at}}</a>
-          <a class="equity" href="/caseDetails" @click="getCaseDetails(item.id)"><span>权益：</span>{{item.sell_type}}</a>
+          <a class="time" href="javascript:void(0)"><span>上架时间：</span>{{item.sell_at}}</a>
+          <a class="equity" href="javascript:void(0)"><span>权益：</span>{{item.sell_type}}</a>
         </div>
         <div class="belong">
-          <a href="/caseDetails" @click="getCaseDetails(item.id)">
+          <a href="javascript:void(0)">
             <span>所属人：</span>{{item.assetowner}}
           </a>
         </div>
         <div class="fault">
           <p>
-            <a href="/caseDetails" @click="getCaseDetails(item.id)">
+            <a href="javascript:void(0)">
               <span>故障现象：</span><span v-html="item.assetcontent"></span>
             </a>
           </p>
         </div>
-        <div :class="item.shopcart_id?'like':'dislike'" @click="toggleLike(item.id)">收藏</div>
+        <div :class="item.shopcart_id?'like':'dislike'" @click.stop="toggleLike(item.id)">收藏</div>
         <div class="price_box">
-          <a href="/caseDetails" @click="getCaseDetails(item.id)"><p class="price">{{item.price}}</p></a>
-          <a href="/caseSource" @click="getCaseSource(item.id)"><p class="tracing">可信溯源</p></a>
-          <a href="javascript:void(0)" @click="buy(item.id)"><p class="buy">一键购买</p></a>
+          <a href="javascript:void(0)"><p class="price">{{item.price}}</p></a>
+          <a href="javascript:void(0)"><p class="tracing">可信溯源</p></a>
+          <a href="javascript:void(0)" @click.stop="buy(item.id)"><p class="buy">一键购买</p></a>
         </div>
       </div>
     </div>
@@ -201,6 +201,7 @@
         this.$store.commit("changeCaseDetails", _.find(this.searchCaseList, function (o) {
           return o.id === val
         }));
+        this.$router.push("/caseDetails")
       },
       getCaseSource(val) {
         this.$store.commit("changeCaseSource", _.find(this.searchCaseList, function (o) {
@@ -215,7 +216,7 @@
       },
       buy(val) {
         if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
-          let buyInfoObj = _.find(this.caseList, function (o) {
+          let buyInfoObj = _.find(this.searchCaseList, function (o) {
             return o.id === val
           });
           this.apiKey = buyInfoObj.apikey;
@@ -278,6 +279,7 @@
       margin 0 auto
       padding-top 30px
       .fr_case {
+        cursor pointer
         margin 0 auto
         margin-bottom 18px
         position relative
