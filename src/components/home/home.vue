@@ -864,7 +864,7 @@
           a {
             img {
               width: 1920px;
-              height 600px
+              height 400px
               /*Firefox*/
               margin: 0 -moz-calc(50% - 1212px);
               /*chrome safari*/
