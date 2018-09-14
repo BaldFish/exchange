@@ -844,7 +844,7 @@
   .carousel {
     max-width 1920px
     //min-width 1212px
-    height 600px
+    height 400px
     margin 0 auto
     .el-carousel {
       width 100%
