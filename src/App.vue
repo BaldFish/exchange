@@ -11,7 +11,7 @@
         <a href="/">欢迎来到 可信链 ！</a>
         <div class="favorite" @click="turnFavorite">
           <span class="s_text">收藏夹</span>
-          <span class="s_num">{{this.$store.state.favoriteCount}}</span>
+          <span class="s_num">{{favoriteCount}}</span>
         </div>
         
         <div class="no_login" v-if="!isLogin">
