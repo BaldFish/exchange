@@ -134,14 +134,26 @@
       }
     },
     mounted() {
-      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-        this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      let url = location.search;
+      if (url.indexOf("?") != -1) {
+        let theRequest = new Object();
+        let str = url.substr(1);
+        let strs = str.split("&");
+        for(let i = 0; i < strs.length; i ++) {
+          theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+        }
+        this.apiKey=theRequest.apikey;
+        this.assetId=theRequest.assetid;
+      } else{
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+          this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+        }
+        this.apiKey=JSON.parse(sessionStorage.getItem("reportDetails")).apikey;
+        this.assetId=JSON.parse(sessionStorage.getItem("reportDetails")).assetid;
       }
-      this.apiKey=JSON.parse(sessionStorage.getItem("reportDetails")).apikey;
-      this.assetId=JSON.parse(sessionStorage.getItem("reportDetails")).assetid;
+      this.acquireReportDetails();
       this.acquireReportSource();
-      this.acquireReportDetails()
     },
     watch: {},
     computed: {},
@@ -197,26 +209,6 @@
           this.open()
         }
       },
-      acquireReportSource(){
-        axios({
-          method: "GET",
-          url: `${cardURL}/v1/transed-asset/${this.assetId}/apikey/${this.apiKey}?page=0&limit=1000000`,
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }).then((res) => {
-          if (res.data.data != null) {
-            for(let v of res.data.data){
-              v.trans_at=utils.formatDate(new Date(v.trans_at), "yyyy-MM-dd hh:mm:ss");
-            }
-            this.reportSource = res.data.data
-          }else{
-            this.reportSource =[]
-          }
-        }).catch((err) => {
-          console.log(err);
-        })
-      },
       acquireReportDetails(){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
           axios({
@@ -247,6 +239,26 @@
             console.log(err);
           })
         }
+      },
+      acquireReportSource(){
+        axios({
+          method: "GET",
+          url: `${cardURL}/v1/transed-asset/${this.assetId}/apikey/${this.apiKey}?page=0&limit=1000000`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          if (res.data.data != null) {
+            for(let v of res.data.data){
+              v.trans_at=utils.formatDate(new Date(v.trans_at), "yyyy-MM-dd hh:mm:ss");
+            }
+            this.reportSource = res.data.data
+          }else{
+            this.reportSource =[]
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       },
       addCollection(){
         this.$store.commit("addCollection")
@@ -282,7 +294,7 @@
       },
       getBuy(val){
         this.$store.commit("changeBuy",val);
-      }
+      },
     },
   }
 </script>

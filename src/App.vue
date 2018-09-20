@@ -268,7 +268,7 @@
 
 <style scoped lang="stylus">
   #app {
-    min-height: 98vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
   }

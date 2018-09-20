@@ -131,14 +131,26 @@
       }
     },
     mounted() {
-      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-        this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      let url = location.search;
+      if (url.indexOf("?") != -1) {
+        let theRequest = new Object();
+        let str = url.substr(1);
+        let strs = str.split("&");
+        for(let i = 0; i < strs.length; i ++) {
+          theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+        }
+        this.apiKey=theRequest.apikey;
+        this.assetId=theRequest.assetid;
+      }else{
+        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+          this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+          this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+        }
+        this.apiKey=JSON.parse(sessionStorage.getItem("caseDetails")).apikey;
+        this.assetId=JSON.parse(sessionStorage.getItem("caseDetails")).assetid;
       }
-      this.apiKey=JSON.parse(sessionStorage.getItem("caseDetails")).apikey;
-      this.assetId=JSON.parse(sessionStorage.getItem("caseDetails")).assetid;
+      this.acquireCaseDetails();
       this.acquireCaseSource();
-      this.acquireCaseDetails()
     },
     watch: {},
     computed: {},
@@ -252,6 +264,7 @@
       subtractCollection(){
         this.$store.commit("subtractCollection")
       },
+      //一键购买
       buy(val){
         if(JSON.parse(sessionStorage.getItem("loginInfo"))){
           let buyInfoObj=this.caseDetails;
@@ -259,6 +272,7 @@
           this.assetId=buyInfoObj.assetid;
           let data={};
           data.nums=1;
+          //创建订单
           axios({
             method: "POST",
             url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,

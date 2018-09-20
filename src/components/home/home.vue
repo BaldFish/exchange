@@ -187,9 +187,10 @@
       }
     },
     mounted() {
-      this.acquireReportList();
-      this.acquireCaseList();
-      this.acquireFacilityList();
+      this.acquireList();
+      //this.acquireReportList();
+      //this.acquireCaseList();
+      //this.acquireFacilityList();
       //获取banner图
       axios({
         method: 'get',
@@ -203,6 +204,26 @@
     watch: {},
     computed: {},
     methods: {
+      acquireList() {
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/asset/list`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          for (let v of res.data[1].data) {
+            v.generate_time = utils.formatDate(new Date(v.generate_time), "yyyy-MM-dd hh:mm:ss");
+          }
+          this.reportList = res.data[1].data;
+          for (let v of res.data[0].data) {
+            v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
+          }
+          this.caseList = res.data[0].data;
+        }).catch((err) => {
+          console.log(err)
+        })
+      },
       //获取诊断报告列表
       acquireReportList() {
         axios({

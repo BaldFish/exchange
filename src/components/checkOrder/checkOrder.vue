@@ -45,15 +45,15 @@
           <span>选择支付方式：&nbsp;&nbsp;</span>
           <span class="pay">
             <label class="pay_label">
-              <input class="pay_radio" type="radio" name="pay" value=30 v-model="value">
+              <input class="pay_radio" type="radio" name="pay" value="30" v-model="value">
               <span class="pay_radioInput"></span>银联
             </label>
             <label class="pay_label">
-              <input class="pay_radio" type="radio" name="pay" value=10 v-model="value">
+              <input class="pay_radio" type="radio" name="pay" value="10" v-model="value">
               <span class="pay_radioInput"></span>微信
             </label>
             <label class="pay_label">
-              <input class="pay_radio" type="radio" name="pay" value=0 v-model="value">
+              <input class="pay_radio" type="radio" name="pay" value="T1" v-model="value">
               <span class="pay_radioInput"></span>可信积分
             </label>
             <!--<label class="pay_label">
@@ -81,8 +81,8 @@
       <div class="check_code">
         <p>可使用可信积分，进行等价交易。</p>
         <p class="tip">提示：可用其它钱包地址支付</p>
-        <img class="check_code_img" :src="`data:image/png;base64,${paymentInfo.png}`" alt="" v-if="value===0">
-        <a class="check_code_a" :href="paymentInfo.image_url" target="_blank" v-if="value!==0">去支付</a>
+        <img class="check_code_img" :src="`data:image/png;base64,${paymentInfo.png}`" alt="" v-if="value==='T1'">
+        <a class="check_code_a" :href="paymentInfo.image_url" target="_blank" v-if="value!=='T1'">去支付</a>
       </div>
     </div>
     <div class="check_container" v-if="next===3">
@@ -145,7 +145,7 @@
         next: 1,
         timer: "",
         phone: "",
-        value: 0,
+        value: "T1",
       }
     },
     mounted() {
@@ -210,10 +210,10 @@
                   pay_method: this.value
                 })
               }).then((res) => {
-                if (this.value === 30 || 10 || 20) {
+                if (_.includes(["10","20","30"],this.value)) {
                   this.paymentInfo = res.data.data;
                   window.open(this.paymentInfo.image_url, "_blank")
-                } else if (this.value === 0) {
+                } else if (this.value === "T1") {
                   this.paymentInfo = res.data;
                 }
                 this.next = 2;
@@ -324,7 +324,7 @@
           //this.$router.push("/facilityDetails");
           window.open("/facilityDetails", "_blank");
         } else if (apiKey === "5b18a5b9cff7cb000194f2f7") {
-          this.getReportDetails(assetId)
+          this.getReportDetails(assetId);
           window.open("/reportDetails", "_blank");
         }
       },
