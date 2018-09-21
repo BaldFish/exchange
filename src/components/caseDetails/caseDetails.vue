@@ -27,7 +27,7 @@
         <span class="money">{{caseDetails.price}}</span>
         <a href="javascript:void(0)" @click="buy(caseDetails.id)"><p class="buy">一键购买</p></a>
       </div>
-
+      
       <div class="details-box">
         <div class="details-left">
           <span class="details-dot"></span>
@@ -61,7 +61,7 @@
         </div>
       </div>
       <div style="clear: both"></div>
-
+      
       <div class="title">
         <span class="title-intro"></span>
         <span class="title-text">案例简介</span>
@@ -69,7 +69,7 @@
       <div class="intro_detail">
         <p>{{caseDetails.assetcontent}}</p>
       </div>
-
+      
       <div class="title">
         <span class="title-source"></span>
         <span class="title-text">可信溯源</span>
@@ -102,16 +102,17 @@
           </ul>
         </div>
       </div>
-
-
+    
+    
     </div>
   </div>
 </template>
 
 <script>
   import axios from "axios";
-  import {baseURL,cardURL} from '@/common/js/public.js';
+  import {baseURL, cardURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
+  
   const querystring = require('querystring');
   
   export default {
@@ -120,34 +121,34 @@
     data() {
       return {
         toggleIndex: 0,
-        caseDetails:{},
-        caseSource:[],
-        userId:"",
-        token:"",
-        apiKey:"",
-        assetId:"",
-        id:"",
-        isShow:false
+        caseDetails: {},
+        caseSource: [],
+        userId: "",
+        token: "",
+        apiKey: "",
+        assetId: "",
+        id: "",
+        isShow: false
       }
     },
     mounted() {
       let url = location.search;
-      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-        this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
-        if(url.indexOf("?") != -1){
-          let theRequest = new Object();
-          let str = url.substr(1);
-          let strs = str.split("&");
-          for(let i = 0; i < strs.length; i ++) {
-            theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
-          }
-          this.apiKey=theRequest.apikey;
-          this.assetId=theRequest.assetid;
-        }else{
-          this.apiKey=JSON.parse(sessionStorage.getItem("caseDetails")).apikey;
-          this.assetId=JSON.parse(sessionStorage.getItem("caseDetails")).assetid;
+      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+        this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      }
+      if (url.indexOf("?") != -1) {
+        let theRequest = new Object();
+        let str = url.substr(1);
+        let strs = str.split("&");
+        for (let i = 0; i < strs.length; i++) {
+          theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
         }
+        this.apiKey = theRequest.apikey;
+        this.assetId = theRequest.assetid;
+      } else {
+        this.apiKey = JSON.parse(sessionStorage.getItem("caseDetails")).apikey;
+        this.assetId = JSON.parse(sessionStorage.getItem("caseDetails")).assetid;
       }
       this.acquireCaseDetails();
       this.acquireCaseSource();
@@ -166,47 +167,47 @@
         }).catch(() => {
         });
       },
-      toggleLike(val){
-        if(sessionStorage.getItem("loginInfo")){
-          let likeInfo=this.caseDetails;
-          this.apiKey=likeInfo.apikey;
-          this.assetId=likeInfo.assetid;
-          if(likeInfo.shopcart_id===""){
+      toggleLike(val) {
+        if (sessionStorage.getItem("loginInfo")) {
+          let likeInfo = this.caseDetails;
+          this.apiKey = likeInfo.apikey;
+          this.assetId = likeInfo.assetid;
+          if (likeInfo.shopcart_id === "") {
             axios({
               method: "POST",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
-                "X-Access-Token":this.token
+                "X-Access-Token": this.token
               }
             }).then((res) => {
-              this.id=res.data.id;
-              likeInfo.shopcart_id=this.id
+              this.id = res.data.id;
+              likeInfo.shopcart_id = this.id
               this.addCollection()
             }).catch((err) => {
               console.log(err);
             });
-          }else if(likeInfo.shopcart_id!==""){
-            this.id=likeInfo.shopcart_id;
+          } else if (likeInfo.shopcart_id !== "") {
+            this.id = likeInfo.shopcart_id;
             axios({
               method: "DELETE",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
-                "X-Access-Token":this.token
+                "X-Access-Token": this.token
               }
             }).then((res) => {
-              likeInfo.shopcart_id="";
+              likeInfo.shopcart_id = "";
               this.subtractCollection()
             }).catch((err) => {
               console.log(err);
             });
           }
-        }else {
+        } else {
           this.open()
         }
       },
-      acquireCaseSource(){
+      acquireCaseSource() {
         axios({
           method: "GET",
           url: `${cardURL}/v1/transed-asset/${this.assetId}/apikey/${this.apiKey}?page=0&limit=1000000`,
@@ -215,19 +216,19 @@
           }
         }).then((res) => {
           if (res.data.data != null) {
-            for(let v of res.data.data){
-              v.updated_at=utils.formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
+            for (let v of res.data.data) {
+              v.updated_at = utils.formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
             }
             this.caseSource = res.data.data
-          }else{
-            this.caseSource =[]
+          } else {
+            this.caseSource = []
           }
         }).catch((err) => {
           console.log(err);
         })
       },
-      acquireCaseDetails(){
-        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+      acquireCaseDetails() {
+        if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
           axios({
             method: "GET",
             url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail?userid=${this.userId}`,
@@ -235,12 +236,12 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
-            res.data.sell_at=utils.formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
-            this.caseDetails=res.data;
+            res.data.sell_at = utils.formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
+            this.caseDetails = res.data;
           }).catch((err) => {
             console.log(err);
           })
-        }else{
+        } else {
           axios({
             method: "GET",
             url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
@@ -248,52 +249,52 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
-            res.data.sell_at=utils.formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
-            this.caseDetails=res.data;
+            res.data.sell_at = utils.formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
+            this.caseDetails = res.data;
           }).catch((err) => {
             console.log(err);
           })
         }
       },
-/*      getCaseSource() {
-        this.$store.commit("changeCaseSource",this.caseDetails);
-      },*/
-      addCollection(){
+      /*      getCaseSource() {
+              this.$store.commit("changeCaseSource",this.caseDetails);
+            },*/
+      addCollection() {
         this.$store.commit("addCollection")
       },
-      subtractCollection(){
+      subtractCollection() {
         this.$store.commit("subtractCollection")
       },
       //一键购买
-      buy(val){
-        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-          let buyInfoObj=this.caseDetails;
-          this.apiKey=buyInfoObj.apikey;
-          this.assetId=buyInfoObj.assetid;
-          let data={};
-          data.nums=1;
+      buy(val) {
+        if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+          let buyInfoObj = this.caseDetails;
+          this.apiKey = buyInfoObj.apikey;
+          this.assetId = buyInfoObj.assetid;
+          let data = {};
+          data.nums = 1;
           //创建订单
           axios({
             method: "POST",
             url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              "X-Access-Token":this.token,
+              "X-Access-Token": this.token,
             },
-            data:querystring.stringify(data),
+            data: querystring.stringify(data),
           }).then((res) => {
-            buyInfoObj=res.data;
+            buyInfoObj = res.data;
             this.getBuy(buyInfoObj);
             this.$router.push("/checkOrder")
           }).catch((err) => {
             console.log(err);
           })
-        }else{
+        } else {
           this.open()
         }
       },
-      getBuy(val){
-        this.$store.commit("changeBuy",val);
+      getBuy(val) {
+        this.$store.commit("changeBuy", val);
       }
     },
   }
@@ -317,7 +318,7 @@
             vertical-align top
             display inline-block
             font-size 14px
-            a{
+            a {
               color: #666666;
             }
           }
@@ -403,13 +404,13 @@
         line-height 18px
         margin-bottom 24px
       }
-      .intro_list{
+      .intro_list {
         box-sizing border-box
         min-height 180px
         padding 20px 30px 5px
         background-color #ffffff
         position relative
-        .buy{
+        .buy {
           position absolute
           top 88px
           right 60px
@@ -421,21 +422,21 @@
           line-height 54px
           text-align center
         }
-        li{
+        li {
           font-size 0
           color: #222222;
           margin-bottom 15px
-          span{
+          span {
             display inline-block
             font-size 16px
             vertical-align top
           }
-          span:first-child{
+          span:first-child {
             width 80px
           }
         }
       }
-      .intro_text{
+      .intro_text {
         box-sizing border-box
         min-height 180px
         margin-top 22px
@@ -443,11 +444,11 @@
         padding 20px 30px
         background-color #ffffff
         border 1px solid #bfbfbf;
-        span{
+        span {
           color: #000000;
           font-size: 18px;
         }
-        p{
+        p {
           margin 18px 50px 30px 36px
           color: #666666;
           font-size: 14px;
@@ -455,18 +456,19 @@
       }
     }
   }
-  .price{
+  
+  .price {
     width: 1200px;
     height: 60px;
     background-color: #e9e9e9;
     line-height 60px
-    label{
+    label {
       font-size: 16px;
       color: #666666;
     }
-    a{
+    a {
       outline none
-      .buy{
+      .buy {
         width: 160px;
         height: 54px;
         display inline-block;
@@ -476,14 +478,14 @@
         text-align center
         margin-top: 3px;
         float right
-        margin-right:3px
+        margin-right: 3px
       }
     }
-    .money{
+    .money {
       font-size: 24px;
       color: #d91f00;
     }
-    .triangle_border_nw{
+    .triangle_border_nw {
       width: 0;
       height: 0;
       border-width: 15px 15px 0 0;
@@ -493,23 +495,24 @@
       margin-right: 5px;
     }
   }
-  .details-box{
-    ul{
+  
+  .details-box {
+    ul {
       margin-left: 30px;
       font-size 14px
-      li{
+      li {
         margin-bottom 18px
-        label{
+        label {
           width: 110px;
           display: inline-block;
           color: #666;
         }
-        span{
+        span {
           color: #222;
         }
       }
     }
-    .details-left{
+    .details-left {
       float left
       width: 590px;
       height: 125px;
@@ -517,17 +520,17 @@
       border-radius: 10px;
       margin-top 16px
       margin-bottom: 20px;
-      .details-dot{
+      .details-dot {
         width: 10px;
         height: 10px;
         display inline-block
         background-color: #f3f3f3;
         border-radius 50%
-        margin:10px
+        margin: 10px
         margin-bottom 0
       }
     }
-    .details-right{
+    .details-right {
       float right
       width: 590px;
       height: 125px;
@@ -535,18 +538,19 @@
       border-radius: 10px;
       margin-top 16px
       margin-bottom: 20px;
-      .details-dot{
+      .details-dot {
         width: 10px;
         height: 10px;
         display inline-block
         background-color: #f3f3f3;
         border-radius 50%
-        margin:10px
+        margin: 10px
         margin-bottom 0
       }
     }
   }
-  .title{
+  
+  .title {
     width: 1200px;
     height: 45px;
     background-color: #ffffff;
@@ -557,27 +561,27 @@
     line-height 45px
     font-size: 18px;
     color: #c82c13;
-    .title-intro{
+    .title-intro {
       width: 18px;
       height: 20px;
-      background:url("./images/case.png") no-repeat center
+      background: url("./images/case.png") no-repeat center
       display: inline-block;
       margin-left: 10px;
       margin-right: 3px;
       position: relative;
       top: 4px;
     }
-    .title-source{
+    .title-source {
       width: 18px;
       height: 20px;
-      background:url("./images/belive.png") no-repeat center
+      background: url("./images/belive.png") no-repeat center
       display: inline-block;
       margin-left: 10px;
       margin-right: 3px;
       position: relative;
       top: 4px;
     }
-    .check-more{
+    .check-more {
       font-size: 14px;
       color: #666666;
       cursor pointer
@@ -585,10 +589,12 @@
       margin-right 24px
     }
   }
-  .more{
-    height:auto !important
+  
+  .more {
+    height: auto !important
   }
-  .transfer-record{
+  
+  .transfer-record {
     width: 1200px;
     height: 145px;
     background-color: #ffffff;
@@ -596,10 +602,10 @@
     border: solid 1px #e5e5e5;
     margin-bottom 60px
     overflow: hidden;
-    .transfer-title{
-      height:54px
+    .transfer-title {
+      height: 54px
       line-height 54px
-      .transfer-dot{
+      .transfer-dot {
         width: 8px;
         height: 8px;
         background-color: #dcdcdc;
@@ -609,38 +615,39 @@
         margin-right: 2px;
         margin-bottom: 2px;
       }
-      label{
+      label {
         font-size: 18px;
         color: #333333;
       }
     }
-    .transfer-container{
+    .transfer-container {
       margin-left 30px
       line-height normal
       margin-bottom: 27px;
-      ul{
+      ul {
         margin-bottom 27px
-        li{
-          label{
+        li {
+          label {
             color: #333333
             width: 84px;
             display: inline-block;
           }
-          span{
+          span {
             color: #666666;
           }
         }
       }
     }
   }
-  .intro_detail{
+  
+  .intro_detail {
     width: 1200px;
     height: 145px;
     background-color: #fff;
     border-radius: 0 0 10px 10px;
     border: solid 1px #e5e5e5;
     margin-bottom: 20px;
-    p{
+    p {
       line-height: 18px
       padding: 20px 30px;
     }

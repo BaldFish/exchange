@@ -107,50 +107,51 @@
           </ul>
         </div>
       </div>
-
+    
     </div>
   </div>
 </template>
 
 <script>
   import axios from "axios";
-  import {baseURL,cardURL} from '@/common/js/public.js';
+  import {baseURL, cardURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
+  
   const querystring = require('querystring');
-
+  
   export default {
     name: "reportDetails",
     components: {},
     data() {
       return {
-        reportSource:[],
-        reportDetails:{},
-        userId:"",
-        token:"",
-        apiKey:"",
-        assetId:"",
-        id:"",
-        isShow:false
+        reportSource: [],
+        reportDetails: {},
+        userId: "",
+        token: "",
+        apiKey: "",
+        assetId: "",
+        id: "",
+        isShow: false
       }
     },
     mounted() {
       let url = location.search;
-      if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-        this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
-        if(url.indexOf("?") != -1){
-          let theRequest = new Object();
-          let str = url.substr(1);
-          let strs = str.split("&");
-          for(let i = 0; i < strs.length; i ++) {
-            theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
-          }
-          this.apiKey=theRequest.apikey;
-          this.assetId=theRequest.assetid;
-        }else{
-          this.apiKey=JSON.parse(sessionStorage.getItem("reportDetails")).apikey;
-          this.assetId=JSON.parse(sessionStorage.getItem("reportDetails")).assetid;
+      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+        this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      }
+      if (url.indexOf("?") != -1) {
+        let theRequest = new Object();
+        let str = url.substr(1);
+        let strs = str.split("&");
+        for (let i = 0; i < strs.length; i++) {
+          theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
         }
+        this.apiKey = theRequest.apikey;
+        this.assetId = theRequest.assetid;
+      } else {
+        this.apiKey = JSON.parse(sessionStorage.getItem("reportDetails")).apikey;
+        this.assetId = JSON.parse(sessionStorage.getItem("reportDetails")).assetid;
       }
       this.acquireReportDetails();
       this.acquireReportSource();
@@ -169,48 +170,48 @@
         }).catch(() => {
         });
       },
-      toggleLike(val){
-        if(sessionStorage.getItem("loginInfo")){
-          let likeInfo=this.reportDetails;
-          this.apiKey=likeInfo.apikey;
-          this.assetId=likeInfo.assetid;
-          if(likeInfo.shopcart_id===""){
+      toggleLike(val) {
+        if (sessionStorage.getItem("loginInfo")) {
+          let likeInfo = this.reportDetails;
+          this.apiKey = likeInfo.apikey;
+          this.assetId = likeInfo.assetid;
+          if (likeInfo.shopcart_id === "") {
             axios({
               method: "POST",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.apiKey}/${this.assetId}`,
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
-                "X-Access-Token":this.token
+                "X-Access-Token": this.token
               }
             }).then((res) => {
-              this.id=res.data.id;
-              likeInfo.shopcart_id=this.id
+              this.id = res.data.id;
+              likeInfo.shopcart_id = this.id
               this.addCollection()
             }).catch((err) => {
               console.log(err);
             });
-          }else if(likeInfo.shopcart_id!==""){
-            this.id=likeInfo.shopcart_id;
+          } else if (likeInfo.shopcart_id !== "") {
+            this.id = likeInfo.shopcart_id;
             axios({
               method: "DELETE",
               url: `${baseURL}/v1/shopcart/${this.userId}/${this.id}`,
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
-                "X-Access-Token":this.token
+                "X-Access-Token": this.token
               }
             }).then((res) => {
-              likeInfo.shopcart_id="";
+              likeInfo.shopcart_id = "";
               this.subtractCollection()
             }).catch((err) => {
               console.log(err);
             });
           }
-        }else {
+        } else {
           this.open()
         }
       },
-      acquireReportDetails(){
-        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
+      acquireReportDetails() {
+        if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
           axios({
             method: "GET",
             url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail?userid=${this.userId}`,
@@ -218,13 +219,13 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
-            res.data.sell_at=utils.formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
-            res.data.generate_time=utils.formatDate(new Date(res.data.generate_time), "yyyy-MM-dd hh:mm:ss");
-            this.reportDetails=res.data;
+            res.data.sell_at = utils.formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
+            res.data.generate_time = utils.formatDate(new Date(res.data.generate_time), "yyyy-MM-dd hh:mm:ss");
+            this.reportDetails = res.data;
           }).catch((err) => {
             console.log(err);
           })
-        }else{
+        } else {
           axios({
             method: "GET",
             url: `${baseURL}/v1/asset/${this.apiKey}/${this.assetId}/detail`,
@@ -232,15 +233,15 @@
               "Content-Type": "application/json",
             }
           }).then((res) => {
-            res.data.sell_at=utils.formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
-            res.data.generate_time=utils.formatDate(new Date(res.data.generate_time), "yyyy-MM-dd hh:mm:ss");
-            this.reportDetails=res.data;
+            res.data.sell_at = utils.formatDate(new Date(res.data.sell_at), "yyyy-MM-dd hh:mm:ss");
+            res.data.generate_time = utils.formatDate(new Date(res.data.generate_time), "yyyy-MM-dd hh:mm:ss");
+            this.reportDetails = res.data;
           }).catch((err) => {
             console.log(err);
           })
         }
       },
-      acquireReportSource(){
+      acquireReportSource() {
         axios({
           method: "GET",
           url: `${cardURL}/v1/transed-asset/${this.assetId}/apikey/${this.apiKey}?page=0&limit=1000000`,
@@ -249,51 +250,51 @@
           }
         }).then((res) => {
           if (res.data.data != null) {
-            for(let v of res.data.data){
-              v.trans_at=utils.formatDate(new Date(v.trans_at), "yyyy-MM-dd hh:mm:ss");
+            for (let v of res.data.data) {
+              v.trans_at = utils.formatDate(new Date(v.trans_at), "yyyy-MM-dd hh:mm:ss");
             }
             this.reportSource = res.data.data
-          }else{
-            this.reportSource =[]
+          } else {
+            this.reportSource = []
           }
         }).catch((err) => {
           console.log(err);
         })
       },
-      addCollection(){
+      addCollection() {
         this.$store.commit("addCollection")
       },
-      subtractCollection(){
+      subtractCollection() {
         this.$store.commit("subtractCollection")
       },
-      buy(val){
-        if(JSON.parse(sessionStorage.getItem("loginInfo"))){
-          let buyInfoObj=this.reportDetails;
-          this.apiKey=buyInfoObj.apikey;
-          this.assetId=buyInfoObj.assetid;
-          var data={};
-          data.nums=1;
+      buy(val) {
+        if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+          let buyInfoObj = this.reportDetails;
+          this.apiKey = buyInfoObj.apikey;
+          this.assetId = buyInfoObj.assetid;
+          var data = {};
+          data.nums = 1;
           axios({
             method: "POST",
             url: `${baseURL}/v1/order/${this.userId}/${this.apiKey}/${this.assetId}`,
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              "X-Access-Token":this.token,
+              "X-Access-Token": this.token,
             },
-            data:querystring.stringify(data),
+            data: querystring.stringify(data),
           }).then((res) => {
-            buyInfoObj=res.data;
+            buyInfoObj = res.data;
             this.getBuy(buyInfoObj);
             this.$router.push("/checkOrder")
           }).catch((err) => {
             console.log(err);
           })
-        }else{
+        } else {
           this.open()
         }
       },
-      getBuy(val){
-        this.$store.commit("changeBuy",val);
+      getBuy(val) {
+        this.$store.commit("changeBuy", val);
       },
     },
   }
@@ -317,7 +318,7 @@
             vertical-align top
             display inline-block
             font-size 14px
-            a{
+            a {
               color: #666666;
             }
           }
@@ -391,24 +392,29 @@
       }
     }
   }
-  .price{
+  
+  .price {
     width: 1200px;
     height: 60px;
     background-color: #e9e9e9;
     line-height 60px
   }
-  .price label{
+  
+  .price label {
     font-size: 16px;
     color: #666666;
   }
-  .price a{
+  
+  .price a {
     outline none
   }
-  .money{
+  
+  .money {
     font-size: 24px;
     color: #d91f00;
   }
-  .triangle_border_nw{
+  
+  .triangle_border_nw {
     width: 0;
     height: 0;
     border-width: 15px 15px 0 0;
@@ -417,7 +423,8 @@
     float: left;
     margin-right: 5px;
   }
-  .buy{
+  
+  .buy {
     width: 160px;
     height: 54px;
     display inline-block;
@@ -427,46 +434,55 @@
     text-align center
     margin-top: 3px;
     float right
-    margin-right:3px
+    margin-right: 3px
   }
-  .details-left,.details-right{
+  
+  .details-left, .details-right {
     width: 590px;
     height: 180px;
     background-color: #ffffff;
     border-radius: 10px;
     margin-top 16px
   }
-  .details-left{
+  
+  .details-left {
     float left
   }
-  .details-right{
+  
+  .details-right {
     float right
   }
-  .details-dot{
+  
+  .details-dot {
     width: 10px;
     height: 10px;
     display inline-block
     background-color: #f3f3f3;
     border-radius 50%
-    margin:10px
+    margin: 10px
     margin-bottom 0
   }
-  .details-box ul{
+  
+  .details-box ul {
     margin-left: 30px;
     font-size 14px
   }
-  .details-box ul li{
+  
+  .details-box ul li {
     margin-bottom 18px
   }
-  .details-box ul li label{
+  
+  .details-box ul li label {
     width: 110px;
     display: inline-block;
     color: #666;
   }
-  .details-box ul li span{
+  
+  .details-box ul li span {
     color: #222;
   }
-  .title{
+  
+  .title {
     width: 1200px;
     height: 45px;
     background-color: #ffffff;
@@ -477,17 +493,17 @@
     line-height 45px
     font-size: 18px;
     color: #c82c13;
-    .title-source{
+    .title-source {
       width: 18px;
       height: 20px;
-      background:url("./images/belive.png") no-repeat center
+      background: url("./images/belive.png") no-repeat center
       display: inline-block;
       margin-left: 10px;
       margin-right: 3px;
       position: relative;
       top: 4px;
     }
-    .check-more{
+    .check-more {
       font-size: 14px;
       color: #666666;
       cursor pointer
@@ -495,10 +511,12 @@
       margin-right 24px
     }
   }
-  .more{
-    height:auto !important
+  
+  .more {
+    height: auto !important
   }
-  .transfer-record{
+  
+  .transfer-record {
     width: 1200px;
     height: 145px;
     background-color: #ffffff;
@@ -506,10 +524,10 @@
     border: solid 1px #e5e5e5;
     margin-bottom 60px
     overflow: hidden;
-    .transfer-title{
-      height:54px
+    .transfer-title {
+      height: 54px
       line-height 54px
-      .transfer-dot{
+      .transfer-dot {
         width: 8px;
         height: 8px;
         background-color: #dcdcdc;
@@ -519,32 +537,30 @@
         margin-right: 2px;
         margin-bottom: 2px;
       }
-      label{
+      label {
         font-size: 18px;
         color: #333333;
       }
     }
-    .transfer-container{
+    .transfer-container {
       margin-left 30px
       line-height normal
       margin-bottom: 27px;
-      ul{
+      ul {
         margin-bottom 27px
-        li{
-          label{
+        li {
+          label {
             color: #333333
             width: 84px;
             display: inline-block;
           }
-          span{
+          span {
             color: #666666;
           }
         }
       }
     }
   }
-
-
 
 
 </style>
