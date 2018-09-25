@@ -81,7 +81,7 @@
 
 <script>
   import axios from "axios";
-  import {baseURL} from '@/common/js/public.js';
+  import {baseURL,cardURL} from '@/common/js/public.js';
 
   const querystring = require('querystring');
 
@@ -136,7 +136,7 @@
       //获取错误码
       axios({
         method: 'get',
-        url: `http://wallet-api-test.launchain.org:50000/v1/errors`
+        url: `${cardURL}/v1/errors`
       }).then(res => {
         this.codeErrors = res.data
       }).catch(error => {
