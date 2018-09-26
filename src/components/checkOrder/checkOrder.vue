@@ -18,9 +18,10 @@
         </thead>
         <tbody>
         <tr class="img_tbody">
-          <td @click="turnDetails(buyInfoObj.apikey,buyInfoObj.assetid)">
+          <td @click="turnDetails(buyInfoObj.apikey,buyInfoObj.assetid)" v-if="buyInfoObj.apikey!=='1111111111111'">
             <img :src="buyInfoObj.asseturl" alt="" v-if="buyInfoObj.apikey==='5ae04522cff7cb000194f2f4'">{{buyInfoObj.assetname}}
           </td>
+          <td v-if="buyInfoObj.apikey==='111111111111'">{{buyInfoObj.assetname}}</td>
           <td>{{buyInfoObj.sell_type}}</td>
           <td>{{buyInfoObj.count}}</td>
           <td>{{total}}</td>
