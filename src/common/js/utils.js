@@ -108,7 +108,7 @@ let utils = {
   /*
  函数：创建Cookie
  说明：
- 参数：string：需要匹配的数据（string类型），searchInput：搜索的关键字（string类型），attribute：css样式属性（）,value：css相对应的属性值
+ 参数：
  调用：
  返回值：
  */
@@ -128,5 +128,36 @@ let utils = {
   }
   document.cookie = cookieText;
 },
+  /*
+ 函数：获取Cookie
+ 说明：
+ 参数：
+ 调用：
+ 返回值：
+ */
+  getCookie:function (name) {
+  let cookieName = encodeURIComponent(name) + '=';
+  let cookieStart = document.cookie.indexOf(cookieName);
+  let cookieValue = null;
+  if (cookieStart > -1) {
+    let cookieEnd = document.cookie.indexOf(';', cookieStart);
+    if (cookieEnd == -1) {
+      cookieEnd = document.cookie.length;
+    }
+    cookieValue = decodeURIComponent(
+      document.cookie.substring(cookieStart + cookieName.length, cookieEnd));
+  }
+  return cookieValue;
+},
+  /*
+ 函数：删除Cookie
+ 说明：
+ 参数：
+ 调用：
+ 返回值：
+ */
+  unsetCookie:function (name) {
+  document.cookie = name + "= ; expires=" + new Date(0);
+}
 };
 export default utils

@@ -254,6 +254,7 @@
           this.codeNotice = false
         }
       },
+      //登录
       login() {
         if (this.loginWay) {
           let loginFormData = {
@@ -280,6 +281,8 @@
                   url: `${baseURL}/v1/sessions`,
                   data: querystring.stringify(loginFormData)
                 }).then(res => {
+                  document.cookie=`token=${res.data.token}`;
+                  document.cookie=`user_id=${res.data.user_id}`;
                   window.sessionStorage.setItem("loginInfo", JSON.stringify(res.data));
                   this.userId = res.data.user_id;
                   this.acquireUserInfo();
@@ -295,7 +298,6 @@
                       })
                     }
                   })
-
                 })
               }
             }
@@ -310,7 +312,6 @@
             captcha_id: this.captcha_id, //图片验证码ID
             captcha_number: this.captcha_number_right //图片验证码--图片
           };
-
           this.$validator.validateAll({
             mobileRight: this.phoneRight,
             captcha_number_right: this.captcha_number_right,
@@ -327,6 +328,8 @@
                   url: `${baseURL}/v1/sessions/phone`,
                   data: querystring.stringify(loginFormData)
                 }).then(res => {
+                  document.cookie=`token=${res.data.token}`;
+                  document.cookie=`user_id=${res.data.user_id}`;
                   window.sessionStorage.setItem("loginInfo", JSON.stringify(res.data));
                   this.userId = res.data.user_id;
                   this.acquireUserInfo();
@@ -357,7 +360,7 @@
           }
         }).then((res) => {
           res.data.phone = res.data.phone.substr(3, 3) + "***" + res.data.phone.substr(10, 4);
-          window.sessionStorage.setItem("userName", JSON.stringify(res.data));
+          window.sessionStorage.setItem("userInfo", JSON.stringify(res.data));
           this.$router.back(-1)
         }).catch((err) => {
           console.log(err);

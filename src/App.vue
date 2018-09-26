@@ -18,12 +18,12 @@
           <a href="/login">请登录</a>
           <a href="/register">免费注册</a>
         </div>
-        <div class="login" v-if="isLogin" @mouseleave="leaveUl">
-          <div @click.capture="toggle">{{userName}} <img src="./common/images/down.png" alt=""></div>
+        <div class="login" v-if="isLogin" @mouseleave.stop="leaveUl">
+          <div @click.stop="toggle">{{userName}} <img src="./common/images/down.png" alt=""></div>
           <ul v-if="switchover">
             <li><a href="/personalAssets" target="_blank">个人中心</a></li>
             <li><a href="/securityCenter" target="_blank">安全中心</a></li>
-            <li @click="dropOut">退出</li>
+            <li @click.stop="dropOut">退出</li>
           </ul>
         </div>
       </div>
@@ -103,6 +103,7 @@
   import myTopSearch from "@/components/topSearch/topSearch"
   import myToggle from "@/components/toggle/toggle"
   import axios from "axios";
+  import utils from "@/common/js/utils.js";
   
   export default {
     name: 'App',
@@ -125,29 +126,80 @@
         isShowLogin: false,
         isShowRegister: false,
         isShowForgetPassword: false,
-        toggleIndex:1,
-        toggleParam: ["搜索","交易平台", "转让平台"],
+        toggleIndex: 1,
+        toggleParam: ["搜索", "交易平台", "转让平台"],
         userId: '',
         token: "",
       }
     },
     beforeMount() {
-      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
-        this.isLogin = true;
-        this.userName = JSON.parse(sessionStorage.getItem("userName")).phone
+      let token = utils.getCookie("token");
+      if (token) {
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/sessions/check`,
+          headers: {
+            "Access-Token": `${token}`,
+          }
+        }).then((res) => {
+          if (res.data.user_id) {
+            window.sessionStorage.setItem("userInfo", JSON.stringify(res.data));
+            let loginInfo = {};
+            loginInfo.token = token;
+            loginInfo.user_id = res.data.user_id;
+            loginInfo._id = res.data._id;
+            window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+            if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+              this.isLogin = true;
+              this.userName = JSON.parse(sessionStorage.getItem("userInfo")).phone
+            } else {
+              this.isLogin = false
+            }
+            this.changTop()
+          } else {
+            this.dropOut()
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       } else {
-        this.isLogin = false
+        sessionStorage.removeItem('loginInfo');
+        sessionStorage.removeItem('userInfo');
       }
-      this.changTop()
     },
     beforeUpdate() {
-      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
-        this.isLogin = true;
-        this.userName = JSON.parse(sessionStorage.getItem("userName")).phone
+      let token = utils.getCookie("token");
+      if (token) {
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/sessions/check`,
+          headers: {
+            "Access-Token": `${token}`,
+          }
+        }).then((res) => {
+          if (res.data.user_id) {
+            window.sessionStorage.setItem("userInfo", JSON.stringify(res.data));
+            let loginInfo = {};
+            loginInfo.token = token;
+            loginInfo.user_id = res.data.user_id;
+            window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+            if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+              this.isLogin = true;
+              this.userName = JSON.parse(sessionStorage.getItem("userInfo")).phone
+            } else {
+              this.isLogin = false
+            }
+            this.changTop()
+          } else {
+            this.dropOut()
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       } else {
-        this.isLogin = false
+        sessionStorage.removeItem('loginInfo');
+        sessionStorage.removeItem('userInfo');
       }
-      this.changTop()
     },
     mounted() {
       if (sessionStorage.getItem("loginInfo")) {
@@ -196,12 +248,24 @@
           this.isRouterAlive = true
         })
       },
-      dropOut(command) {
-        sessionStorage.removeItem('loginInfo');
-        sessionStorage.removeItem('userInfo');
-        sessionStorage.removeItem('userName');
-        this.switchover = false;
-        location.reload()
+      dropOut() {
+        let sessionsId = JSON.parse(sessionStorage.getItem("userInfo")).session_id;
+        axios({
+          method: 'DELETE',
+          url: `${baseURL}/v1/sessions/${sessionsId}`,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          }
+        }).then(res => {
+          sessionStorage.removeItem('loginInfo');
+          sessionStorage.removeItem('userInfo');
+          utils.unsetCookie("token");
+          utils.unsetCookie("user_id");
+          this.switchover = false;
+          location.reload()
+        }).catch(error => {
+          console.log(error);
+        })
       },
       toggle() {
         this.switchover = !this.switchover
@@ -211,24 +275,11 @@
       },
       platform(index) {
         if (index === 0) {
-          window.location.href="http://47.92.98.66:5002"
+          window.location.href = "http://47.92.98.66:5002"
         } else if (index === 1) {
-          /*          if(JSON.parse(sessionStorage.getItem("loginInfo"))&&JSON.parse(sessionStorage.getItem("userName"))){
-                      let info={};
-                      info.loginInfo=JSON.parse(sessionStorage.getItem("loginInfo"));
-                      info.userName=JSON.parse(sessionStorage.getItem("userName"));
-                      console.log(info);
-                      let popup = window.open('http://10.0.0.123:5001',"title");
-                      setTimeout(function () {
-                        popup.postMessage(info, 'http://10.0.0.123:5001');
-                      }, 2000);
-                    }else{
-                      window.open('http://10.0.0.123:5001')
-                    }*/
-          //window.open('http://47.92.98.66:5001')
-          window.location.href="http://47.92.98.66:5000"
-        }else if (index === 2) {
-          window.location.href="http://47.92.98.66:5001"
+          window.location.href = "http://47.92.98.66:5000"
+        } else if (index === 2) {
+          window.location.href = "http://47.92.98.66:5001"
         }
       },
       open() {
@@ -402,7 +453,7 @@
         color #ffffff
         vertical-align top
         font-size 12px
-        img{
+        img {
           vertical-align top
           margin-top 18px
         }

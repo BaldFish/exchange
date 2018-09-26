@@ -32,10 +32,10 @@
         if (index === 0) {
           this.$router.push("/home")
         } else if (index === 1) {
-/*          if(JSON.parse(sessionStorage.getItem("loginInfo"))&&JSON.parse(sessionStorage.getItem("userName"))){
+/*          if(JSON.parse(sessionStorage.getItem("loginInfo"))&&JSON.parse(sessionStorage.getItem("userInfo"))){
             let info={};
             info.loginInfo=JSON.parse(sessionStorage.getItem("loginInfo"));
-            info.userName=JSON.parse(sessionStorage.getItem("userName"));
+            info.userInfo=JSON.parse(sessionStorage.getItem("userInfo"));
             console.log(info);
             let popup = window.open('http://10.0.0.123:5001',"title");
             setTimeout(function () {
