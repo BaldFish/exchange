@@ -99,18 +99,13 @@
 
 <script>
   import "@/common/stylus/index.styl";
-  import {baseURL, cardURL} from '@/common/js/public.js';
-  import myTopSearch from "@/components/topSearch/topSearch"
-  import myToggle from "@/components/toggle/toggle"
+  import {baseURL, cardURL, loginPlatform, exchangePlatform, transferPlatform, searchPlatform} from '@/common/js/public.js';
   import axios from "axios";
   import utils from "@/common/js/utils.js";
   
   export default {
     name: 'App',
-    components: {
-      myTopSearch,
-      myToggle,
-    },
+    components: {},
     provide() {
       return {
         reload: this.reload
@@ -275,11 +270,11 @@
       },
       platform(index) {
         if (index === 0) {
-          window.location.href = "http://47.92.98.66:5002"
+          window.location.href = searchPlatform
         } else if (index === 1) {
-          window.location.href = "http://47.92.98.66:5000"
+          window.location.href = exchangePlatform
         } else if (index === 2) {
-          window.location.href = "http://47.92.98.66:5001"
+          window.location.href = transferPlatform
         }
       },
       open() {

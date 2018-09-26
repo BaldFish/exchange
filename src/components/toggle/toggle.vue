@@ -7,6 +7,8 @@
 </template>
 
 <script>
+  import {baseURL, cardURL,loginPlatform,exchangePlatform,transferPlatform,searchPlatform} from '@/common/js/public.js';
+  
   export default {
     name: "toggle",
     components: {},
@@ -32,19 +34,7 @@
         if (index === 0) {
           this.$router.push("/home")
         } else if (index === 1) {
-/*          if(JSON.parse(sessionStorage.getItem("loginInfo"))&&JSON.parse(sessionStorage.getItem("userInfo"))){
-            let info={};
-            info.loginInfo=JSON.parse(sessionStorage.getItem("loginInfo"));
-            info.userInfo=JSON.parse(sessionStorage.getItem("userInfo"));
-            console.log(info);
-            let popup = window.open('http://10.0.0.123:5001',"title");
-            setTimeout(function () {
-              popup.postMessage(info, 'http://10.0.0.123:5001');
-            }, 2000);
-          }else{
-            window.open('http://10.0.0.123:5001')
-          }*/
-          window.open('http://47.92.98.66:5001')
+          window.open(transferPlatform)
         }
       }
     },
