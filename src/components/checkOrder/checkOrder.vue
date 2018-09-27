@@ -125,6 +125,7 @@
   import axios from "axios";
   import {baseURL, cardURL} from '@/common/js/public.js';
   import {BigNumber} from 'bignumber.js';
+  import utils from "@/common/js/utils.js";
   
   const querystring = require('querystring');
   
@@ -149,16 +150,66 @@
         value: "T1",
       }
     },
+    /*beforeMount() {
+      let token = utils.getCookie("token");
+      if (token) {
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/sessions/check`,
+          headers: {
+            "Access-Token": `${token}`,
+          }
+        }).then((res) => {
+          if (res.data.user_id) {
+            window.sessionStorage.setItem("userInfo", JSON.stringify(res.data));
+            let loginInfo = {};
+            loginInfo.token = token;
+            loginInfo.user_id = res.data.user_id;
+            window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+            if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+              this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+              this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+              //this.userName = JSON.parse(sessionStorage.getItem("userInfo")).phone
+              //this.isLogin = true;
+              this.acquireFavoriteCount();
+            } else {
+              //this.isLogin = false
+            }
+            //this.changTop()
+          } else {
+            //this.dropOut()
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      } else {
+        sessionStorage.removeItem('loginInfo');
+        sessionStorage.removeItem('userInfo');
+      }
+    },*/
     mounted() {
+      let url = location.search;
+      console.log(url)
       if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
         this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
         this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
+      }
+      if (url.indexOf("?") != -1) {
+        let theRequest = new Object();
+        let str = url.substr(1);
+        let strs = str.split("&");
+        for (let i = 0; i < strs.length; i++) {
+          theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+        }
+        this.orderNum = theRequest.order_id;
+        console.log(this.orderNum)
+      } else {
         if (JSON.parse(sessionStorage.getItem("buyInfoObj"))) {
           this.orderNum = JSON.parse(sessionStorage.getItem("buyInfoObj")).orderNum
         }
-        this.acquireOrderInfo();
-        this.acquireUserInfo();
       }
+      this.acquireOrderInfo();
+      //this.acquireUserInfo();
     },
     beforeRouteLeave(to, from, next) {
       clearTimeout(this.timer);
