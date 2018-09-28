@@ -134,12 +134,38 @@
         isShow: false
       }
     },
+    beforeMount() {
+      let token = utils.getCookie("token");
+      if (token) {
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/sessions/check`,
+          headers: {
+            "Access-Token": `${token}`,
+          }
+        }).then((res) => {
+          if (res.data.user_id) {
+            window.sessionStorage.setItem("userInfo", JSON.stringify(res.data));
+            let loginInfo = {};
+            loginInfo.token = token;
+            loginInfo.user_id = res.data.user_id;
+            window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+            this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+            this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
+            this.acquireReportDetails();
+          } else {
+            alert("登录失效")
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      } else {
+        sessionStorage.removeItem('loginInfo');
+        sessionStorage.removeItem('userInfo');
+      }
+    },
     mounted() {
       let url = location.search;
-      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
-        this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-      }
       if (url.indexOf("?") != -1) {
         let theRequest = new Object();
         let str = url.substr(1);

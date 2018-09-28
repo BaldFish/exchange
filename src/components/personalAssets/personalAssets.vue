@@ -23,6 +23,30 @@
         </tr>
         </thead>
         <tbody>
+        <tr class="classify" v-if="reportPackageList.length>0">
+          <td colspan="5">诊断报告包</td>
+        </tr>
+        <tr class="content_tbody" v-for="(item,index) of reportPackageList" :key="item.id">
+          <td>{{item.assetname}}</td>
+          <td>{{item.sell_type}}</td>
+          <td>{{item.count}}</td>
+          <td>{{item.price}}</td>
+          <td class="quick_buy_td">
+            <button>查看</button>
+          </td>
+        </tr>
+        <tr class="classify" v-if="casePackageList.length>0">
+          <td colspan="5">维修案例包</td>
+        </tr>
+        <tr class="content_tbody" v-for="(item,index) of casePackageList" :key="item.id">
+          <td>{{item.assetname}}</td>
+          <td>{{item.sell_type}}</td>
+          <td>{{item.count}}</td>
+          <td>{{item.price}}</td>
+          <td class="quick_buy_td">
+            <button>查看</button>
+          </td>
+        </tr>
         <tr class="classify" v-if="reportList.length>0">
           <td colspan="5">诊断报告</td>
         </tr>
@@ -107,6 +131,16 @@
       }
     },
     computed: {
+      reportPackageList:function () {
+        return this.assetList.filter(function (value, index, array) {
+          return value.apikey === "5b18a5b9cff7cb000194f1g5"
+        })
+      },
+      casePackageList:function () {
+        return this.assetList.filter(function (value, index, array) {
+          return value.apikey ==="5a6be74a55aaf50001a5e145"
+        })
+      },
       reportList: function () {
         return this.assetList.filter(function (value, index, array) {
           return value.apikey === "5b18a5b9cff7cb000194f2f7"
@@ -197,6 +231,7 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
+          console.log(res.data)
           this.total = res.data.count;
           for (let v of res.data.data) {
             v.created_at = utils.formatDate(new Date(v.created_at), "yyyy-MM-dd hh:mm:ss");

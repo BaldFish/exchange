@@ -131,12 +131,38 @@
         isShow: false
       }
     },
+    beforeMount() {
+      let token = utils.getCookie("token");
+      if (token) {
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/sessions/check`,
+          headers: {
+            "Access-Token": `${token}`,
+          }
+        }).then((res) => {
+          if (res.data.user_id) {
+            window.sessionStorage.setItem("userInfo", JSON.stringify(res.data));
+            let loginInfo = {};
+            loginInfo.token = token;
+            loginInfo.user_id = res.data.user_id;
+            window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+            this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+            this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
+            this.acquireCaseDetails();
+          } else {
+            alert("登录失效")
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      } else {
+        sessionStorage.removeItem('loginInfo');
+        sessionStorage.removeItem('userInfo');
+      }
+    },
     mounted() {
       let url = location.search;
-      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
-        this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-      }
       if (url.indexOf("?") != -1) {
         let theRequest = new Object();
         let str = url.substr(1);
@@ -207,26 +233,6 @@
           this.open()
         }
       },
-      acquireCaseSource() {
-        axios({
-          method: "GET",
-          url: `${cardURL}/v1/transed-asset/${this.assetId}/apikey/${this.apiKey}?page=0&limit=1000000`,
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }).then((res) => {
-          if (res.data.data != null) {
-            for (let v of res.data.data) {
-              v.updated_at = utils.formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
-            }
-            this.caseSource = res.data.data
-          } else {
-            this.caseSource = []
-          }
-        }).catch((err) => {
-          console.log(err);
-        })
-      },
       acquireCaseDetails() {
         if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
           axios({
@@ -255,6 +261,26 @@
             console.log(err);
           })
         }
+      },
+      acquireCaseSource() {
+        axios({
+          method: "GET",
+          url: `${cardURL}/v1/transed-asset/${this.assetId}/apikey/${this.apiKey}?page=0&limit=1000000`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          if (res.data.data != null) {
+            for (let v of res.data.data) {
+              v.updated_at = utils.formatDate(new Date(v.updated_at), "yyyy-MM-dd hh:mm:ss");
+            }
+            this.caseSource = res.data.data
+          } else {
+            this.caseSource = []
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       },
       /*      getCaseSource() {
               this.$store.commit("changeCaseSource",this.caseDetails);

@@ -39,6 +39,9 @@
               @click="turnDetails(item.apikey,item.assetid)">
             <p>{{item.assetname}}</p>
           </td>
+          <td v-if="item.apikey==='5a6be74a55aaf50001a5e145'||item.apikey==='5b18a5b9cff7cb000194f1g5'">
+            <p>{{item.assetname}}</p>
+          </td>
           <td>{{item.sell_type}}</td>
           <td>{{item.count}}</td>
           <td>

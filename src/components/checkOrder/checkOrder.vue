@@ -18,10 +18,11 @@
         </thead>
         <tbody>
         <tr class="img_tbody">
-          <td @click="turnDetails(buyInfoObj.apikey,buyInfoObj.assetid)" v-if="buyInfoObj.apikey!=='1111111111111'">
+          <td @click="turnDetails(buyInfoObj.apikey,buyInfoObj.assetid)"
+              v-if="buyInfoObj.apikey!=='5a6be74a55aaf50001a5e145'&&buyInfoObj.apikey!=='5b18a5b9cff7cb000194f1g5'">
             <img :src="buyInfoObj.asseturl" alt="" v-if="buyInfoObj.apikey==='5ae04522cff7cb000194f2f4'">{{buyInfoObj.assetname}}
           </td>
-          <td v-if="buyInfoObj.apikey==='111111111111'">{{buyInfoObj.assetname}}</td>
+          <td v-if="buyInfoObj.apikey==='5a6be74a55aaf50001a5e145'||buyInfoObj.apikey==='5b18a5b9cff7cb000194f1g5'">{{buyInfoObj.assetname}}</td>
           <td>{{buyInfoObj.sell_type}}</td>
           <td>{{buyInfoObj.count}}</td>
           <td>{{total}}</td>
@@ -150,7 +151,7 @@
         value: "T1",
       }
     },
-    /*beforeMount() {
+    beforeMount() {
       let token = utils.getCookie("token");
       if (token) {
         axios({
@@ -166,18 +167,11 @@
             loginInfo.token = token;
             loginInfo.user_id = res.data.user_id;
             window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
-            if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
-              this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-              this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
-              //this.userName = JSON.parse(sessionStorage.getItem("userInfo")).phone
-              //this.isLogin = true;
-              this.acquireFavoriteCount();
-            } else {
-              //this.isLogin = false
-            }
-            //this.changTop()
+            this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+            this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
+            this.acquireUserInfo();
           } else {
-            //this.dropOut()
+            alert("登录失效")
           }
         }).catch((err) => {
           console.log(err);
@@ -186,14 +180,9 @@
         sessionStorage.removeItem('loginInfo');
         sessionStorage.removeItem('userInfo');
       }
-    },*/
+    },
     mounted() {
       let url = location.search;
-      console.log(url)
-      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
-        this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-      }
       if (url.indexOf("?") != -1) {
         let theRequest = new Object();
         let str = url.substr(1);
@@ -202,14 +191,10 @@
           theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
         }
         this.orderNum = theRequest.order_id;
-        console.log(this.orderNum)
       } else {
-        if (JSON.parse(sessionStorage.getItem("buyInfoObj"))) {
-          this.orderNum = JSON.parse(sessionStorage.getItem("buyInfoObj")).orderNum
-        }
+        this.orderNum = JSON.parse(sessionStorage.getItem("buyInfoObj")).orderNum
       }
       this.acquireOrderInfo();
-      //this.acquireUserInfo();
     },
     beforeRouteLeave(to, from, next) {
       clearTimeout(this.timer);
@@ -262,7 +247,7 @@
                   pay_method: this.value
                 })
               }).then((res) => {
-                if (_.includes(["10","20","30"],this.value)) {
+                if (_.includes(["10", "20", "30"], this.value)) {
                   this.paymentInfo = res.data.data;
                   window.open(this.paymentInfo.image_url, "_blank")
                 } else if (this.value === "T1") {
