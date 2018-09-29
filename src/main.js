@@ -28,6 +28,7 @@ const store = new Vuex.Store({
     caseSource: {},
     facilityDetails: {},
     facilitySource: {},
+    reportEvaluation: {},
     /*propertyDetails:{},*/
     favoriteCount: 0,
     buyInfoObj: {},
@@ -54,6 +55,10 @@ const store = new Vuex.Store({
     changeFacilitySource(state, params) {
       state.facilitySource = params;
       window.sessionStorage.setItem("facilitySource", JSON.stringify(state.facilitySource))
+    },
+    changeReportEvaluation(state, params) {
+      state.reportEvaluation = params;
+      window.sessionStorage.setItem("reportEvaluation", JSON.stringify(state.reportEvaluation))
     },
     /*changePropertyDetails(state, params) {
       state.propertyDetails = params;

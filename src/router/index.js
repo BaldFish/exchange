@@ -25,6 +25,7 @@ import mySearchFacility from '@/components/searchFacility/searchFacility'
 import myPublicityPage from '@/components/publicityPage/publicityPage'
 import myYuanBeanPage from '@/components/yuanBeanPage/yuanBeanPage'
 import myReportDetails from '@/components/reportDetails/reportDetails'
+import myBuyerEvaluation from '@/components/buyerEvaluation/buyerEvaluation'
 Vue.use(Router);
 
 export default new Router({
@@ -163,6 +164,11 @@ export default new Router({
       path: '/reportDetails',
       name: 'reportDetails',
       component: myReportDetails
+    },
+    {
+      path: '/buyerEvaluation',
+      name: 'buyerEvaluation',
+      component: myBuyerEvaluation
     },
   ]
 })

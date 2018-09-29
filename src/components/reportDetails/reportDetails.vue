@@ -107,6 +107,143 @@
           </ul>
         </div>
       </div>
+
+      <div class="evaluate">
+        <div class="title">
+          <span class="title-source"></span>
+          <span class="title-text">商品评价</span>
+          <span class="reliability">资产可信度：<span>{{credit}}%</span></span>
+        </div>
+        <div class="evaluate-container">
+          <div class="evaluate-tabs">
+            <ul>
+              <li>
+                <input type="radio" name="evaluate" checked="checked" @click="getEvaluationList">
+                <span>全部评价（{{total_comments}}）</span>
+              </li>
+              <!--<li>
+                <input type="radio" name="evaluate">
+                <span>追评（{{evaluationList}}）</span>
+              </li>-->
+              <li>
+                <input type="radio" name="evaluate" @click="getPraiseList">
+                <span>好评（{{praise}}）</span>
+              </li>
+              <li>
+                <input type="radio" name="evaluate" @click="getAssessmentList">
+                <span>中评（{{assessment}}）</span>
+              </li>
+              <li>
+                <input type="radio" name="evaluate" @click="getBadList">
+                <span>差评（{{bad_comment}}）</span>
+              </li>
+            </ul>
+          </div>
+          <div class="evaluate-details">
+            <ul>
+              <li v-for="item in evaluationList.data">
+                <div class="buyer">
+                  <div class="buyer-info">
+                    <p>{{item.userid}}</p><br>
+                    <p>{{item.created_at}}</p>
+                  </div>
+                  <div class="buyer-details">
+                    <el-rate v-model="item.star" disabled style="width:120px;float: left"></el-rate>
+                    <div class="buyer-action">
+                      <!--<div :class="isThumbsUp?'thumbs-up-yes':'thumbs-up-no'" @click="toggleThumbsUp()">
+                        <span></span>
+                        <span class="num">{{thumbsUpNum}}</span>
+                      </div>-->
+                      <div class="reply" @click="openModal(item)" v-if="item.can_reply == 1">
+                        <img src="./images/reply.png" alt="">
+                        <!--<span class="num">1</span>-->
+                      </div>
+                    </div>
+                    <div style="clear: both"></div>
+                    <div class="buyer-text">
+                      <p>{{item.content}}</p>
+                    </div>
+                    <div class="buyer-img" v-if="item.img">
+                      <ul>
+                        <li v-for="img in item.img" @click="showBigImg(img)">
+                          <input type="radio" name="smallImg">
+                          <img :src="img" alt="">
+                        </li>
+                      </ul>
+                      <div style="clear: both"></div>
+                      <div class="big-img" @click="hideBigImg()" v-if="isShowImg">
+                        <img :src="bigImg" alt="">
+                      </div>
+                    </div>
+                  </div>
+                  <div style="clear: both"></div>
+                </div>
+                <div class="seller" v-if="item.reply != null">
+                  <div class="seller-info">
+                    <p>[商家回复]</p><br>
+                    <p>{{item.reply[0].created_at}}</p>
+                  </div>
+                  <div class="seller-details">
+                    <p>{{item.reply[0].content}}</p>
+                  </div>
+                  <div style="clear: both"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="clearfix paging" v-if="currentTab == 0">
+          <el-pagination class="my_paging"
+                         layout="prev, pager, next"
+                         :background=true
+                         :total=total
+                         :page-size=evaluationLimit
+                         :current-page.sync=evaluationPage_All
+                         @current-change="handleCurrentChange">
+          </el-pagination>
+        </div>
+        <div class="clearfix paging" v-if="currentTab == 1">
+          <el-pagination class="my_paging"
+                         layout="prev, pager, next"
+                         :background=true
+                         :total=total
+                         :page-size=evaluationLimit
+                         :current-page.sync=evaluationPage_Praise
+                         @current-change="handleCurrentChange">
+          </el-pagination>
+        </div>
+        <div class="clearfix paging" v-if="currentTab == 2">
+          <el-pagination class="my_paging"
+                         layout="prev, pager, next"
+                         :background=true
+                         :total=total
+                         :page-size=evaluationLimit
+                         :current-page.sync=evaluationPage_Assessment
+                         @current-change="handleCurrentChange">
+          </el-pagination>
+        </div>
+        <div class="clearfix paging" v-if="currentTab == 3">
+          <el-pagination class="my_paging"
+                         layout="prev, pager, next"
+                         :background=true
+                         :total=total
+                         :page-size=evaluationLimit
+                         :current-page.sync=evaluationPage_Bad
+                         @current-change="handleCurrentChange">
+          </el-pagination>
+        </div>
+
+        <el-dialog title="卖家回复" :visible.sync="dialogFormVisible">
+          <el-form>
+            <el-input type="textarea" v-model="replyContent"></el-input>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="closeModal">取 消</el-button>
+            <el-button type="primary" @click="replySubmit">确 定</el-button>
+          </div>
+        </el-dialog>
+
+      </div>
     
     </div>
   </div>
@@ -131,7 +268,28 @@
         apiKey: "",
         assetId: "",
         id: "",
-        isShow: false
+        isShow: false,
+        bigImg:'',
+        isShowImg:false,
+        isThumbsUp:false,
+        thumbsUpNum:100,
+        evaluationList:{},
+        wallet_address:'',
+        evaluationPage_All: 1,
+        evaluationPage_Praise: 1,
+        evaluationPage_Assessment: 1,
+        evaluationPage_Bad: 1,
+        evaluationLimit: 10,
+        assessment:'',
+        bad_comment:'',
+        credit:'',
+        praise:'',
+        total_comments:'',
+        total: 10,
+        dialogFormVisible: false,
+        replyContent:'',
+        evaluationId:'',
+        currentTab:'',
       }
     },
     beforeMount() {
@@ -152,6 +310,9 @@
             window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
             this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
             this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
+
+            this.wallet_address=JSON.parse(sessionStorage.getItem("userInfo")).wallet_address;
+
             this.acquireReportDetails();
           } else {
             alert("登录失效")
@@ -181,10 +342,190 @@
       }
       this.acquireReportDetails();
       this.acquireReportSource();
+
+      this.getEvaluationList();
     },
     watch: {},
     computed: {},
     methods: {
+      showBigImg(img){
+        this.isShowImg = true;
+        this.bigImg = img
+      },
+      hideBigImg(){
+        this.isShowImg = false;
+      },
+      toggleThumbsUp(){
+        this.isThumbsUp = !this.isThumbsUp;
+        if (this.isThumbsUp){
+          this.thumbsUpNum ++
+        } else {
+          this.thumbsUpNum --
+        }
+      },
+      // 获取全部评价列表
+      getEvaluationList(){
+        this.currentTab = 0;
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/asset-comment/comment/list/${this.assetId}/${this.apiKey}?address=${this.wallet_address}&page=${this.evaluationPage_All}&limit=${this.evaluationLimit}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          //格式化时间
+          res.data.data.forEach((val)=>{
+            val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
+            if (val.reply != null){
+              val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
+            }
+          });
+          this.evaluationList=res.data;
+          this.assessment = res.data.assessment;
+          this.bad_comment = res.data.bad_comment;
+          this.credit = res.data.credit;
+          this.praise = res.data.praise;
+          this.total_comments = res.data.total_comments;
+          this.total = res.data.total_comments
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
+      // 获取好评列表
+      getPraiseList(){
+        this.currentTab = 1;
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/asset-comment/comment/praiselist/${this.assetId}/${this.apiKey}?address=${this.wallet_address}&page=${this.evaluationPage_Praise}&limit=${this.evaluationLimit}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          //格式化时间
+          res.data.data.forEach((val)=>{
+            val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
+            if (val.reply != null){
+              val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
+            }
+          });
+          this.evaluationList=res.data;
+          this.total = res.data.total_comments
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
+      // 获取中评列表
+      getAssessmentList(){
+        this.currentTab = 2;
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/asset-comment/comment/assessmentlist/${this.assetId}/${this.apiKey}?address=${this.wallet_address}&page=${this.evaluationPage_Assessment}&limit=${this.evaluationLimit}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          //格式化时间
+          res.data.data.forEach((val)=>{
+            val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
+            if (val.reply != null){
+              val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
+            }
+          });
+          this.evaluationList=res.data;
+          this.total = res.data.total_comments
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
+      // 获取差评列表
+      getBadList(){
+        this.currentTab = 3;
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/asset-comment/comment/badlist/${this.assetId}/${this.apiKey}?address=${this.wallet_address}&page=${this.evaluationPage_Bad}&limit=${this.evaluationLimit}`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          //格式化时间
+          res.data.data.forEach((val)=>{
+            val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
+            if (val.reply != null){
+              val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
+            }
+          });
+          this.evaluationList=res.data;
+          this.total = res.data.total_comments
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
+      // 分页变化，不同tab分页独立
+      handleCurrentChange(val) {
+        if (this.currentTab == 0){
+          this.evaluationPage_All = val;
+          this.getEvaluationList()
+        } else if(this.currentTab == 1){
+          this.evaluationPage_Praise = val;
+          this.getPraiseList()
+        } else if(this.currentTab == 2){
+          this.evaluationPage_Assessment = val;
+          this.getAssessmentList()
+        } else if(this.currentTab == 3){
+          this.evaluationPage_Bad = val;
+          this.getBadList()
+        }
+      },
+      // 打开modal
+      openModal(item){
+        this.replyContent = '';
+        if(sessionStorage.getItem("loginInfo")){
+          this.dialogFormVisible = true;
+          this.evaluationId = item._id
+        } else {
+          this.open()
+        }
+      },
+      // 关闭modal
+      closeModal(){
+        this.dialogFormVisible = false;
+        this.replyContent = ''
+      },
+      // 卖家回复
+      replySubmit(){
+        if (sessionStorage.getItem("loginInfo")) {
+          axios({
+            method: "POST",
+            url: `${baseURL}/v1/asset-comment/reply/insert`,
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "X-Access-Token":this.token,
+            },
+            data:querystring.stringify({
+              userid:this.userId,
+              id:this.evaluationId,
+              content:this.replyContent
+            }),
+          }).then((res) => {
+            this.dialogFormVisible = false;
+            this.replyContent = '';
+            if (this.currentTab == 0){
+              this.getEvaluationList()
+            } else if(this.currentTab == 1){
+              this.getPraiseList()
+            } else if(this.currentTab == 2){
+              this.getAssessmentList()
+            } else if(this.currentTab == 3){
+              this.getBadList()
+            }
+          }).catch((err) => {
+            console.log(err);
+          })
+        } else {
+          this.open()
+        }
+      },
+
       open() {
         this.$confirm('此操作需要先登录, 是否登录?', '提示', {
           confirmButtonText: '是',
@@ -588,5 +929,211 @@
     }
   }
 
+  .evaluate{
+    .title{
+      .reliability{
+        font-size: 18px;
+        color: #666666;
+        float: right;
+        margin-right: 54px;
+        span{
+          font-size: 28px;
+          color: #d91e01;
+        }
+      }
+    }
+    .evaluate-container{
+      width: 1200px;
+      height: auto;
+      background-color: #fff;
+      border-radius: 0 0 10px 10px;
+      border: solid 1px #e5e5e5;
+      .evaluate-tabs{
+        width: 1160px;
+        height: 30px;
+        background-color: #f7f7f7;
+        margin: 0 auto
+        margin-top 14px
+        margin-bottom 22px
+        font-size: 12px;
+        color: #666666;
+        ul{
+          margin-left 70px
+          li{
+            width:auto
+            float left
+            height 30px
+            margin-right 50px
+            input{
+              width:100%
+              height: 100%
+              opacity 0
+              cursor pointer
+              position: relative;
+              z-index: 10;
+            }
+            span{
+              position: relative;
+              bottom: 22px;
+            }
+            input:checked + span{
+              color: #d91e01;
+            }
+          }
+        }
+      }
+      .evaluate-details{
+        margin: 0 18px;
+        ul{
+          li:last-child{
+            border-bottom none
+          }
+          li{
+            border-bottom 1px solid #dcdcdc
+            .buyer{
+              margin: 12px 0;
+              .buyer-info{
+                font-size: 12px;
+                color: #333333;
+                width: 160px
+                text-align right
+                margin-right 30px
+                float left
+                p:last-child{
+                  color: #999999;
+                }
+              }
+              .buyer-details{
+                width: 970px;
+                float: right;
+                .buyer-action{
+                  float right
+                  font-size: 12px
+                  color: #333333;
+                  width: 100px;
+                  cursor pointer
+                  .thumbs-up-no{
+                    float: left;
+                    margin-right: 10px;
+                    span:first-child{
+                      width: 17px;
+                      height: 15px;
+                      display inline-block
+                      background: url("./images/bad.png") no-repeat center
+                    }
+                    .num{
+                      position: relative;
+                      bottom: 2px;
+                    }
+                  }
+                  .thumbs-up-yes{
+                    float: left;
+                    margin-right: 10px;
+                    span:first-child{
+                      width: 17px;
+                      height: 15px;
+                      display inline-block
+                      background: url("./images/good.png") no-repeat center
+                    }
+                    .num{
+                      position: relative;
+                      bottom: 2px;
+                    }
+                  }
+                  .reply{
+                    float: right;
+                    margin-right: 20px;
+                    .num{
+                      position: relative;
+                      bottom: 3px;
+                    }
+                  }
+                }
+                .buyer-text{
+                  font-size: 12px;
+                  color: #666666;
+                  line-height normal
+                  margin-top: 8px;
+                }
+                .buyer-img{
+                  margin-bottom: 14px;
+                  ul{
+                    margin 14px 0
+                    li{
+                      width: 50px;
+                      height: 50px;
+                      float left
+                      margin-right 12px
+                      cursor pointer
+                      input{
+                        width: 50px;
+                        height: 50px;
+                        opacity: 0;
+                        position: relative;
+                        z-index: 10;
+                        cursor pointer
+                      }
+                      input:checked + img{
+                        border: 1px solid red;
+                      }
+                      img{
+                        width: 100%
+                        height:100%
+                        position: relative;
+                        bottom: 52px;
+                        border: solid 1px #eeeeee;
+                      }
+                    }
+                  }
+                  .big-img{
+                    width: 200px;
+                    height: 200px;
+                    border: solid 1px #eeeeee;
+                    margin-top: 14px;
+                    cursor: pointer;
+                    img{
+                      width: 100%
+                      height:100%
+                    }
+                  }
+                }
+              }
+            }
+            .seller{
+              padding-bottom 16px
+              .seller-info{
+                font-size: 12px;
+                color: #999;
+                width: 160px;
+                text-align: right;
+                margin-right: 30px;
+                float: left;
+                p:first-child{
+                  padding-top: 20px;
+                }
+              }
+              .seller-details{
+                width: 970px;
+                float: right;
+                font-size: 12px;
+                color: #ff8e7d;
+                line-height normal
+                border-top: solid 1px #eeeeee;
+                padding-top 16px
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
+</style>
+<style>
+  .evaluate .el-dialog__body{
+    padding: 20px
+  }
+  .evaluate .el-textarea__inner{
+    height: 200px;
+  }
 </style>
