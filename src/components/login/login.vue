@@ -17,14 +17,14 @@
           <div class="content-right">
             <div class="right-details">
               <ul class="content-nav">
-                <li @click="tabChange" :class="{'nav-avtive': loginWay,'nav-unavtive': !loginWay}">账户登陆</li>
-                <li @click="tabChange" :class="{'nav-avtive': !loginWay,'nav-unavtive':loginWay }">手机登录</li>
+                <li @click="tabChange" :class="{'nav-avtive': loginWay,'nav-unavtive': !loginWay}">手机登陆</li>
+                <li @click="tabChange" :class="{'nav-avtive': !loginWay,'nav-unavtive':loginWay }">免密登录</li>
               </ul>
               <section class="account-login" v-show="loginWay">
                 <ul>
                   <li>
                     <i></i>
-                    <input type="text" placeholder="请输入账号" v-model="phoneLeft" v-validate="'required|mobile'" name='mobile'>
+                    <input type="text" placeholder="请输入手机号" v-model="phoneLeft" v-validate="'required|mobile'" name='mobile'>
                     <span v-show="errors.has('mobile')" class="error" style="width: 200px">{{errors.first('mobile')}}</span>
                   </li>
                   <li>
