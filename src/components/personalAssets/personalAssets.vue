@@ -32,7 +32,15 @@
           <td>{{item.count}}</td>
           <td>{{item.price}}</td>
           <td class="quick_buy_td">
-            <button>查看</button>
+            <a class="create" @click="createPackage($event)">生成包</a>
+            <div class="time">
+              <span>剩余：</span>
+              <span>00:00:{{prepareTime}}</span>
+            </div>
+            <div class="download">
+              <span @click="download(fileUrl)">下载</span>
+              <span>{{fileLength}}</span>
+            </div>
           </td>
         </tr>
         <tr class="classify" v-if="casePackageList.length>0">
@@ -44,7 +52,15 @@
           <td>{{item.count}}</td>
           <td>{{item.price}}</td>
           <td class="quick_buy_td">
-            <button>查看</button>
+            <a class="create" @click="createPackage($event)">生成包</a>
+            <div class="time">
+              <span>剩余：</span>
+              <span>00:00:{{prepareTime}}</span>
+            </div>
+            <div class="download">
+              <span @click="download(fileUrl)">下载</span>
+              <span>{{fileLength}}</span>
+            </div>
           </td>
         </tr>
         <tr class="classify" v-if="reportList.length>0">
@@ -56,7 +72,7 @@
           <td>{{item.count}}</td>
           <td>{{item.price}}</td>
           <td class="quick_buy_td">
-            <button>查看</button>
+            <a @click="getReportConclusion(item.orderNum)">查看</a>
           </td>
         </tr>
         <tr class="classify" v-if="facilityList.length>0">
@@ -68,7 +84,7 @@
           <td>{{item.count}}</td>
           <td>{{item.price}}</td>
           <td class="quick_buy_td">
-            <button>查看</button>
+            <a>查看</a>
           </td>
         </tr>
         <tr class="classify" v-if="caseList.length>0">
@@ -80,7 +96,7 @@
           <td>{{item.count}}</td>
           <td>{{item.price}}</td>
           <td class="quick_buy_td">
-            <button>查看</button>
+            <a>查看</a>
           </td>
         </tr>
         </tbody>
@@ -109,7 +125,7 @@
 <script>
   import axios from "axios";
   import _ from "lodash";
-  import "../../common/stylus/paging.styl";
+  import "@/common/stylus/paging.styl";
   import {baseURL, cardURL} from '@/common/js/public.js';
   import {BigNumber} from 'bignumber.js';
   import utils from "@/common/js/utils.js";
@@ -119,6 +135,12 @@
     components: {},
     data() {
       return {
+        fileLength:"",
+        fileUrl:"",
+        prepareTime:0,
+        isCreate:true,
+        isTime:false,
+        isDownload:false,
         total: 10,
         pageSize: 10,
         currentPage: 1,
@@ -166,6 +188,35 @@
       }
     },
     methods: {
+      download(url){
+        window.open(url,"_blank")
+      },
+      createPackage(event){
+        let clickTarget=event.currentTarget;
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/asset/download`,
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then((res) => {
+          this.fileLength=res.data.file_length;
+          this.fileUrl=res.data.file_url;
+          this.prepareTime=res.data.prepare_time/1000;
+          $(clickTarget).parent().children("a").css('display',"none");
+          $(clickTarget).parent().children("div").eq(0).css('display',"block");
+          let interval = window.setInterval(()=> {
+            if ((this.prepareTime--) <= 0) {
+              $(clickTarget).parent().children("div").eq(0).css('display',"none");
+              $(clickTarget).parent().children("div").eq(1).css('display',"block");
+              this.prepareTime=res.data.prepare_time/1000;
+              window.clearInterval(interval);
+            }
+          }, 1000);
+        }).catch((err) => {
+          console.log(err);
+        });
+      },
       open() {
         this.$confirm('此操作需要先登录, 是否登录?', '提示', {
           confirmButtonText: '是',
@@ -231,7 +282,6 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          console.log(res.data)
           this.total = res.data.count;
           for (let v of res.data.data) {
             v.created_at = utils.formatDate(new Date(v.created_at), "yyyy-MM-dd hh:mm:ss");
@@ -276,6 +326,12 @@
         //this.$router.push("/transferDetails")
         window.open("/transferDetails", "_blank")
       },*/
+      getReportConclusion(val){
+        this.$store.commit("changeReportConclusion", _.find(this.assetList, function (o) {
+          return o.orderNum === val
+        }));
+        window.open("/reportConclusion","_blank")
+      }
     },
   }
 </script>
@@ -408,7 +464,7 @@
     border-bottom: none;
   }
   
-  .quick_buy_td button {
+ /* .quick_buy_td button {
     box-sizing: border-box;
     width: 80px;
     height: 28px;
@@ -420,8 +476,53 @@
     font-size: 14px;
     color: #c6351e;
     margin: 0 10px;
+  }*/
+  .quick_buy_td a {
+    display: block;
+    box-sizing: border-box;
+    width: 80px;
+    height: 28px;
+    margin: 0 auto;
+    line-height: 26px;
+    border-radius: 4px;
+    border: solid 1px #c6351e;
+    background-color: #ffffff;
+    outline: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #c6351e;
+  }
+  .quick_buy_td a:active {
+    background-color: #c6351e;
+    color: #ffffff;
+    
   }
   
+  .quick_buy_td .time,.quick_buy_td .download{
+    display: none;
+    width: 100px;
+    height: 60px;
+    margin: 0 auto;
+  }
+  .quick_buy_td .time span,.quick_buy_td .download span{
+    display: block;
+    border: none;
+    width: 60px;
+    height: 30px;
+    line-height: 30px;
+    margin: 0 auto;
+  }
+  .quick_buy_td .download span:first-child{
+    border: 1px solid #c6351e;
+    background-color: #ffffff;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #c6351e;
+  }
+  .quick_buy_td .download span:first-child:active{
+    background-color: #c6351e;
+    color: #ffffff;
+  }
   .no_assets_content {
     margin-top: 12px;
     width: 1078px;

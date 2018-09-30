@@ -111,10 +111,11 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          for (let v of res.data) {
+          for (let v of res.data.data) {
             v.generate_time = utils.formatDate(new Date(v.generate_time), "yyyy-MM-dd hh:mm:ss");
           }
-          this.reportList = res.data;
+          this.total=res.data.count;
+          this.reportList = res.data.data;
         }).catch((err) => {
           console.log(err)
         })
