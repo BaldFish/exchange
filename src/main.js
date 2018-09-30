@@ -5,16 +5,19 @@ import App from './App';
 import router from './router';
 import Vuex from 'vuex';
 import $ from 'jquery';
+
 Vue.use(Vuex);
 
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+
 Vue.use(ElementUI);
 
 //引入省、市、区三级联动
-import { pca, pcaa } from 'area-data';
+import {pca, pcaa} from 'area-data';
 import 'vue-area-linkage/dist/index.css';
 import VueAreaLinkage from 'vue-area-linkage';
+
 Vue.use(VueAreaLinkage);
 
 import '@/common/js/validate.js'
@@ -23,17 +26,18 @@ Vue.config.productionTip = false;
 /* eslint-disable no-new */
 const store = new Vuex.Store({
   state: {
-    reportDetails:{},
+    reportDetails: {},
     caseDetails: {},
     caseSource: {},
     facilityDetails: {},
     facilitySource: {},
     reportEvaluation: {},
+    reportConclusion: {},
     /*propertyDetails:{},*/
     favoriteCount: 0,
     buyInfoObj: {},
-    searchValue:"",
-    searchInput:"",
+    searchValue: "",
+    searchInput: "",
   },
   mutations: {
     changeReportDetails(state, params) {
@@ -59,6 +63,10 @@ const store = new Vuex.Store({
     changeReportEvaluation(state, params) {
       state.reportEvaluation = params;
       window.sessionStorage.setItem("reportEvaluation", JSON.stringify(state.reportEvaluation))
+    },
+    changeReportConclusion(state, params) {
+      state.reportConclusion = params;
+      window.sessionStorage.setItem("reportConclusion", JSON.stringify(state.reportConclusion))
     },
     /*changePropertyDetails(state, params) {
       state.propertyDetails = params;
