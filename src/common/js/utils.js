@@ -1,5 +1,5 @@
 let utils = {
-  /*
+  /*  1
   函数，加法函数，用来得到精确的加法结果
   说明：javascript的加法结果会有误差，在两个浮点数相加的时候会比较明显。这个函数返回较为精确的加法结果。
   参数：arg1：第一个加数；arg2第二个加数；d要保留的小数位数（可以不传此参数，如果不传则不处理小数位数）
@@ -15,7 +15,7 @@ let utils = {
     var d = arguments[2];
     return typeof d === "number" ? Number((result).toFixed(d)) : result;
   },
-  /*
+  /*  2
   函数：减法函数，用来得到精确的减法结果
   说明：函数返回较为精确的减法结果。
   参数：arg1：第一个加数；arg2第二个加数；d要保留的小数位数（可以不传此参数，如果不传则不处理小数位数
@@ -25,7 +25,7 @@ let utils = {
   subtract: function (arg1, arg2) {
     return Calc.Add(arg1, -Number(arg2), arguments[2]);
   },
-  /*
+  /*  3
   函数：乘法函数，用来得到精确的乘法结果
   说明：函数返回较为精确的乘法结果。
   参数：arg1：第一个乘数；arg2第二个乘数；d要保留的小数位数（可以不传此参数，如果不传则不处理小数位数)
@@ -38,7 +38,7 @@ let utils = {
     resultVal = Number(r1.replace(".", "")) * Number(r2.replace(".", "")) / Math.pow(10, m);
     return typeof d !== "number" ? Number(resultVal) : Number(resultVal.toFixed(parseInt(d)));
   },
-  /*
+  /*  4
   函数：除法函数，用来得到精确的除法结果
   说明：函数返回较为精确的除法结果。
   参数：arg1：除数；arg2被除数；d要保留的小数位数（可以不传此参数，如果不传则不处理小数位数)
@@ -51,7 +51,7 @@ let utils = {
     resultVal = Number(r1.replace(".", "")) / Number(r2.replace(".", "")) * Math.pow(10, m);
     return typeof d !== "number" ? Number(resultVal) : Number(resultVal.toFixed(parseInt(d)));
   },
-  /*
+  /*  5
   函数：时间格式化函数
   说明：
   参数：
@@ -83,7 +83,7 @@ let utils = {
     }
     return fmt;
   },
-  /*
+  /*  6
   函数：时间补零函数
   说明：
   参数：
@@ -93,7 +93,7 @@ let utils = {
   padLeftZero: function (str) {
     return ("00" + str).substr(str.length);
   },
-  /*
+  /*  7
   函数：搜索关键字高亮函数
   说明：
   参数：string：需要匹配的数据（string类型），searchInput：搜索的关键字（string类型），attribute：css样式属性（）,value：css相对应的属性值
@@ -105,7 +105,7 @@ let utils = {
     let replaceString=`<span style=${attribute+":"+value}>${searchInput}</span>`;
     return string.replace(replaceReg,replaceString)
   },
-  /*
+  /*  8
  函数：创建Cookie
  说明：
  参数：
@@ -128,7 +128,7 @@ let utils = {
   }
   document.cookie = cookieText;
 },
-  /*
+  /*  9
  函数：获取Cookie
  说明：
  参数：
@@ -149,7 +149,7 @@ let utils = {
   }
   return cookieValue;
 },
-  /*
+  /*  10
  函数：删除Cookie
  说明：
  参数：

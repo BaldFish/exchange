@@ -32,14 +32,14 @@
           <td>{{item.count}}</td>
           <td>{{item.price}}</td>
           <td class="quick_buy_td">
-            <a class="create" @click="createPackage($event)">生成包</a>
+            <a class="create" @click="createPackage($event,item.orderNum)">生成包</a>
             <div class="time">
               <span>剩余：</span>
-              <span>00:00:{{prepareTime}}</span>
+              <span>{{item.prepareTime}}</span>
             </div>
             <div class="download">
-              <span @click="download(fileUrl)">下载</span>
-              <span>{{fileLength}}</span>
+              <span @click="download(item.fileUrl)">下载</span>
+              <span>{{item.fileLength}}</span>
             </div>
           </td>
         </tr>
@@ -52,14 +52,14 @@
           <td>{{item.count}}</td>
           <td>{{item.price}}</td>
           <td class="quick_buy_td">
-            <a class="create" @click="createPackage($event)">生成包</a>
+            <a class="create" @click="createPackage($event,item.orderNum)">生成包</a>
             <div class="time">
               <span>剩余：</span>
-              <span>00:00:{{prepareTime}}</span>
+              <span>{{item.prepareTime}}</span>
             </div>
             <div class="download">
-              <span @click="download(fileUrl)">下载</span>
-              <span>{{fileLength}}</span>
+              <span @click="download(item.fileUrl)">下载</span>
+              <span>{{item.fileLength}}</span>
             </div>
           </td>
         </tr>
@@ -135,12 +135,6 @@
     components: {},
     data() {
       return {
-        fileLength:"",
-        fileUrl:"",
-        prepareTime:0,
-        isCreate:true,
-        isTime:false,
-        isDownload:false,
         total: 10,
         pageSize: 10,
         currentPage: 1,
@@ -153,14 +147,14 @@
       }
     },
     computed: {
-      reportPackageList:function () {
+      reportPackageList: function () {
         return this.assetList.filter(function (value, index, array) {
           return value.apikey === "5b18a5b9cff7cb000194f1g5"
         })
       },
-      casePackageList:function () {
+      casePackageList: function () {
         return this.assetList.filter(function (value, index, array) {
-          return value.apikey ==="5a6be74a55aaf50001a5e145"
+          return value.apikey === "5a6be74a55aaf50001a5e145"
         })
       },
       reportList: function () {
@@ -188,11 +182,26 @@
       }
     },
     methods: {
-      download(url){
-        window.open(url,"_blank")
+      download(url) {
+        window.open(url, "_blank")
       },
-      createPackage(event){
-        let clickTarget=event.currentTarget;
+      padLeftZero(s) {
+        return s < 10 ? '0' + s : s;
+      },
+      InitTime(time) {
+        let  hh, mm, ss = null;
+        if (time <= 0) {
+          return
+        } else {
+          hh = Math.floor((time / 60 / 60) % 24);
+          mm = Math.floor((time / 60) % 60);
+          ss = Math.floor(time % 60);
+          let str = this.padLeftZero(hh) + ":" + this.padLeftZero(mm) + ":" + this.padLeftZero(ss);
+          return str;
+        }
+      },
+      createPackage(event, orderNum) {
+        let clickTarget = event.currentTarget;
         axios({
           method: "GET",
           url: `${baseURL}/v1/asset/download`,
@@ -200,17 +209,25 @@
             "Content-Type": "application/json",
           }
         }).then((res) => {
-          this.fileLength=res.data.file_length;
-          this.fileUrl=res.data.file_url;
-          this.prepareTime=res.data.prepare_time/1000;
-          $(clickTarget).parent().children("a").css('display',"none");
-          $(clickTarget).parent().children("div").eq(0).css('display',"block");
-          let interval = window.setInterval(()=> {
-            if ((this.prepareTime--) <= 0) {
-              $(clickTarget).parent().children("div").eq(0).css('display',"none");
-              $(clickTarget).parent().children("div").eq(1).css('display',"block");
-              this.prepareTime=res.data.prepare_time/1000;
+          let clickInfo = _.find(this.assetList, function (o) {
+            return o.orderNum === orderNum
+          });
+          let v = this.InitTime(res.data.prepare_time / 1000);
+          this.$set(clickInfo, "prepareTime", v)
+          this.$set(clickInfo, "fileLength", res.data.file_length);
+          this.$set(clickInfo, "fileUrl", res.data.file_url);
+          $(clickTarget).parent().children("a").css('display', "none");
+          $(clickTarget).parent().children("div").eq(0).css('display', "block");
+          let interval = window.setInterval(() => {
+            let a = clickInfo.prepareTime.split(":");
+            let b = parseInt(a[0]) * 60 * 60 + parseInt(a[1]) * 60 + parseInt(a[2]);
+            if ((--b) <= 0) {
+              $(clickTarget).parent().children("div").eq(0).css('display', "none");
+              $(clickTarget).parent().children("div").eq(1).css('display', "block");
               window.clearInterval(interval);
+            } else {
+              let v = this.InitTime(b);
+              this.$set(clickInfo, "prepareTime", v)
             }
           }, 1000);
         }).catch((err) => {
@@ -326,11 +343,11 @@
         //this.$router.push("/transferDetails")
         window.open("/transferDetails", "_blank")
       },*/
-      getReportConclusion(val){
+      getReportConclusion(val) {
         this.$store.commit("changeReportConclusion", _.find(this.assetList, function (o) {
           return o.orderNum === val
         }));
-        window.open("/reportConclusion","_blank")
+        window.open("/reportConclusion", "_blank")
       }
     },
   }
@@ -464,19 +481,19 @@
     border-bottom: none;
   }
   
- /* .quick_buy_td button {
-    box-sizing: border-box;
-    width: 80px;
-    height: 28px;
-    border-radius: 4px;
-    border: solid 1px #c6351e;
-    background-color: #ffffff;
-    outline: none;
-    cursor: pointer;
-    font-size: 14px;
-    color: #c6351e;
-    margin: 0 10px;
-  }*/
+  /* .quick_buy_td button {
+     box-sizing: border-box;
+     width: 80px;
+     height: 28px;
+     border-radius: 4px;
+     border: solid 1px #c6351e;
+     background-color: #ffffff;
+     outline: none;
+     cursor: pointer;
+     font-size: 14px;
+     color: #c6351e;
+     margin: 0 10px;
+   }*/
   .quick_buy_td a {
     display: block;
     box-sizing: border-box;
@@ -492,19 +509,21 @@
     font-size: 14px;
     color: #c6351e;
   }
+  
   .quick_buy_td a:active {
     background-color: #c6351e;
     color: #ffffff;
     
   }
   
-  .quick_buy_td .time,.quick_buy_td .download{
+  .quick_buy_td .time, .quick_buy_td .download {
     display: none;
     width: 100px;
     height: 60px;
     margin: 0 auto;
   }
-  .quick_buy_td .time span,.quick_buy_td .download span{
+  
+  .quick_buy_td .time span, .quick_buy_td .download span {
     display: block;
     border: none;
     width: 60px;
@@ -512,17 +531,20 @@
     line-height: 30px;
     margin: 0 auto;
   }
-  .quick_buy_td .download span:first-child{
+  
+  .quick_buy_td .download span:first-child {
     border: 1px solid #c6351e;
     background-color: #ffffff;
     border-radius: 4px;
     cursor: pointer;
     color: #c6351e;
   }
-  .quick_buy_td .download span:first-child:active{
+  
+  .quick_buy_td .download span:first-child:active {
     background-color: #c6351e;
     color: #ffffff;
   }
+  
   .no_assets_content {
     margin-top: 12px;
     width: 1078px;
