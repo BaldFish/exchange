@@ -259,10 +259,10 @@
         }).then(res => {
           sessionStorage.removeItem('loginInfo');
           sessionStorage.removeItem('userInfo');
-          /*document.cookie = `token=;expires=${new Date(0)}`;
-          document.cookie = `user_id=;expires=${new Date(0)}`;*/
-          document.cookie = `token=;expires=${new Date(0)};domain=.launchain.org`;
-          document.cookie = `user_id=;expires=${new Date(0)};domain=.launchain.org`;
+          document.cookie = `token=;expires=${new Date(0)}`;
+          document.cookie = `user_id=;expires=${new Date(0)}`;
+          /*document.cookie = `token=;expires=${new Date(0)};domain=.launchain.org`;
+          document.cookie = `user_id=;expires=${new Date(0)};domain=.launchain.org`;*/
           this.switchover = false;
           location.reload()
         }).catch(error => {
