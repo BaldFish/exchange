@@ -66,7 +66,11 @@
               star:null,
               remnant:0,
               content:'',
-              upLoadData:{},
+              upLoadData:{
+                img: currentImg,
+                order_id: '',
+                userid: ''
+              },
               userId:'',
               token:'',
               apiKey:'',
@@ -93,6 +97,12 @@
           // 倒计数
           descInput(){
             this.remnant = this.content.length;
+          },
+          handlePreview(file) {
+            console.log(file);
+          },
+          handleSuccess(response, file, fileList){
+            console.log(response);
           },
           // 文件上传前
           beforeImgUpload (file) {
