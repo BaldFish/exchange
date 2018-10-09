@@ -144,7 +144,7 @@
               <li v-for="item in evaluationList.data">
                 <div class="buyer">
                   <div class="buyer-info">
-                    <p>{{item.userid}}</p><br>
+                    <p>{{item.phone}}</p><br>
                     <p>{{item.created_at}}</p>
                   </div>
                   <div class="buyer-details">
@@ -312,6 +312,7 @@
             this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
 
             this.wallet_address=JSON.parse(sessionStorage.getItem("userInfo")).wallet_address;
+            this.getEvaluationList();
 
             this.acquireReportDetails();
           } else {

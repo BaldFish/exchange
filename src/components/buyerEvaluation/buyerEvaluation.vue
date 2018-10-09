@@ -75,7 +75,8 @@
               token:'',
               apiKey:'',
               assetId:'',
-              reportEvaluation:''
+              reportEvaluation:'',
+              phone:''
             }
         },
         created() {
@@ -84,6 +85,7 @@
           if(JSON.parse(sessionStorage.getItem("loginInfo"))){
             this.userId=JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
             this.token=JSON.parse(sessionStorage.getItem("loginInfo")).token;
+            this.phone=JSON.parse(sessionStorage.getItem("userInfo")).phone;
             this.reportEvaluation=JSON.parse(sessionStorage.getItem("reportEvaluation"));
             this.upLoadData = {
               img: currentImg,
@@ -160,6 +162,7 @@
                 order_id:this.reportEvaluation.orderNum,
                 star:this.star,
                 content:this.content,
+                phone:this.phone,
               }),
             }).then((res) => {
               this.$router.push({path: '/orderHistory'});
