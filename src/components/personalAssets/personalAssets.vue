@@ -204,7 +204,7 @@
         let clickTarget = event.currentTarget;
         axios({
           method: "GET",
-          url: `${baseURL}/v1/asset/download`,
+          url: `${baseURL}/v1/asset/download?order_id=${orderNum}`,
           headers: {
             "Content-Type": "application/json",
           }
@@ -212,8 +212,8 @@
           let clickInfo = _.find(this.assetList, function (o) {
             return o.orderNum === orderNum
           });
-          let v = this.InitTime(res.data.prepare_time / 1000);
-          this.$set(clickInfo, "prepareTime", v)
+          let v = this.InitTime(res.data.prepare_time);
+          this.$set(clickInfo, "prepareTime", v);
           this.$set(clickInfo, "fileLength", res.data.file_length);
           this.$set(clickInfo, "fileUrl", res.data.file_url);
           $(clickTarget).parent().children("a").css('display', "none");
