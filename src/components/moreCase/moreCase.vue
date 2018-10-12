@@ -36,7 +36,7 @@
         </div>
         <div :class="item.shopcart_id?'like':'dislike'" @click.stop="toggleLike(item.id)">收藏</div>
         <div class="price_box">
-          <a href="javascript:void(0)"><p class="price">{{item.price}}</p></a>
+          <a href="javascript:void(0)"><p class="price">￥{{item.price}}</p></a>
           <a href="javascript:void(0)"><p class="tracing">可信溯源</p></a>
           <a href="javascript:void(0)" @click.stop="buy(item.id)"><p class="buy">一键购买</p></a>
         </div>
@@ -404,10 +404,10 @@
             height 24px
             font-size: 24px;
             color: #c6351e;
-            background-image: url('./images/currency.png');
+            /*background-image: url('./images/currency.png');*/
             background-repeat: no-repeat;
             background-position: top left;
-            padding-left 26px
+            /*padding-left 26px*/
             margin-bottom 8px
           }
           .tracing {

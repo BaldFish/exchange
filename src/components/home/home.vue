@@ -45,7 +45,7 @@
             </p>
           </div>-->
           <div class="price_box">
-            <a href="javascript:void(0)"><p class="price">{{item.price}}</p></a>
+            <a href="javascript:void(0)"><p class="price">￥{{item.price}}</p></a>
             <a href="javascript:void(0)"><p class="tracing">可信溯源</p></a>
           </div>
           <div class="bar"></div>
@@ -98,7 +98,10 @@
           <h3>维修案例</h3>
           <a href="/moreCase">查看更多</a>
         </div>
-        <div class="fr fr_case" v-for="(item,index) of caseList" :key="item.id" @click="getCaseDetails(item.id)">
+        <div class="none_case" v-if="noneCase">
+          <p>暂无数据</p>
+        </div>
+        <div class="fr fr_case" v-for="(item,index) of caseList" :key="item.id" @click="getCaseDetails(item.id)" v-if="!noneCase">
           <h4><a href="javascript:void(0)">{{item.assetname}}</a></h4>
           <div class="attestation">
             <span class="merchant" v-if="item.authtype==='认证商家'">{{item.authtype}}</span>
@@ -122,7 +125,7 @@
             </p>
           </div>
           <div class="price_box">
-            <a href="javascript:void(0)"><p class="price">{{item.price}}</p></a>
+            <a href="javascript:void(0)"><p class="price">￥{{item.price}}</p></a>
             <a href="javascript:void(0)"><p class="tracing">可信溯源</p></a>
           </div>
           <div class="bar"></div>
@@ -137,19 +140,16 @@
             <img src="./images/06.png" alt="">
           </div>
           <div class="fl partner_img">
-            <img src="./images/06.png" alt="">
+            <img src="./images/partner_02.png" alt="">
           </div>
           <div class="fl partner_img">
-            <img src="./images/06.png" alt="">
+            <img src="./images/partner_03.png" alt="">
           </div>
           <div class="fl partner_img">
-            <img src="./images/07.png" alt="">
+            <img src="./images/partner_04.png" alt="">
           </div>
           <div class="fl partner_img">
-            <img src="./images/07.png" alt="">
-          </div>
-          <div class="fl partner_img">
-            <img src="./images/07.png" alt="">
+            <img src="./images/partner_05.jpg" alt="">
           </div>
         </div>
       </div>
@@ -179,6 +179,7 @@
         facilityList: [],
         userId: "",
         token: "",
+        noneCase: false,
         //用webpack搭建的项目不能直接使用绝对路径，要用require，如果不使用这个，必须是线上图片。http类型的
         bannerList: [
           {link_url: 'javascript:void(0)', picture_url: require('./images/banner.png')},
@@ -219,7 +220,12 @@
           for (let v of res.data[0].data) {
             v.sell_at = utils.formatDate(new Date(v.sell_at), "yyyy-MM-dd hh:mm:ss");
           }
-          this.caseList = res.data[0].data;
+          if (res.data[0].data.length === 0 || res.data[0].data === null){
+            this.noneCase = true
+          } else {
+            this.noneCase = false;
+            this.caseList = res.data[0].data;
+          }
         }).catch((err) => {
           console.log(err)
         })
@@ -361,6 +367,18 @@
           border-bottom 1px solid #ffffff
         }
       }
+      .none_case{
+        height: 696px;
+        width:854px
+        background-color #ffffff
+        float right
+        text-align center
+        p{
+          color: #222;
+          font-size: 20px;
+          margin-top 338px
+        }
+      }
       .report {
         .fl_bg {
           height 734px
@@ -497,10 +515,10 @@
               height 24px
               font-size: 24px;
               color: #c6351e;
-              background-image: url('./images/currency.png');
+              /*background-image: url('./images/currency.png');*/
               background-repeat: no-repeat;
               background-position: top left;
-              padding-left 26px
+              /*padding-left 26px*/
               margin-bottom 8px
             }
             .tracing {
@@ -793,10 +811,10 @@
               height 24px
               font-size: 24px;
               color: #c6351e;
-              background-image: url('./images/currency.png');
+              /*background-image: url('./images/currency.png');*/
               background-repeat: no-repeat;
               background-position: top left;
-              padding-left 26px
+              /*padding-left 26px*/
               margin-bottom 8px
             }
             .tracing {
