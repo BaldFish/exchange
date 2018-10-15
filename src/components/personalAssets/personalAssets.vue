@@ -34,7 +34,7 @@
           <td class="quick_buy_td">
             <a class="create" @click="createPackage($event,item.orderNum)">生成包</a>
             <div class="time">
-              <span>剩余：</span>
+              <span>预计时间：</span>
               <span>{{item.prepareTime}}</span>
             </div>
             <div class="download">
