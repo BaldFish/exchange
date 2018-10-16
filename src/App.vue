@@ -145,7 +145,7 @@
             window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
             this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
             this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-            this.userName = JSON.parse(sessionStorage.getItem("userInfo")).phone
+            this.userName = JSON.parse(sessionStorage.getItem("userInfo")).phone;
             this.isLogin = true;
             this.acquireFavoriteCount();
           } else {
@@ -187,7 +187,7 @@
             window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
             this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
             this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-            this.userName = JSON.parse(sessionStorage.getItem("userInfo")).phone
+            this.userName = JSON.parse(sessionStorage.getItem("userInfo")).phone;
             this.isLogin = true;
             this.acquireFavoriteCount();
           } else {
