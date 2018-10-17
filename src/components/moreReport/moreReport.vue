@@ -60,7 +60,7 @@
   import "@/common/stylus/paging.styl";
   import axios from "axios";
   import _ from "lodash";
-  import {baseURL, cardURL} from '@/common/js/public.js';
+  import {baseURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
   
   const querystring = require('querystring');

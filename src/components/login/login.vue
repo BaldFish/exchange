@@ -81,7 +81,7 @@
 
 <script>
   import axios from "axios";
-  import {baseURL,cardURL} from '@/common/js/public.js';
+  import {baseURL} from '@/common/js/public.js';
 
   const querystring = require('querystring');
 
@@ -136,7 +136,7 @@
       //获取错误码
       axios({
         method: 'get',
-        url: `${cardURL}/v1/errors`
+        url: `${baseURL}/v1/errors`
       }).then(res => {
         this.codeErrors = res.data
       }).catch(error => {
@@ -281,10 +281,10 @@
                   url: `${baseURL}/v1/sessions`,
                   data: querystring.stringify(loginFormData)
                 }).then(res => {
-                  /*document.cookie=`token=${res.data.token}`;
-                  document.cookie=`user_id=${res.data.user_id}`;*/
-                  document.cookie=`token=${res.data.token};domain=.launchain.org`;
-                  document.cookie=`user_id=${res.data.user_id};domain=.launchain.org`;
+                  document.cookie=`token=${res.data.token}`;
+                  document.cookie=`user_id=${res.data.user_id}`;
+                  /*document.cookie=`token=${res.data.token};domain=.launchain.org`;
+                  document.cookie=`user_id=${res.data.user_id};domain=.launchain.org`;*/
                   window.sessionStorage.setItem("loginInfo", JSON.stringify(res.data));
                   this.userId = res.data.user_id;
                   this.acquireUserInfo();
@@ -330,10 +330,10 @@
                   url: `${baseURL}/v1/sessions/phone`,
                   data: querystring.stringify(loginFormData)
                 }).then(res => {
-                  /*document.cookie=`token=${res.data.token}`;
-                  document.cookie=`user_id=${res.data.user_id}`;*/
-                  document.cookie=`token=${res.data.token};domain=.launchain.org`;
-                  document.cookie=`user_id=${res.data.user_id};domain=.launchain.org`;
+                  document.cookie=`token=${res.data.token}`;
+                  document.cookie=`user_id=${res.data.user_id}`;
+                  /*document.cookie=`token=${res.data.token};domain=.launchain.org`;
+                  document.cookie=`user_id=${res.data.user_id};domain=.launchain.org`;*/
                   window.sessionStorage.setItem("loginInfo", JSON.stringify(res.data));
                   this.userId = res.data.user_id;
                   this.acquireUserInfo();

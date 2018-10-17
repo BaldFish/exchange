@@ -158,13 +158,14 @@
 <script>
   import axios from "axios";
   import {baseURL} from '@/common/js/public.js';
+  
   const querystring = require('querystring');
-
-  export default{
-    inject:['reload'],
+  
+  export default {
+    inject: ['reload'],
     name: "securityCenter",
     components: {},
-    data(){
+    data() {
       //Element-ui自定义校验
       var validateRenew = (rule, value, callback) => {
         if (value === '') {
@@ -181,146 +182,151 @@
         phoneVerification: false,
         modifyPassword: false,
         realNameAuthentication: false,
-        bindPhone:true,
-        captcha:"./images/code.png", //图形验证码--图片
-        phone:'',
-        userInfo:'',
-        errorMsg:'',
-        errorMsgCaptcha:'',//图形验证码
-        errorMsgCode:'',//短信验证码
-        codeValue:true,//倒计时value
-        codeValue2:true,//倒计时value
-        second:60,// 发送验证码倒计时
-        second2:60,// 发送验证码倒计时
+        bindPhone: true,
+        captcha: "./images/code.png", //图形验证码--图片
+        phone: '',
+        userInfo: '',
+        token:"",
+        errorMsg: '',
+        errorMsgCaptcha: '',//图形验证码
+        errorMsgCode: '',//短信验证码
+        codeValue: true,//倒计时value
+        codeValue2: true,//倒计时value
+        second: 60,// 发送验证码倒计时
+        second2: 60,// 发送验证码倒计时
         formPwd: {
-          old:'',
-          new:'',
-          renew:''
+          old: '',
+          new: '',
+          renew: ''
         },
         formAuth: {
-          type:1,
+          type: 1,
           realname: '',
-          idcard:''
+          idcard: ''
         },
-        formPhone:{
+        formPhone: {
           phone: '',
-          code:'',
-          new_phone:'',
-          new_code:'',
-          captcha_id:'',
-          captcha_number:'',
-          inputPhone:'', //新手机号
-          captcha_number_next:'',//手机验证，下一步modal，图形验证码输入的值
+          code: '',
+          new_phone: '',
+          new_code: '',
+          captcha_id: '',
+          captcha_number: '',
+          inputPhone: '', //新手机号
+          captcha_number_next: '',//手机验证，下一步modal，图形验证码输入的值
         },
         formBindWallet: {
-          wallet_address:'',
-          captcha_id:'',
-          captcha_number:''
+          wallet_address: '',
+          captcha_id: '',
+          captcha_number: ''
         },
         formModifyWallet: {
-          wallet_address:'',
-          captcha_id:'',
-          captcha_number:''
+          wallet_address: '',
+          captcha_id: '',
+          captcha_number: ''
         },
         formLabelWidth: '120px',
         rules: {
           old: [
-            { required: true, message: '请输入旧密码', trigger: 'blur' }
+            {required: true, message: '请输入旧密码', trigger: 'blur'}
           ],
           new: [
-            { required: true, message: '请输入新密码', trigger: 'blur' }
+            {required: true, message: '请输入新密码', trigger: 'blur'}
           ],
           renew: [
-            { validator: validateRenew, trigger: 'blur' }
+            {validator: validateRenew, trigger: 'blur'}
           ],
           wallet_address: [
-            { required: true, message: '请输入钱包地址', trigger: 'blur' }
+            {required: true, message: '请输入钱包地址', trigger: 'blur'}
           ],
           captcha_number: [
-            { required: true, message: '请输入图形验证码', trigger: 'blur' }
+            {required: true, message: '请输入图形验证码', trigger: 'blur'}
           ],
           captcha_number_next: [
-            { required: true, message: '请输入图形验证码', trigger: 'blur' }
+            {required: true, message: '请输入图形验证码', trigger: 'blur'}
           ],
           realname: [
-            { required: true, message: '请输入真实姓名', trigger: 'blur' }
+            {required: true, message: '请输入真实姓名', trigger: 'blur'}
           ],
           idcard: [
-            { required: true, message: '请输入身份证号', trigger: 'blur' }
+            {required: true, message: '请输入身份证号', trigger: 'blur'}
           ],
           code: [
-            { required: true, message: '请输入短信验证码', trigger: 'blur' }
+            {required: true, message: '请输入短信验证码', trigger: 'blur'}
           ],
           new_code: [
-            { required: true, message: '请输入短信验证码', trigger: 'blur' }
+            {required: true, message: '请输入短信验证码', trigger: 'blur'}
           ],
           inputPhone: [
-            { required: true, message: '请输入新手机号', trigger: 'blur' }
+            {required: true, message: '请输入新手机号', trigger: 'blur'}
           ]
         }
       }
     },
-    mounted: function() {
-      let loginInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
-      axios({
-        method: 'get',
-        url: `${baseURL}/v1/users/${loginInfo.user_id}`,
-      }).then(res => {
-        this.userInfo = res.data;
-        sessionStorage.setItem("userInfo",JSON.stringify(res.data));
-        this.phone = `${res.data.phone.substring(3,6)}*****${res.data.phone.substring(11,14)}`
-      }).catch(error => {
-        console.log(error);
-      });
+    mounted: function () {
+      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
+        this.userInfo=JSON.parse(sessionStorage.getItem("userInfo"))
+      }
     },
     methods: {
       //清除modal旧数据
-      openModalPwd(){
+      openModalPwd() {
         this.modifyPassword = true;
-        this.$refs.formPwd.resetFields();
-        this.formPwd ={
-          old:'',
-          new:'',
-          renew:''
+        if (this.$refs.formPwd!== undefined) {
+          this.$refs.formPwd.resetFields();
+        }
+        this.formPwd = {
+          old: '',
+          new: '',
+          renew: ''
         }
       },
-      openModalModifyWallet(){
+      openModalModifyWallet() {
         this.dialogFormVisible2 = true;
-        this.$refs.formModifyWallet.resetFields();
+        if (this.$refs.formModifyWallet !== undefined) {
+          this.$refs.formModifyWallet.resetFields();
+        }
         this.getCaptcha();
         this.formModifyWallet = {
-          wallet_address:'',
-          captcha_id:'',
-          captcha_number:''
+          wallet_address: '',
+          captcha_id: '',
+          captcha_number: ''
         }
       },
-      openModalBindWallet(){
+      openModalBindWallet() {
         this.dialogFormVisible = true;
-        this.$refs.formBindWallet.resetFields();
+        if (this.$refs.formBindWallet!== undefined) {
+          this.$refs.formBindWallet.resetFields();
+        }
         this.getCaptcha();
         this.formBindWallet = {
-          wallet_address:'',
-          captcha_id:'',
-          captcha_number:''
+          wallet_address: '',
+          captcha_id: '',
+          captcha_number: ''
         }
       },
-      openModalRealNameAuth(){
+      openModalRealNameAuth() {
         this.realNameAuthentication = true;
-        this.$refs.formAuth.resetFields();
+        if (this.$refs.formAuth!== undefined) {
+          this.$refs.formAuth.resetFields();
+        }
         this.formAuth = {
-          type:1,
+          type: 1,
           realname: '',
-          idcard:''
+          idcard: ''
         }
       },
       //修改密码
-      submitPwd(){
+      submitPwd() {
         this.$refs.formPwd.validate((valid) => {
           if (valid) {
             axios({
               method: 'put',
-              url: `${baseURL}/v1/users/${this.userInfo._id}/password`,
-              data: querystring.stringify(this.formPwd)
+              url: `${baseURL}/v1/users/${this.userInfo.user_id}/password`,
+              data: querystring.stringify(this.formPwd),
+              headers: {
+                "Access-Token": `${this.token}`,
+              }
             }).then(res => {
               this.modifyPassword = false
             }).catch(error => {
@@ -332,14 +338,14 @@
         })
       },
       //用户认证
-      submitAuth(){
+      submitAuth() {
         this.$refs.formAuth.validate((valid) => {
           if (valid) {
             //errorMsg修改成一样的值，vue没触发响应，每次清空
             this.errorMsg = "";
             axios({
               method: 'post',
-              url: `${baseURL}/v1/users/${this.userInfo._id}/authentication`,
+              url: `${baseURL}/v1/users/${this.userInfo.user_id}/authentication`,
               data: querystring.stringify(this.formAuth)
             }).then(res => {
               this.userInfo.authentication = 2;
@@ -352,28 +358,28 @@
         })
       },
       //获取图片验证码--图片
-      getCaptcha(){
+      getCaptcha() {
         axios({
           method: 'post',
           url: `${baseURL}/v1/captcha`,
           data: querystring.stringify({})
         }).then(res => {
           this.captcha = `data:image/png;base64,${res.data.png}`;
-          this.formPhone.captcha_id =res.data.captcha_id;
-          this.formBindWallet.captcha_id =res.data.captcha_id;
-          this.formModifyWallet.captcha_id =res.data.captcha_id;
+          this.formPhone.captcha_id = res.data.captcha_id;
+          this.formBindWallet.captcha_id = res.data.captcha_id;
+          this.formModifyWallet.captcha_id = res.data.captcha_id;
         }).catch(error => {
           console.log(error);
         });
       },
       //获取短信验证码
       getCode(id) {
-        let phoneNum ="";
-        if(id == 1){
+        let phoneNum = "";
+        if (id == 1) {
           //倒计时
           let me = this;
           me.codeValue = false;
-          let interval = window.setInterval(function() {
+          let interval = window.setInterval(function () {
             if ((me.second--) <= 0) {
               me.second = 60;
               me.codeValue = true;
@@ -381,19 +387,19 @@
             }
           }, 1000);
           phoneNum = this.userInfo.phone
-        }else{
-          if (this.formPhone.inputPhone){
+        } else {
+          if (this.formPhone.inputPhone) {
             //倒计时
             let me = this;
             me.codeValue2 = false;
-            let interval = window.setInterval(function() {
+            let interval = window.setInterval(function () {
               if ((me.second2--) <= 0) {
                 me.second2 = 60;
                 me.codeValue2 = true;
                 window.clearInterval(interval);
               }
             }, 1000);
-            phoneNum = '+86'+this.formPhone.inputPhone
+            phoneNum = '+86' + this.formPhone.inputPhone
           }
         }
         axios({
@@ -401,7 +407,7 @@
           url: `${baseURL}/v1/sms/code`,
           data: querystring.stringify({
             phone: phoneNum, //手机号
-            type:3 //1-注册，2-修改密码, 3-登录
+            type: 3 //1-注册，2-修改密码, 3-登录
           })
         }).then(res => {
         }).catch(error => {
@@ -409,20 +415,22 @@
         })
       },
       //修改绑定手机,清除modal旧数据
-      openPhoneModal(){
+      openPhoneModal() {
         this.phoneVerification = true;
-        this.bindPhone =  true;
+        this.bindPhone = true;
         this.getCaptcha();
-        this.$refs.formPhone.resetFields();
+        if(this.$refs.formPhone!=undefined){
+          this.$refs.formPhone.resetFields();
+        }
         this.formPhone = {
           phone: '',
-          code:'',
-          new_phone:'',
-          new_code:'',
-          captcha_id:'',
-          captcha_number:'',
-          captcha_number_next:'',
-          inputPhone:''
+          code: '',
+          new_phone: '',
+          new_code: '',
+          captcha_id: '',
+          captcha_number: '',
+          captcha_number_next: '',
+          inputPhone: ''
         };
         //倒计时初始化
         this.codeValue = true;
@@ -430,12 +438,12 @@
         this.second = 60;
         this.second2 = 60;
       },
-      nextStep(){
+      nextStep() {
         //校验图形验证码input存在
-        this.$refs.formPhone.validateField('captcha_number_next',(captcha_number_next) => {
+        this.$refs.formPhone.validateField('captcha_number_next', (captcha_number_next) => {
           if (!captcha_number_next) {
             //校验短信验证码input存在
-            this.$refs.formPhone.validateField('code',(code) => {
+            this.$refs.formPhone.validateField('code', (code) => {
               if (!code) {
                 //校验图形验证码正确
                 this.errorMsgCaptcha = '';
@@ -449,7 +457,7 @@
                     method: 'get',
                     url: `${baseURL}/v1/sms/${this.userInfo.phone}/code/${this.formPhone.code}`
                   }).then(res => {
-                    this.bindPhone =false;
+                    this.bindPhone = false;
                   }).catch(error => {
                     console.log(error);
                     this.errorMsgCode = '短信验证码错误'
@@ -469,10 +477,10 @@
           }
         })
       },
-      submitPhone(){
+      submitPhone() {
         this.formPhone.phone = this.userInfo.phone;
-        this.formPhone.new_phone = '+86'+this.formPhone.inputPhone;
-
+        this.formPhone.new_phone = '+86' + this.formPhone.inputPhone;
+        
         this.$refs.formPhone.validate((valid) => {
           if (valid) {
             //校验图形验证码正确
@@ -489,8 +497,11 @@
               }).then(res => {
                 axios({
                   method: 'post',
-                  url: `${baseURL}/v1/users/${this.userInfo._id}/phone`,
-                  data: querystring.stringify(this.formPhone)
+                  url: `${baseURL}/v1/users/${this.userInfo.user_id}/phone`,
+                  data: querystring.stringify(this.formPhone),
+                  headers: {
+                    "Access-Token": `${this.token}`,
+                  }
                 }).then(res => {
                   this.phoneVerification = false;
                   this.reload()
@@ -512,7 +523,7 @@
         })
       },
       //绑定钱包地址
-      sunmitBindWallet(){
+      sunmitBindWallet() {
         //校验input是否有值
         this.$refs.formBindWallet.validate((valid) => {
           if (valid) {
@@ -525,8 +536,11 @@
             }).then(res => {
               axios({
                 method: 'post',
-                url: `${baseURL}/v1/users/${this.userInfo._id}/wallet_address/${this.formBindWallet.wallet_address}`,
-                data: querystring.stringify(this.formBindWallet)
+                url: `${baseURL}/v1/users/${this.userInfo.user_id}/wallet_address/${this.formBindWallet.wallet_address}`,
+                data: querystring.stringify(this.formBindWallet),
+                headers: {
+                  "Access-Token": `${this.token}`,
+                }
               }).then(res => {
                 this.dialogFormVisible = false;
                 this.reload()
@@ -545,7 +559,7 @@
         })
       },
       //修改钱包地址
-      sunmitModifyWallet(){
+      sunmitModifyWallet() {
         //校验input是否有值
         this.$refs.formModifyWallet.validate((valid) => {
           if (valid) {
@@ -558,8 +572,11 @@
             }).then(res => {
               axios({
                 method: 'post',
-                url: `${baseURL}/v1/users/${this.userInfo._id}/wallet_address/${this.formModifyWallet.wallet_address}`,
-                data: querystring.stringify(this.formModifyWallet)
+                url: `${baseURL}/v1/users/${this.userInfo.user_id}/wallet_address/${this.formModifyWallet.wallet_address}`,
+                data: querystring.stringify(this.formModifyWallet),
+                headers: {
+                  "Access-Token": `${this.token}`,
+                }
               }).then(res => {
                 this.dialogFormVisible2 = false;
                 this.reload()
@@ -581,11 +598,12 @@
   }
 </script>
 <style scoped>
-  .nav_content{
+  .nav_content {
     width: 1078px;
     float: right;
   }
-  .nav_content_title{
+  
+  .nav_content_title {
     width: 1078px;
     height: 50px;
     background-color: #ffffff;
@@ -594,73 +612,89 @@
     font-size: 18px;
     color: #222222;
   }
-  .nav_content_title span{
+  
+  .nav_content_title span {
     padding-left: 20px;
   }
-  .nav_content_title span:last-child{
+  
+  .nav_content_title span:last-child {
     font-size: 14px;
     color: #666666;
   }
-  .nav_content_table{
+  
+  .nav_content_table {
     margin-top: 12px;
-    width:1078px;
+    width: 1078px;
     background-color: #ffffff;
     border: solid 1px #bfbfbf;
     margin-bottom: 324px;
   }
-  .nav_content_table table{
-    width:100%;
+  
+  .nav_content_table table {
+    width: 100%;
   }
-  .nav_content_table tbody td:nth-child(1){
-    width:100px;
+  
+  .nav_content_table tbody td:nth-child(1) {
+    width: 100px;
     text-align: center;
   }
-  .nav_content_table tbody td:nth-child(1) span{
+  
+  .nav_content_table tbody td:nth-child(1) span {
     display: inline-block;
   }
-  .nav_content_table tbody td:nth-child(2){
-    width:170px;
+  
+  .nav_content_table tbody td:nth-child(2) {
+    width: 170px;
     font-size: 18px;
     color: #222222;
   }
-  .nav_content_table tbody td:nth-child(3){
-    width:710px;
+  
+  .nav_content_table tbody td:nth-child(3) {
+    width: 710px;
     font-size: 16px;
     color: #666666;
   }
-  .nav_content_table tbody td:nth-child(4){
+  
+  .nav_content_table tbody td:nth-child(4) {
     font-size: 16px;
     color: #666666;
     cursor: pointer;
   }
-  .nav_content_table tbody tr{
+  
+  .nav_content_table tbody tr {
     border-bottom: 1px solid #d2d2d2;
     text-align: left;
-    height:90px;
+    height: 90px;
   }
-  .nav_content_table tbody tr td{
+  
+  .nav_content_table tbody tr td {
     vertical-align: middle;
   }
-  .nav_content_table tbody tr:last-child{
+  
+  .nav_content_table tbody tr:last-child {
     border-bottom: none;
   }
-  .red_set{
+  
+  .red_set {
     color: #c6351e !important;
   }
 </style>
 <style>
-  .safe_dialog .el-dialog__header{
+  .safe_dialog .el-dialog__header {
     text-align: center;
     font-size: 16px;
     color: #222222;
   }
-  .safe_dialog .dialog-footer{
+  
+  .safe_dialog .dialog-footer {
     text-align: center;
   }
-  .padding_phone{
+  
+  .padding_phone {
     padding: 20px;
   }
-  .safe_dialog .dialog-footer button{
+  
+  .safe_dialog .dialog-footer button {
     width: 85px;
     height: 30px;
     border-radius: 4px;
@@ -671,22 +705,28 @@
     background-color: #ffffff;
     cursor: pointer;
   }
-  .safe_dialog .forget_btn{
+  
+  .safe_dialog .forget_btn {
     margin-left: 30px;
   }
-  .safe_dialog .forget_btn a{
+  
+  .safe_dialog .forget_btn a {
     color: #c9402a;
   }
-  .safe_dialog .el-form-item{
+  
+  .safe_dialog .el-form-item {
     margin-bottom: 14px;
   }
-  .safe_dialog .el-dialog__footer{
+  
+  .safe_dialog .el-dialog__footer {
     padding: 20px;
   }
-  .safe_dialog .el-form-item__label{
+  
+  .safe_dialog .el-form-item__label {
     color: #222222;
   }
-  .safe_dialog .el-input__inner{
+  
+  .safe_dialog .el-input__inner {
     width: 198px;
     height: 28px;
     background-color: #eeeeee;
@@ -694,15 +734,18 @@
     border: 0;
     padding-left: 4px;
   }
-  .safe_dialog .el-dialog{
+  
+  .safe_dialog .el-dialog {
     width: 400px;
     border-radius: 10px;
   }
-  .safe_dialog .el-dialog__body{
+  
+  .safe_dialog .el-dialog__body {
     padding-bottom: 0;
     padding-top: 10px;
   }
-  .safe_dialog .el-form-item img{
+  
+  .safe_dialog .el-form-item img {
     width: 57px;
     height: 23px;
     position: relative;
@@ -710,22 +753,27 @@
     left: -60px;
     cursor: pointer;
   }
-  .safe_dialog .el-form-item__content{
-    width:100%;
+  
+  .safe_dialog .el-form-item__content {
+    width: 100%;
   }
-  .safe_dialog .el-input{
+  
+  .safe_dialog .el-input {
     float: left;
-    width:auto;
+    width: auto;
   }
-  .safe_dialog .el-dialog__headerbtn{
+  
+  .safe_dialog .el-dialog__headerbtn {
     border: 1px solid #909399;
     width: 18px;
     height: 18px;
   }
-  .safe_dialog .el-dialog__headerbtn .el-dialog__close:hover{
+  
+  .safe_dialog .el-dialog__headerbtn .el-dialog__close:hover {
     color: #909399;
   }
-  .safe_dialog .send_btn{
+  
+  .safe_dialog .send_btn {
     width: 57px;
     height: 23px;
     border-radius: 4px;
@@ -739,47 +787,57 @@
     left: -60px;
     top: 1px;
   }
-  .safe_dialog .first_label .el-form-item__label{
+  
+  .safe_dialog .first_label .el-form-item__label {
     padding-right: 2px;
   }
-  .safe_dialog .auth_title{
+  
+  .safe_dialog .auth_title {
     padding-left: 14px;
     margin-bottom: 12px;
   }
-  .safe_dialog .auth_title img{
+  
+  .safe_dialog .auth_title img {
     float: left;
     margin: 0 10px;
   }
-  .safe_dialog .title_p1{
+  
+  .safe_dialog .title_p1 {
     font-size: 16px;
     color: #222222;
     position: relative;
     top: -4px;
     margin-bottom: 12px;
   }
-  .safe_dialog .title_p2{
+  
+  .safe_dialog .title_p2 {
     font-size: 12px;
     color: #666666;
   }
-  .safe_dialog .auth_box .el-dialog{
+  
+  .safe_dialog .auth_box .el-dialog {
     width: 420px;
   }
-  .class-a span{
+  
+  .class-a span {
     width: 35px;
     height: 27px;
     background: url("./images/adopt.png") no-repeat center;
     background-size: 100% 100%;
   }
-  .class-b span{
+  
+  .class-b span {
     width: 33px;
     height: 34px;
     background: url("./images/not.png") no-repeat center;
     background-size: 100% 100%;
   }
-  .bindWallet .el-form-item__label{
+  
+  .bindWallet .el-form-item__label {
     width: 122px !important;
   }
-  .second_count{
+  
+  .second_count {
     background-color: #7d7d7d;
     font-size: 14px;
     color: #ffffff;

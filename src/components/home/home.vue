@@ -160,7 +160,7 @@
 <script>
   import axios from "axios";
   import _ from "lodash";
-  import {baseURL, cardURL} from '@/common/js/public.js';
+  import {baseURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
   
   export default {
@@ -195,7 +195,7 @@
       //获取banner图
       axios({
         method: 'get',
-        url: `${cardURL}/v1/broadcast/s?type_id=5b572fa8a4cc0d6ea8ba5484`
+        url: `${baseURL}/v1/broadcast/s?type_id=5b572fa8a4cc0d6ea8ba5484`
       }).then(res => {
         this.bannerList = res.data;
       }).catch(error => {

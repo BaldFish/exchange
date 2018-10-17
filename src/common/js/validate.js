@@ -7,7 +7,7 @@ Validator.addLocale(zh_CN); // 设置提示信息中文方式显示
 
 const config = {
   errorBagName: 'errors',
-  fieldsBagName: 'fields',
+  fieldsBagName: 'fieldBags',
   delay: 100,
   locale: 'zh_CN',
   strict: true,

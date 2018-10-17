@@ -43,7 +43,7 @@
 </template>
 
 <script>
-  import {baseURL, cardURL} from '@/common/js/public.js';
+  import {baseURL} from '@/common/js/public.js';
   import axios from "axios";
   import utils from "@/common/js/utils.js";
   const querystring = require('querystring');
@@ -130,7 +130,7 @@
       acquireCaseSource(){
         axios({
           method: "GET",
-          url: `${cardURL}/v1/transed-asset/${this.assetId}/apikey/${this.apiKey}?page=0&limit=1000000`,
+          url: `${baseURL}/v1/transed-asset/${this.assetId}/apikey/${this.apiKey}?page=0&limit=1000000`,
           headers: {
             "Content-Type": "application/json",
           }

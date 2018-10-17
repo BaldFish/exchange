@@ -54,7 +54,7 @@
 
 <script>
   import axios from "axios";
-  import {baseURL,cardURL} from '@/common/js/public.js';
+  import {baseURL} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
   const querystring = require('querystring');
   var currentImg = '';

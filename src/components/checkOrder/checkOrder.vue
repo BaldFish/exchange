@@ -124,7 +124,7 @@
 
 <script>
   import axios from "axios";
-  import {baseURL, cardURL} from '@/common/js/public.js';
+  import {baseURL} from '@/common/js/public.js';
   import {BigNumber} from 'bignumber.js';
   import utils from "@/common/js/utils.js";
   
@@ -320,7 +320,7 @@
         //获取可信币余额
         axios({
           method:"GET",
-          url:`${cardURL}/v1/token/TSD/balance?address=${this.walletAddress}`,
+          url:`${baseURL}/v1/token/TSD/balance?address=${this.walletAddress}`,
         }).then((res)=>{
           res.data.result="0x"+res.data.result;
           this.balance = new BigNumber(Number(res.data.result)).dividedBy(1e+18).toFormat(2);
@@ -330,7 +330,7 @@
         //获取Gas余额
         /*axios({
           method: "POST",
-          url: `${cardURL}/`,
+          url: `${baseURL}/`,
           headers: {
             "Content-Type": "application/json",
           },
