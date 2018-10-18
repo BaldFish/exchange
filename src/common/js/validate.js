@@ -55,7 +55,7 @@ Validator.extend('mobile', {
     zh_CN: (field) => '请输入正确的手机号'
   },
   validate: (value) => {
-    return value.length == 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value);
+    return value.length == 11 && /^((13|14|15|16|17|18|19)[0-9]{1}\d{8})$/.test(value);
   }
 });
 
@@ -64,7 +64,7 @@ Validator.extend('mobileRight', {
     zh_CN: (field) => '请输入正确的手机号'
   },
   validate: (value) => {
-    return value.length == 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value);
+    return value.length == 11 && /^((13|14|15|16|17|18|19)[0-9]{1}\d{8})$/.test(value);
   }
 });
 

@@ -346,7 +346,10 @@
             axios({
               method: 'post',
               url: `${baseURL}/v1/users/${this.userInfo.user_id}/authentication`,
-              data: querystring.stringify(this.formAuth)
+              data: querystring.stringify(this.formAuth),
+              headers: {
+                "Access-Token": `${this.token}`,
+              }
             }).then(res => {
               this.userInfo.authentication = 2;
               this.realNameAuthentication = false
@@ -456,6 +459,7 @@
                   axios({
                     method: 'get',
                     url: `${baseURL}/v1/sms/${this.userInfo.phone}/code/${this.formPhone.code}`
+                    
                   }).then(res => {
                     this.bindPhone = false;
                   }).catch(error => {
@@ -477,10 +481,10 @@
           }
         })
       },
+      //修改手机号
       submitPhone() {
         this.formPhone.phone = this.userInfo.phone;
         this.formPhone.new_phone = '+86' + this.formPhone.inputPhone;
-        
         this.$refs.formPhone.validate((valid) => {
           if (valid) {
             //校验图形验证码正确
