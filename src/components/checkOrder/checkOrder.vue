@@ -158,7 +158,7 @@
           method: "GET",
           url: `${baseURL}/v1/sessions/check`,
           headers: {
-            "Access-Token": `${token}`,
+            "X-Access-Token": `${token}`,
           }
         }).then((res) => {
           if (res.data.user_id) {
