@@ -299,7 +299,7 @@
           method: "GET",
           url: `${baseURL}/v1/sessions/check`,
           headers: {
-            "X-Access-Token": `${token}`,
+            "Access-Token": `${token}`,
           }
         }).then((res) => {
           if (res.data.user_id) {
@@ -315,9 +315,9 @@
             this.getEvaluationList();
 
             this.acquireReportDetails();
-          } else {
+          } /*else {
             alert("登录失效")
-          }
+          }*/
         }).catch((err) => {
           console.log(err);
         })
@@ -343,7 +343,6 @@
       }
       this.acquireReportDetails();
       this.acquireReportSource();
-
       this.getEvaluationList();
     },
     watch: {},
