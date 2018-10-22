@@ -287,7 +287,8 @@
                   document.cookie=`user_id=${res.data.user_id};domain=.launchain.cn`;
                   window.sessionStorage.setItem("loginInfo", JSON.stringify(res.data));
                   this.userId = res.data.user_id;
-                  this.acquireUserInfo();
+                  this.$router.back(-1)
+                  //this.acquireUserInfo();
                 }).catch(error => {
                   console.log(error);
                   //错误提示
@@ -336,7 +337,8 @@
                   document.cookie=`user_id=${res.data.user_id};domain=.launchain.cn`;
                   window.sessionStorage.setItem("loginInfo", JSON.stringify(res.data));
                   this.userId = res.data.user_id;
-                  this.acquireUserInfo();
+                  this.$router.back(-1)
+                  //this.acquireUserInfo();
                 }).catch(error => {
                   console.log(error);
                   //错误提示
@@ -355,7 +357,7 @@
           })
         }
       },
-      acquireUserInfo() {
+      /*acquireUserInfo() {
         axios({
           method: "GET",
           url: `${baseURL}/v1/users/${this.userId}`,
@@ -369,7 +371,7 @@
         }).catch((err) => {
           console.log(err);
         });
-      },
+      },*/
     }
   }
 </script>

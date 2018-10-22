@@ -122,7 +122,7 @@
         isShowRegister: false,
         isShowForgetPassword: false,
         toggleIndex: 1,
-        toggleParam: ["搜索", "交易平台", "转让平台"],
+        toggleParam: ["搜索", "交易平台"/*, "转让平台"*/],
         userId: '',
         token: "",
       }
@@ -134,7 +134,7 @@
           method: "GET",
           url: `${baseURL}/v1/sessions/check`,
           headers: {
-            "X-Access-Token": `${token}`,
+            "Access-Token": `${token}`,
           }
         }).then((res) => {
           if (res.data.user_id) {
@@ -150,7 +150,9 @@
             this.acquireFavoriteCount();
           } else {
             this.isLogin = false;
-            this.dropOut()
+            sessionStorage.removeItem('loginInfo');
+            sessionStorage.removeItem('userInfo');
+            //this.dropOut()
           }
         }).catch((err) => {
           console.log(err);
@@ -162,11 +164,11 @@
       this.changTop()
     },
     /*mounted() {
-      if (sessionStorage.getItem("loginInfo")) {
+      /!*if (sessionStorage.getItem("loginInfo")) {
         this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
         this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
         this.acquireFavoriteCount();
-      }
+      }*!/
       console.log("mounted")
     },*/
     beforeUpdate() {
@@ -176,7 +178,7 @@
           method: "GET",
           url: `${baseURL}/v1/sessions/check`,
           headers: {
-            "X-Access-Token": `${token}`,
+            "Access-Token": `${token}`,
           }
         }).then((res) => {
           if (res.data.user_id) {
@@ -192,7 +194,9 @@
             this.acquireFavoriteCount();
           } else {
             this.isLogin = false;
-            this.dropOut()
+            sessionStorage.removeItem('loginInfo');
+            sessionStorage.removeItem('userInfo');
+            //this.dropOut()
           }
         }).catch((err) => {
           console.log(err);
