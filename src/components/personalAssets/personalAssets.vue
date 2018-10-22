@@ -146,6 +146,19 @@
         balance: 0,
       }
     },
+    mounted() {
+      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
+        this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
+        this.walletAddress=JSON.parse(sessionStorage.getItem("userInfo")).wallet_address;
+        if (this.walletAddress) {
+          this.acquireBalance()
+        } else {
+          this.balance = 0
+        }
+        this.acquireAssetList();
+      }
+    },
     computed: {
       reportPackageList: function () {
         return this.assetList.filter(function (value, index, array) {
@@ -172,14 +185,6 @@
           return value.apikey === "5ae04522cff7cb000194f2f4"
         })
       },
-    },
-    mounted() {
-      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
-        this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-        this.acquireUserInfo();
-        this.acquireAssetList();
-      }
     },
     methods: {
       download(url) {
@@ -249,7 +254,7 @@
         this.currentPage = val;
         this.acquireAssetList();
       },
-      acquireUserInfo() {
+      /*acquireUserInfo() {
         axios({
           method: "GET",
           url: `${baseURL}/v1/users/${this.userId}`,
@@ -267,7 +272,7 @@
         }).catch((err) => {
           console.log(err);
         });
-      },
+      },*/
       acquireBalance() {
         //获取可信币余额
         axios({

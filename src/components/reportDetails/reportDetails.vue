@@ -315,9 +315,9 @@
             this.getEvaluationList();
 
             this.acquireReportDetails();
-          } /*else {
+          } else {
             alert("登录失效")
-          }*/
+          }
         }).catch((err) => {
           console.log(err);
         })

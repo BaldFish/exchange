@@ -169,7 +169,8 @@
             window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
             this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
             this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-            this.acquireUserInfo();
+            this.walletAddress=JSON.parse(sessionStorage.getItem("userInfo")).wallet_address;
+            this.acquireBalance();
           } else {
             alert("登录失效")
           }
@@ -296,7 +297,7 @@
         });
       },
       //获取用户信息
-      acquireUserInfo() {
+      /*acquireUserInfo() {
         axios({
           method: "GET",
           url: `${baseURL}/v1/users/${this.userId}`,
@@ -314,7 +315,7 @@
         }).catch((err) => {
           console.log(err);
         });
-      },
+      },*/
       //获取钱包地址余额
       acquireBalance() {
         //获取可信币余额
