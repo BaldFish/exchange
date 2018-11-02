@@ -164,7 +164,7 @@
       if(this.pathname==="/developer"){
         this.toggleIndex=2
       }else{
-        this.toggleIndex=0
+        this.toggleIndex=1
       }
     },
     beforeUpdate() {
