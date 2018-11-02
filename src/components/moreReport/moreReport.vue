@@ -60,7 +60,7 @@
   import "@/common/stylus/paging.styl";
   import axios from "axios";
   import _ from "lodash";
-  import {baseURL} from '@/common/js/public.js';
+  import {baseURL,loginPlatform} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
   
   const querystring = require('querystring');
@@ -91,6 +91,11 @@
     watch: {},
     computed: {},
     methods: {
+      login() {
+        let redirectURL = window.location.href;
+        let url=`?redirectURL=${redirectURL}`;
+        window.location.href=`${loginPlatform}${url}`;
+      },
       open() {
         this.$confirm('此操作需要先登录, 是否登录?', '提示', {
           confirmButtonText: '是',
@@ -98,7 +103,7 @@
           type: 'warning',
           center: true
         }).then(() => {
-          this.$router.push("/login")
+          this.login();
         }).catch(() => {
         });
       },

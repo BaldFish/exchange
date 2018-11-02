@@ -15,8 +15,8 @@
         </div>
         
         <div class="no_login" v-if="!isLogin">
-          <a href="/login">请登录</a>
-          <a href="/register">免费注册</a>
+          <a href="javascript:void(0)" @click="login">请登录</a>
+          <a href="javascript:void(0)" @click="register">免费注册</a>
         </div>
         <div class="login" v-if="isLogin" @mouseleave.stop="leaveUl">
           <div @click.stop="toggle">{{userName}} <img src="./common/images/down.png" alt=""></div>
@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-    <div class="login-header" v-if="isShowLogin">
+    <!--<div class="login-header" v-if="isShowLogin">
       <div class="login-header-cont">
         <router-link to="/home">
           <img src="./common/images/login_header.png" alt="">
@@ -54,7 +54,7 @@
           <router-link to="/login" class="to_login">登录</router-link>
         </p>
       </section>
-    </div>
+    </div>-->
     <!--<my-topSearch v-if="isShowTopSearch"></my-topSearch>
     <my-toggle :toggleIndex="toggleIndex"></my-toggle>-->
     <div class="main_wrap">
@@ -114,12 +114,12 @@
         switchover: false,
         isLogin: false,
         userName: "",
-        isShowTopSearch: false,
+        isShowTopSearch: true,
         isShowLogin: false,
         isShowRegister: false,
         isShowForgetPassword: false,
         toggleIndex: 1,
-        toggleParam: ["搜索", "交易平台"/*, "转让平台"*/],
+        toggleParam: ["搜索", "交易平台", "开发者计划"],
         userId: '',
         token: "",
       }
@@ -158,16 +158,15 @@
         sessionStorage.removeItem('loginInfo');
         sessionStorage.removeItem('userInfo');
       }
-      this.changTop()
+      //this.changTop()
     },
-    /*mounted() {
-      /!*if (sessionStorage.getItem("loginInfo")) {
-        this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-        this.acquireFavoriteCount();
-      }*!/
-      console.log("mounted")
-    },*/
+    mounted() {
+      if(this.pathname==="/developer"){
+        this.toggleIndex=2
+      }else{
+        this.toggleIndex=0
+      }
+    },
     beforeUpdate() {
       let token = utils.getCookie("token");
       if (token) {
@@ -202,20 +201,43 @@
         sessionStorage.removeItem('loginInfo');
         sessionStorage.removeItem('userInfo');
       }
-      this.changTop()
+      //this.changTop()
     },
     computed: {
+      pathname:{
+        get:function () {
+          return document.location.pathname
+        },
+        set:function () {}
+      },
       favoriteCount: function () {
         return this.$store.state.favoriteCount
       }
     },
     watch: {
+      $route(to,from) {
+        if (to.path === "/developer") {
+          this.toggleIndex = 2
+        } else {
+          this.toggleIndex = 0
+        }
+      },
       favoriteCount: function () {
         this.acquireFavoriteCount();
-      }
+      },
     },
     methods: {
-      changTop() {
+      login() {
+        let redirectURL = window.location.href;
+        let url=`?redirectURL=${redirectURL}`;
+        window.location.href=`${loginPlatform}${url}`;
+      },
+      register() {
+        let redirectURL = window.location.href;
+        let url=`?redirectURL=${redirectURL}`;
+        window.location.href=`${loginPlatform}${url}`;
+      },
+      /*changTop() {
         if (this.$route.path == "/login") {
           this.isShowTopSearch = false;
           this.isShowLogin = true;
@@ -242,7 +264,7 @@
           this.isShowRegister = false;
           this.isShowForgetPassword = false;
         }
-      },
+      },*/
       reload() {
         this.isRouterAlive = false;
         this.$nextTick(() => {
@@ -282,7 +304,7 @@
         } else if (index === 1) {
           window.location.href = exchangePlatform
         } else if (index === 2) {
-          window.location.href = transferPlatform
+          window.location.href = "/developer"
         }
       },
       open() {
@@ -292,7 +314,7 @@
           type: 'warning',
           center: true
         }).then(() => {
-          this.$router.push("/login")
+          this.login();
         }).catch(() => {
         });
       },
@@ -485,7 +507,7 @@
     }
   }
   
-  .login-header {
+  /*.login-header {
     width: 100%;
     height: 130px;
     background-color: #f3f3f3;
@@ -521,7 +543,7 @@
       }
     }
   }
-  
+  */
   .main_wrap {
     flex: 1;
     box-sizing: border-box;
