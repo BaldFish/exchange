@@ -160,14 +160,13 @@
       }
       //this.changTop()
     },
-    /*mounted() {
-      /!*if (sessionStorage.getItem("loginInfo")) {
-        this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-        this.acquireFavoriteCount();
-      }*!/
-      console.log("mounted")
-    },*/
+    mounted() {
+      if(this.pathname==="/developer"){
+        this.toggleIndex=2
+      }else{
+        this.toggleIndex=0
+      }
+    },
     beforeUpdate() {
       let token = utils.getCookie("token");
       if (token) {
@@ -205,14 +204,27 @@
       //this.changTop()
     },
     computed: {
+      pathname:{
+        get:function () {
+          return document.location.pathname
+        },
+        set:function () {}
+      },
       favoriteCount: function () {
         return this.$store.state.favoriteCount
       }
     },
     watch: {
+      $route(to,from) {
+        if (to.path === "/developer") {
+          this.toggleIndex = 2
+        } else {
+          this.toggleIndex = 0
+        }
+      },
       favoriteCount: function () {
         this.acquireFavoriteCount();
-      }
+      },
     },
     methods: {
       login() {
