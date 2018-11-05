@@ -7,12 +7,12 @@
     <div class="nav_content_table">
       <table>
         <tbody>
-        <tr>
+        <!--<tr>
           <td><img src="./images/adopt.png" alt=""></td>
           <td>登录密码</td>
           <td>互联网账号存在被盗风险，建议您定期更改密码以保护账户安全</td>
           <td @click="openModalPwd">修改</td>
-        </tr>
+        </tr>-->
         <tr>
           <td><img src="./images/adopt.png" alt=""></td>
           <td>手机验证</td>
@@ -31,14 +31,14 @@
         <tr v-if="!userInfo.wallet_address">
           <td><img src="./images/not.png" alt=""></td>
           <td>钱包地址</td>
-          <td>绑定您的钱包地址后，可信币才能显示出来</td>
-          <td class="red_set" @click="openModalBindWallet">设置</td>
+          <td>绑定您的钱包地址后，数据豆才能显示出来</td>
+          <!--<td class="red_set" @click="openModalBindWallet">设置</td>-->
         </tr>
         <tr v-else>
           <td><img src="./images/adopt.png" alt=""></td>
           <td>钱包地址</td>
           <td>钱包地址：{{userInfo.wallet_address}}</td>
-          <td @click="openModalModifyWallet">修改</td>
+          <!--<td @click="openModalModifyWallet">修改</td>-->
         </tr>
         </tbody>
       </table>
@@ -158,6 +158,7 @@
 <script>
   import axios from "axios";
   import {baseURL} from '@/common/js/public.js';
+  import utils from "@/common/js/utils.js";
   
   const querystring = require('querystring');
   
@@ -262,12 +263,37 @@
         }
       }
     },
-    mounted: function () {
-      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
-        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-        this.userInfo=JSON.parse(sessionStorage.getItem("userInfo"))
+    beforeMount() {
+      let token = utils.getCookie("token");
+      if (token) {
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/sessions/check`,
+          headers: {
+            "Access-Token": `${token}`,
+          }
+        }).then((res) => {
+          if (res.data.user_id) {
+            window.sessionStorage.setItem("userInfo", JSON.stringify(res.data));
+            let loginInfo = {};
+            loginInfo.token = token;
+            loginInfo.user_id = res.data.user_id;
+            window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+            this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+            this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
+            this.userInfo=res.data
+          } else {
+            alert("登录失效")
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      } else {
+        sessionStorage.removeItem('loginInfo');
+        sessionStorage.removeItem('userInfo');
       }
     },
+    mounted: function () {},
     methods: {
       //清除modal旧数据
       openModalPwd() {

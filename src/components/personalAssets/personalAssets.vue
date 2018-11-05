@@ -6,7 +6,7 @@
         <router-link to="/securityCenter" class="to_bind">去绑定 ></router-link>
       </p>
       <p v-if="walletAddress!==''">钱包地址：{{walletAddress}}</p>
-      <p>可信币：{{balance}}</p>
+      <p>数据豆：{{balance}}</p>
     </div>
     <div class="nav_content_title">
       <span>已购资产</span>
@@ -146,19 +146,39 @@
         balance: 0,
       }
     },
-    mounted() {
-      if (JSON.parse(sessionStorage.getItem("loginInfo"))) {
-        this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-        this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-        this.walletAddress=JSON.parse(sessionStorage.getItem("userInfo")).wallet_address;
-        if (this.walletAddress) {
-          this.acquireBalance()
-        } else {
-          this.balance = 0
-        }
-        this.acquireAssetList();
+    beforeMount() {
+      let token = utils.getCookie("token");
+      if (token) {
+        axios({
+          method: "GET",
+          url: `${baseURL}/v1/sessions/check`,
+          headers: {
+            "Access-Token": `${token}`,
+          }
+        }).then((res) => {
+          if (res.data.user_id) {
+            window.sessionStorage.setItem("userInfo", JSON.stringify(res.data));
+            let loginInfo = {};
+            loginInfo.token = token;
+            loginInfo.user_id = res.data.user_id;
+            window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+            this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+            this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
+            this.walletAddress=JSON.parse(sessionStorage.getItem("userInfo")).wallet_address;
+            this.acquireBalance();
+            this.acquireAssetList();
+          } else {
+            alert("登录失效")
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      } else {
+        sessionStorage.removeItem('loginInfo');
+        sessionStorage.removeItem('userInfo');
       }
     },
+    mounted() {},
     computed: {
       reportPackageList: function () {
         return this.assetList.filter(function (value, index, array) {
@@ -186,6 +206,7 @@
         })
       },
     },
+    watch:{},
     methods: {
       download(url) {
         window.open(url, "_blank")
@@ -279,7 +300,7 @@
         });
       },*/
       acquireBalance() {
-        //获取可信币余额
+        //获取数据豆余额
         axios({
           method:"GET",
           url:`${baseURL}/v1/token/TSD/balance?address=${this.walletAddress}`,
