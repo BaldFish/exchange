@@ -74,6 +74,11 @@
           </ul>
         </div>
         <div class="ft-box">
+          <ul class="text">
+            <li @click="centerDialogVisible = true">意见和建议</li>
+          </ul>
+        </div>
+        <div class="ft-box">
           <ul class="code">
             <li>
               <a href="javascript:void(0)">
@@ -110,6 +115,7 @@
     },
     data() {
       return {
+        centerDialogVisible: false,
         isRouterAlive: true,
         switchover: false,
         isLogin: false,
@@ -228,11 +234,17 @@
     },
     methods: {
       login() {
+        /*let redirectURL = "http://localhost:5000";
+        let url=`?redirectURL=${redirectURL}`;
+        window.location.href=`http://localhost:5003/login${url}`;*/
         let redirectURL = window.location.href;
         let url=`?redirectURL=${redirectURL}`;
         window.location.href=`${loginPlatform}/login${url}`;
       },
       register() {
+        /*let redirectURL = "http://localhost:5000";
+        let url=`?redirectURL=${redirectURL}`;
+        window.location.href=`http://localhost:5003/login${url}`;*/
         let redirectURL = window.location.href;
         let url=`?redirectURL=${redirectURL}`;
         window.location.href=`${loginPlatform}/register${url}`;
@@ -284,8 +296,8 @@
           sessionStorage.removeItem('userInfo');
           /*document.cookie = `token=;expires=${new Date(0)}`;
           document.cookie = `user_id=;expires=${new Date(0)}`;*/
-          document.cookie = `token=;expires=${new Date(0)};domain=.launchain.cn`;
-          document.cookie = `user_id=;expires=${new Date(0)};domain=.launchain.cn`;
+          document.cookie = `token=;expires=${new Date(0)};domain=.datajs.com.cn`;
+          document.cookie = `user_id=;expires=${new Date(0)};domain=.datajs.com.cn`;
           this.switchover = false;
           location.reload()
         }).catch(error => {
@@ -621,6 +633,12 @@
             top: 50%;
             transform: translateY(-50%);
           }
+        }
+      }
+      .ft-box:nth-child(3){
+        margin-left 130px
+        li{
+          cursor pointer
         }
       }
       .ft-box:last-child {

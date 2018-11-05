@@ -283,8 +283,13 @@
                 }).then(res => {
                   /*document.cookie=`token=${res.data.token}`;
                   document.cookie=`user_id=${res.data.user_id}`;*/
+<<<<<<< HEAD
                   document.cookie=`token=${res.data.token};domain=.launchain.cn`;
                   document.cookie=`user_id=${res.data.user_id};domain=.launchain.cn`;
+=======
+                  document.cookie=`token=${res.data.token};domain=.datajs.com.cn`;
+                  document.cookie=`user_id=${res.data.user_id};domain=.datajs.com.cn`;
+>>>>>>> develop
                   window.sessionStorage.setItem("loginInfo", JSON.stringify(res.data));
                   this.userId = res.data.user_id;
                   this.$router.back(-1)
@@ -333,8 +338,13 @@
                 }).then(res => {
                   /*document.cookie=`token=${res.data.token}`;
                   document.cookie=`user_id=${res.data.user_id}`;*/
+<<<<<<< HEAD
                   document.cookie=`token=${res.data.token};domain=.launchain.cn`;
                   document.cookie=`user_id=${res.data.user_id};domain=.launchain.cn`;
+=======
+                  document.cookie=`token=${res.data.token};domain=.datajs.com.cn`;
+                  document.cookie=`user_id=${res.data.user_id};domain=.datajs.com.cn`;
+>>>>>>> develop
                   window.sessionStorage.setItem("loginInfo", JSON.stringify(res.data));
                   this.userId = res.data.user_id;
                   this.$router.back(-1)

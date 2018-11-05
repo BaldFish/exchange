@@ -31,10 +31,10 @@
         <div style="clear: both"></div>
         <div class="reply-container">
           <textarea placeholder="立即评价晒单吧" name="" style="resize:none;line-height: normal" maxlength="500" @input = "descInput" v-model="content"></textarea>
-          <p class="reply-tips">{{remnant}}/500(评价多于10个字，有可能会获得可信币哦)</p>
+          <p class="reply-tips">{{remnant}}/500(评价多于10个字，有可能会获得数据豆哦)</p>
           <el-upload
             class="upload-demo"
-            action="http://wallet-api-test.launchain.org:50000/exchange/v1/asset-comment/img/upload"
+            action="http://wallet-api-test.launchain.org/v1/asset-comment/img/upload"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
             :on-success="handleSuccess"
@@ -54,7 +54,7 @@
 
 <script>
   import axios from "axios";
-  import {baseURL} from '@/common/js/public.js';
+  import {baseURL,} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
   const querystring = require('querystring');
   var currentImg = '';
