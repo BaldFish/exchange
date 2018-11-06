@@ -17,7 +17,7 @@
         
         <div class="no_login" v-if="!isLogin">
           <a href="javascript:void(0)" @click="login">请登录</a>
-          <a href="javascript:void(0)" @click="register">免费注册</a>
+          <!--<a href="javascript:void(0)" @click="register">免费注册</a>-->
         </div>
         <div class="login" v-if="isLogin" @mouseleave.stop="leaveUl">
           <div @click.stop="toggle">{{userName}} <img src="./common/images/down.png" alt=""></div>
@@ -470,7 +470,8 @@
       .no_login {
         vertical-align top
         display inline-block
-        width 160px
+        margin-right 20px
+        width 140px
         height 50px
         a {
           font-size 12px
@@ -481,7 +482,8 @@
       .login {
         display inline-block
         cursor pointer
-        width 160px
+        margin-right 20px
+        width 140px
         height 50px
         position relative
         color #ffffff
