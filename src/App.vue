@@ -3,6 +3,7 @@
     <div class="head-wrap" v-if="isShowTopSearch">
       <div class="head">
         <a class="logo" href="/">
+          <img src="./common/images/logo.png" alt="">
           <!--<p>Trusted Assets Blockchain</p>-->
         </a>
         <ul class="platform">
@@ -380,32 +381,28 @@
         font-size 12px
       }
       .logo {
-        display inline-block
-        color #ffffff
-        background-image: url('./common/images/logo.png');
-        background-position: top center;
-        background-repeat: no-repeat;
-        width 150px
-        height 46px
         float left
-        margin-top 2px
-        margin-left 6px
-        position relative
-        vertical-align top
-        p {
-          line-height 20px
-          font-size 12px
-          position absolute
-          left 50px
-          bottom 0
+        box-sizing border-box
+        font-size: 0px;
+        display: table-cell;
+        width: 160px;
+        height: 50px;
+        vertical-align: top;
+        text-align: center;
+        img {
+          vertical-align: top;
+          max-width 160px
+          max-height 48px
+          position: relative;
+          top: 50%;
+          transform: translateY(-50%);
         }
-        
       }
       .platform {
         box-sizing border-box
         display inline-block
         text-align left
-        width 630px
+        width 620px
         height 50px
         font-size 0
         //padding-left 100px
@@ -621,13 +618,13 @@
           font-size: 0px;
           color: #c6351e;
           display: table-cell;
-          width: 150px;
+          width: 200px;
           height: 150px;
           vertical-align: top;
           text-align: center;
           img {
             vertical-align: top;
-            max-width 150px
+            max-width 200px
             max-height 150px
             position: relative;
             top: 50%;
@@ -639,6 +636,8 @@
         margin-left 130px
         li{
           cursor pointer
+          border 1px solid #ffffff
+          padding 4px
         }
       }
       .ft-box:last-child {
