@@ -2,8 +2,8 @@
   <div class="nav_content">
     <div class="assets_summary">
       <p>{{phone}}</p>
-      <p v-if="walletAddress===''">未绑定钱包地址
-        <router-link to="/securityCenter" class="to_bind">去绑定 ></router-link>
+      <p v-if="walletAddress===''">未创建钱包
+        <a href="javascript:void(0)" class="to_bind" @click="login">去创建 ></a>
       </p>
       <p v-if="walletAddress!==''">钱包地址：{{walletAddress}}</p>
       <p>数据豆：{{balance}}</p>
