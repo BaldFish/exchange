@@ -353,15 +353,23 @@
       },
       //提示框
       open() {
-        this.$confirm('此操作需要先绑定钱包地址, 是否绑定?', '提示', {
+        this.$confirm('此操作需要先创建钱包地址, 是否去创建?', '提示', {
           confirmButtonText: '是',
           cancelButtonText: '否',
           type: 'warning',
           center: true
         }).then(() => {
-          this.$router.push("/securityCenter")
+          this.login()
         }).catch(() => {
         });
+      },
+      login() {
+        /*let redirectURL = "http://localhost:5000";
+        let url=`?redirectURL=${redirectURL}`;
+        window.location.href=`http://localhost:5003/login${url}`;*/
+        let redirectURL = window.location.href;
+        let url=`?redirectURL=${redirectURL}`;
+        window.location.href=`${loginPlatform}/login${url}`;
       },
       turnDetails(apiKey, assetId) {
         if (apiKey === "5a6be74a55aaf50001a5e250") {

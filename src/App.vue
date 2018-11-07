@@ -61,6 +61,36 @@
     <div class="main_wrap">
       <router-view class="main" v-if="isRouterAlive"></router-view>
     </div>
+    <el-dialog
+      title="提示"
+      :visible.sync="centerDialogVisible"
+      width="380px" top="20vh"
+      center class="dialog">
+      <div class="content">
+        <div class="header">
+          <a class="close" href="javascript:void(0)" @click="close"></a>
+          <p class="phone">咨询热线：010-58205388</p>
+          <p class="tip">请填写一下信息，我们会尽快和您联系</p>
+        </div>
+        <div class="mainer">
+          <div class="name">
+            <label for="name">您的姓名：</label>
+            <input type="text" id="name" v-model="name">
+          </div>
+          <div class="phone">
+            <label for="phone">手机号码：</label>
+            <input type="text" id="phone" v-model="phone">
+          </div>
+          <div class="content">
+            <label for="content">留言内容：</label>
+            <textarea id="content" v-model="content"></textarea>
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="submitAdvise">提交留言</el-button>
+  </span>
+    </el-dialog>
     <div class="footer-wrap">
       <div class="footer">
         <div class="ft-box">
@@ -76,7 +106,7 @@
         </div>
         <div class="ft-box">
           <ul class="text">
-            <li @click="centerDialogVisible = true">意见和建议</li>
+            <li @click="advise">意见和建议</li>
           </ul>
         </div>
         <div class="ft-box">
@@ -105,7 +135,7 @@
   import {baseURL, loginPlatform, exchangePlatform, transferPlatform, searchPlatform} from '@/common/js/public.js';
   import axios from "axios";
   import utils from "@/common/js/utils.js";
-  
+  const querystring = require('querystring');
   export default {
     name: 'App',
     components: {},
@@ -116,6 +146,10 @@
     },
     data() {
       return {
+        name:"",
+        phone:"",
+        content:"",
+        tipName:"",
         centerDialogVisible: false,
         isRouterAlive: true,
         switchover: false,
@@ -234,6 +268,59 @@
       },
     },
     methods: {
+      advise(){
+        this.name="";
+        this.phone="";
+        this.content="";
+        this.centerDialogVisible=true
+      },
+      close(){
+        this.centerDialogVisible=false
+      },
+      submitAdvise(){
+        if(this.content===""){
+          this.tipName="反馈内容";
+          this.openTip();
+          return
+        }
+        if(this.phone===""){
+          this.tipName="手机号码";
+          this.openTip();
+          return
+        }
+        if(this.name===""){
+          this.tipName="姓名";
+          this.openTip();
+          return
+        }
+        let data={
+          name:this.name,
+          phone:this.phone,
+          content:this.content,
+          platform:1,
+        };
+        //提交请求
+        axios({
+          method: 'post',
+          url: `${baseURL}/v1/users/feedback`,
+          data: querystring.stringify(data),
+        }).then(res => {
+          this.centerDialogVisible=false
+        }).catch(error => {
+          console.log(error);
+        })
+      },
+      openTip() {
+        this.$confirm(`${this.tipName}, 不能为空！`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true,
+          showCancelButton:false
+        }).then(() => {
+        }).catch(() => {
+        });
+      },
       login() {
         /*let redirectURL = "http://localhost:5000";
         let url=`?redirectURL=${redirectURL}`;
@@ -644,6 +731,98 @@
       }
       .ft-box:last-child {
         float right
+      }
+    }
+  }
+</style>
+<style lang="stylus">
+  .dialog {
+    .el-dialog--center {
+      border-radius: 10px;
+    }
+    .el-dialog__header {
+      display none
+    }
+    .el-dialog__body {
+      padding-top 28px
+      padding-bottom 28px
+      position relative
+      .content {
+        .header{
+          text-align center
+          .close{
+            display inline-block
+            width 15px
+            height 15px
+            position absolute
+            top 12px
+            right 20px
+            background-image: url('./common/images/close.png');
+            background-position: top left;
+            background-repeat: no-repeat;
+          }
+          .phone{
+            font-size: 18px;
+            color: #c6351e;
+            margin-bottom 8px
+          }
+          .tip{
+            color #666666
+          }
+        }
+        .mainer{
+          margin-top 40px
+          margin-left 25px
+          label{
+            color #222222
+            font-size 18px
+          }
+          input,textarea{
+            color #333333
+            box-sizing border-box
+            outline:none;
+            border 1px solid #d2d2d2
+            resize:none;
+            width 210px
+            padding-left 12px
+          }
+          input:focus,textarea:focus{
+            border 1px solid #c6351e
+          }
+          input{
+            height 26px
+          }
+          textarea{
+            height 130px
+          }
+          .name{
+            margin-bottom 22px
+          }
+          .phone{
+            margin-bottom 22px
+          }
+          .content{
+            label{
+              vertical-align top
+            }
+            textarea{
+              vertical-align top
+            }
+          }
+        }
+      }
+    }
+    .el-dialog__footer{
+      padding-top 0
+      padding-bottom 20px
+      .el-button,.el-button--primary{
+        border none
+        width: 94px;
+        height: 30px;
+        background-color: #c6351e;
+        border-radius: 8px;
+        padding 0
+        font-size: 16px;
       }
     }
   }
