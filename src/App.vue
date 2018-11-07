@@ -9,7 +9,7 @@
         <ul class="platform">
           <li v-for="(item,index) of toggleParam" @click="platform(index)" :class="{active:index===toggleIndex}">{{item}}</li>
         </ul>
-        <a href="/">欢迎来到 ENGINE ！</a>
+        <a href="/">欢迎来到 数据集市 ！</a>
         <div class="favorite" @click="turnFavorite">
           <span class="s_text">收藏夹</span>
           <span class="s_num">{{favoriteCount}}</span>
