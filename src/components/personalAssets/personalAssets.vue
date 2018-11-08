@@ -6,7 +6,7 @@
         <a href="javascript:void(0)" class="to_bind" @click="login">去创建 ></a>
       </p>
       <p v-if="walletAddress!==''">钱包地址：{{walletAddress}}</p>
-      <p>数据豆：{{balance}}</p>
+      <p>元积分：{{balance}}</p>
     </div>
     <div class="nav_content_title">
       <span>已购资产</span>
@@ -300,7 +300,7 @@
         });
       },*/
       acquireBalance() {
-        //获取数据豆余额
+        //获取元积分余额
         axios({
           method:"GET",
           url:`${baseURL}/v1/token/TSD/balance?address=${this.walletAddress}`,

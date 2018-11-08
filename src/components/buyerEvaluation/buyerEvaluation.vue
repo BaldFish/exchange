@@ -31,7 +31,7 @@
         <div style="clear: both"></div>
         <div class="reply-container">
           <textarea placeholder="立即评价晒单吧" name="" style="resize:none;line-height: normal" maxlength="500" @input = "descInput" v-model="content"></textarea>
-          <p class="reply-tips">{{remnant}}/500(评价多于10个字，有可能会获得数据豆哦)</p>
+          <p class="reply-tips">{{remnant}}/500(评价多于10个字，有可能会获得元积分哦)</p>
           <el-upload
             class="upload-demo"
             action="http://wallet-api-test.launchain.org/v1/asset-comment/img/upload"
