@@ -107,7 +107,7 @@
           </ul>
         </div>
       </div>
-
+      
       <div class="evaluate">
         <div class="title">
           <span class="title-source"></span>
@@ -178,7 +178,7 @@
                   </div>
                   <div style="clear: both"></div>
                 </div>
-                <div class="seller" v-if="item.reply != null">
+                <div class="seller" v-if="item.reply!== null">
                   <div class="seller-info">
                     <p>[商家回复]</p><br>
                     <p>{{item.reply[0].created_at}}</p>
@@ -232,7 +232,7 @@
                          @current-change="handleCurrentChange">
           </el-pagination>
         </div>
-
+        
         <el-dialog title="卖家回复" :visible.sync="dialogFormVisible">
           <el-form>
             <el-input type="textarea" v-model="replyContent"></el-input>
@@ -242,7 +242,7 @@
             <el-button type="primary" @click="replySubmit">确 定</el-button>
           </div>
         </el-dialog>
-
+      
       </div>
     
     </div>
@@ -251,7 +251,7 @@
 
 <script>
   import axios from "axios";
-  import {baseURL,loginPlatform} from '@/common/js/public.js';
+  import {baseURL, loginPlatform} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
   
   const querystring = require('querystring');
@@ -269,27 +269,27 @@
         assetId: "",
         id: "",
         isShow: false,
-        bigImg:'',
-        isShowImg:false,
-        isThumbsUp:false,
-        thumbsUpNum:100,
-        evaluationList:{},
-        wallet_address:'',
+        bigImg: '',
+        isShowImg: false,
+        isThumbsUp: false,
+        thumbsUpNum: 100,
+        evaluationList: {},
+        wallet_address: '',
         evaluationPage_All: 1,
         evaluationPage_Praise: 1,
         evaluationPage_Assessment: 1,
         evaluationPage_Bad: 1,
         evaluationLimit: 10,
-        assessment:'',
-        bad_comment:'',
-        credit:'',
-        praise:'',
-        total_comments:'',
+        credit: 100,
+        total_comments: 0,
+        praise: 0,
+        assessment: 0,
+        bad_comment: 0,
         total: 10,
         dialogFormVisible: false,
-        replyContent:'',
-        evaluationId:'',
-        currentTab:'',
+        replyContent: '',
+        evaluationId: '',
+        currentTab: '',
       }
     },
     beforeMount() {
@@ -310,10 +310,10 @@
             window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
             this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
             this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-
-            this.wallet_address=JSON.parse(sessionStorage.getItem("userInfo")).wallet_address;
+            
+            this.wallet_address = JSON.parse(sessionStorage.getItem("userInfo")).wallet_address;
             this.getEvaluationList();
-
+            
             this.acquireReportDetails();
           } else {
             alert("登录失效")
@@ -348,23 +348,23 @@
     watch: {},
     computed: {},
     methods: {
-      showBigImg(img){
+      showBigImg(img) {
         this.isShowImg = true;
         this.bigImg = img
       },
-      hideBigImg(){
+      hideBigImg() {
         this.isShowImg = false;
       },
-      toggleThumbsUp(){
+      toggleThumbsUp() {
         this.isThumbsUp = !this.isThumbsUp;
-        if (this.isThumbsUp){
-          this.thumbsUpNum ++
+        if (this.isThumbsUp) {
+          this.thumbsUpNum++
         } else {
-          this.thumbsUpNum --
+          this.thumbsUpNum--
         }
       },
       // 获取全部评价列表
-      getEvaluationList(){
+      getEvaluationList() {
         this.currentTab = 0;
         axios({
           method: "GET",
@@ -374,13 +374,13 @@
           }
         }).then((res) => {
           //格式化时间
-          res.data.data.forEach((val)=>{
+          res.data.data.forEach((val) => {
             val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
-            if (val.reply != null){
+            if (val.reply != null) {
               val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
             }
           });
-          this.evaluationList=res.data;
+          this.evaluationList = res.data;
           this.assessment = res.data.assessment;
           this.bad_comment = res.data.bad_comment;
           this.credit = res.data.credit;
@@ -392,7 +392,7 @@
         })
       },
       // 获取好评列表
-      getPraiseList(){
+      getPraiseList() {
         this.currentTab = 1;
         axios({
           method: "GET",
@@ -402,20 +402,20 @@
           }
         }).then((res) => {
           //格式化时间
-          res.data.data.forEach((val)=>{
+          res.data.data.forEach((val) => {
             val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
-            if (val.reply != null){
+            if (val.reply != null) {
               val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
             }
           });
-          this.evaluationList=res.data;
+          this.evaluationList = res.data;
           this.total = res.data.total_comments
         }).catch((err) => {
           console.log(err);
         })
       },
       // 获取中评列表
-      getAssessmentList(){
+      getAssessmentList() {
         this.currentTab = 2;
         axios({
           method: "GET",
@@ -425,20 +425,20 @@
           }
         }).then((res) => {
           //格式化时间
-          res.data.data.forEach((val)=>{
+          res.data.data.forEach((val) => {
             val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
-            if (val.reply != null){
+            if (val.reply != null) {
               val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
             }
           });
-          this.evaluationList=res.data;
+          this.evaluationList = res.data;
           this.total = res.data.total_comments
         }).catch((err) => {
           console.log(err);
         })
       },
       // 获取差评列表
-      getBadList(){
+      getBadList() {
         this.currentTab = 3;
         axios({
           method: "GET",
@@ -448,13 +448,13 @@
           }
         }).then((res) => {
           //格式化时间
-          res.data.data.forEach((val)=>{
+          res.data.data.forEach((val) => {
             val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
-            if (val.reply != null){
+            if (val.reply != null) {
               val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
             }
           });
-          this.evaluationList=res.data;
+          this.evaluationList = res.data;
           this.total = res.data.total_comments
         }).catch((err) => {
           console.log(err);
@@ -462,24 +462,24 @@
       },
       // 分页变化，不同tab分页独立
       handleCurrentChange(val) {
-        if (this.currentTab == 0){
+        if (this.currentTab == 0) {
           this.evaluationPage_All = val;
           this.getEvaluationList()
-        } else if(this.currentTab == 1){
+        } else if (this.currentTab == 1) {
           this.evaluationPage_Praise = val;
           this.getPraiseList()
-        } else if(this.currentTab == 2){
+        } else if (this.currentTab == 2) {
           this.evaluationPage_Assessment = val;
           this.getAssessmentList()
-        } else if(this.currentTab == 3){
+        } else if (this.currentTab == 3) {
           this.evaluationPage_Bad = val;
           this.getBadList()
         }
       },
       // 打开modal
-      openModal(item){
+      openModal(item) {
         this.replyContent = '';
-        if(sessionStorage.getItem("loginInfo")){
+        if (sessionStorage.getItem("loginInfo")) {
           this.dialogFormVisible = true;
           this.evaluationId = item._id
         } else {
@@ -487,35 +487,35 @@
         }
       },
       // 关闭modal
-      closeModal(){
+      closeModal() {
         this.dialogFormVisible = false;
         this.replyContent = ''
       },
       // 卖家回复
-      replySubmit(){
+      replySubmit() {
         if (sessionStorage.getItem("loginInfo")) {
           axios({
             method: "POST",
             url: `${baseURL}/v1/asset-comment/reply/insert`,
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              "X-Access-Token":this.token,
+              "X-Access-Token": this.token,
             },
-            data:querystring.stringify({
-              userid:this.userId,
-              id:this.evaluationId,
-              content:this.replyContent
+            data: querystring.stringify({
+              userid: this.userId,
+              id: this.evaluationId,
+              content: this.replyContent
             }),
           }).then((res) => {
             this.dialogFormVisible = false;
             this.replyContent = '';
-            if (this.currentTab == 0){
+            if (this.currentTab == 0) {
               this.getEvaluationList()
-            } else if(this.currentTab == 1){
+            } else if (this.currentTab == 1) {
               this.getPraiseList()
-            } else if(this.currentTab == 2){
+            } else if (this.currentTab == 2) {
               this.getAssessmentList()
-            } else if(this.currentTab == 3){
+            } else if (this.currentTab == 3) {
               this.getBadList()
             }
           }).catch((err) => {
@@ -527,8 +527,8 @@
       },
       login() {
         let redirectURL = window.location.href;
-        let url=`?redirectURL=${redirectURL}`;
-        window.location.href=`${loginPlatform}${url}`;
+        let url = `?redirectURL=${redirectURL}`;
+        window.location.href = `${loginPlatform}${url}`;
       },
       open() {
         this.$confirm('此操作需要先登录, 是否登录?', '提示', {
@@ -932,27 +932,27 @@
       }
     }
   }
-
-  .evaluate{
-    .title{
-      .reliability{
+  
+  .evaluate {
+    .title {
+      .reliability {
         font-size: 18px;
         color: #666666;
         float: right;
         margin-right: 54px;
-        span{
+        span {
           font-size: 28px;
           color: #d91e01;
         }
       }
     }
-    .evaluate-container{
+    .evaluate-container {
       width: 1200px;
       height: auto;
       background-color: #fff;
       border-radius: 0 0 10px 10px;
       border: solid 1px #e5e5e5;
-      .evaluate-tabs{
+      .evaluate-tabs {
         width: 1160px;
         height: 30px;
         background-color: #f7f7f7;
@@ -961,115 +961,115 @@
         margin-bottom 22px
         font-size: 12px;
         color: #666666;
-        ul{
+        ul {
           margin-left 70px
-          li{
-            width:auto
+          li {
+            width: auto
             float left
             height 30px
             margin-right 50px
-            input{
-              width:100%
+            input {
+              width: 100%
               height: 100%
               opacity 0
               cursor pointer
               position: relative;
               z-index: 10;
             }
-            span{
+            span {
               position: relative;
               bottom: 22px;
             }
-            input:checked + span{
+            input:checked + span {
               color: #d91e01;
             }
           }
         }
       }
-      .evaluate-details{
+      .evaluate-details {
         margin: 0 18px;
-        ul{
-          li:last-child{
+        ul {
+          li:last-child {
             border-bottom none
           }
-          li{
+          li {
             border-bottom 1px solid #dcdcdc
-            .buyer{
+            .buyer {
               margin: 12px 0;
-              .buyer-info{
+              .buyer-info {
                 font-size: 12px;
                 color: #333333;
                 width: 160px
                 text-align right
                 margin-right 30px
                 float left
-                p:last-child{
+                p:last-child {
                   color: #999999;
                 }
               }
-              .buyer-details{
+              .buyer-details {
                 width: 970px;
                 float: right;
-                .buyer-action{
+                .buyer-action {
                   float right
                   font-size: 12px
                   color: #333333;
                   width: 100px;
                   cursor pointer
-                  .thumbs-up-no{
+                  .thumbs-up-no {
                     float: left;
                     margin-right: 10px;
-                    span:first-child{
+                    span:first-child {
                       width: 17px;
                       height: 15px;
                       display inline-block
                       background: url("./images/bad.png") no-repeat center
                     }
-                    .num{
+                    .num {
                       position: relative;
                       bottom: 2px;
                     }
                   }
-                  .thumbs-up-yes{
+                  .thumbs-up-yes {
                     float: left;
                     margin-right: 10px;
-                    span:first-child{
+                    span:first-child {
                       width: 17px;
                       height: 15px;
                       display inline-block
                       background: url("./images/good.png") no-repeat center
                     }
-                    .num{
+                    .num {
                       position: relative;
                       bottom: 2px;
                     }
                   }
-                  .reply{
+                  .reply {
                     float: right;
                     margin-right: 20px;
-                    .num{
+                    .num {
                       position: relative;
                       bottom: 3px;
                     }
                   }
                 }
-                .buyer-text{
+                .buyer-text {
                   font-size: 12px;
                   color: #666666;
                   line-height normal
                   margin-top: 8px;
                 }
-                .buyer-img{
+                .buyer-img {
                   margin-bottom: 14px;
-                  ul{
+                  ul {
                     margin 14px 0
-                    li{
+                    li {
                       width: 50px;
                       height: 50px;
                       float left
                       margin-right 12px
                       cursor pointer
-                      input{
+                      input {
                         width: 50px;
                         height: 50px;
                         opacity: 0;
@@ -1077,46 +1077,46 @@
                         z-index: 10;
                         cursor pointer
                       }
-                      input:checked + img{
+                      input:checked + img {
                         border: 1px solid red;
                       }
-                      img{
+                      img {
                         width: 100%
-                        height:100%
+                        height: 100%
                         position: relative;
                         bottom: 52px;
                         border: solid 1px #eeeeee;
                       }
                     }
                   }
-                  .big-img{
+                  .big-img {
                     width: 200px;
                     height: 200px;
                     border: solid 1px #eeeeee;
                     margin-top: 14px;
                     cursor: pointer;
-                    img{
+                    img {
                       width: 100%
-                      height:100%
+                      height: 100%
                     }
                   }
                 }
               }
             }
-            .seller{
+            .seller {
               padding-bottom 16px
-              .seller-info{
+              .seller-info {
                 font-size: 12px;
                 color: #999;
                 width: 160px;
                 text-align: right;
                 margin-right: 30px;
                 float: left;
-                p:first-child{
+                p:first-child {
                   padding-top: 20px;
                 }
               }
-              .seller-details{
+              .seller-details {
                 width: 970px;
                 float: right;
                 font-size: 12px;
@@ -1134,10 +1134,11 @@
 
 </style>
 <style>
-  .evaluate .el-dialog__body{
+  .evaluate .el-dialog__body {
     padding: 20px
   }
-  .evaluate .el-textarea__inner{
+  
+  .evaluate .el-textarea__inner {
     height: 200px;
   }
 </style>
