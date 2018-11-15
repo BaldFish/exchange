@@ -26,6 +26,7 @@ import myPublicityPage from '@/components/publicityPage/publicityPage'
 import myYuanBeanPage from '@/components/yuanBeanPage/yuanBeanPage'
 import myReportDetails from '@/components/reportDetails/reportDetails'
 import myBuyerEvaluation from '@/components/buyerEvaluation/buyerEvaluation'
+import mySellerReply from  '@/components/sellerReply/sellerReply'
 import myReportConclusion from '@/components/reportConclusion/reportConclusion'
 import myDeveloper from '@/components/developer/developer'
 Vue.use(Router);
@@ -171,6 +172,11 @@ export default new Router({
       path: '/buyerEvaluation',
       name: 'buyerEvaluation',
       component: myBuyerEvaluation
+    },
+    {
+      path:"/sellerReply",
+      name:"sellerReply",
+      component:mySellerReply
     },
     {
       path: '/reportConclusion',

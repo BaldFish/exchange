@@ -27,7 +27,7 @@
       </div>
       <div class="buyer-reply">
         <label>商品评分</label>
-        <el-rate v-model="star" style="width:120px;float: left"></el-rate>
+        <el-rate v-model="star" show-text :texts="texts"></el-rate>
         <div style="clear: both"></div>
         <div class="reply-container">
           <textarea placeholder="立即评价晒单吧" name="" style="resize:none;line-height: normal" maxlength="500" @input = "descInput" v-model="content"></textarea>
@@ -63,6 +63,7 @@
         name: "buyerEvaluation",
         data() {
             return {
+              texts:["很差","较差","一般","不错","很好"],
               star:null,
               remnant:0,
               content:'',

@@ -81,6 +81,10 @@
             <label for="phone">手机号码：</label>
             <input type="text" id="phone" v-model="phone">
           </div>
+          <div class="phone">
+            <label for="email">邮箱：</label>
+            <input type="text" id="email" v-model="email">
+          </div>
           <div class="content">
             <label for="content">留言内容：</label>
             <textarea id="content" v-model="content"></textarea>
@@ -149,6 +153,7 @@
         name:"",
         phone:"",
         content:"",
+        email:"",
         tipName:"",
         centerDialogVisible: false,
         isRouterAlive: true,
@@ -283,8 +288,8 @@
           this.openTip();
           return
         }
-        if(this.phone===""){
-          this.tipName="手机号码";
+        if(this.phone===""&&this.email===""){
+          this.tipName="手机号码或邮箱";
           this.openTip();
           return
         }
@@ -296,6 +301,7 @@
         let data={
           name:this.name,
           phone:this.phone,
+          email:this.email,
           content:this.content,
           platform:1,
         };
@@ -322,7 +328,7 @@
         });
       },
       login() {
-        /*let redirectURL = "http://localhost:5000";
+        /*let redirectURL = window.location.href;
         let url=`?redirectURL=${redirectURL}`;
         window.location.href=`http://localhost:5003/login${url}`;*/
         let redirectURL = window.location.href;
@@ -776,6 +782,9 @@
           label{
             color #222222
             font-size 18px
+            display inline-block
+            width 90px
+            text-align right
           }
           input,textarea{
             color #333333
