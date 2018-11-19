@@ -233,7 +233,7 @@
           </el-pagination>
         </div>
         
-        <el-dialog title="卖家回复" :visible.sync="dialogFormVisible">
+        <!--<el-dialog title="卖家回复" :visible.sync="dialogFormVisible">
           <el-form>
             <el-input type="textarea" v-model="replyContent"></el-input>
           </el-form>
@@ -241,7 +241,7 @@
             <el-button @click="closeModal">取 消</el-button>
             <el-button type="primary" @click="replySubmit">确 定</el-button>
           </div>
-        </el-dialog>
+        </el-dialog>-->
       
       </div>
     
@@ -310,11 +310,9 @@
             window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
             this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
             this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-            
             this.wallet_address = JSON.parse(sessionStorage.getItem("userInfo")).wallet_address;
-            this.getEvaluationList();
-            
-            this.acquireReportDetails();
+            /*this.acquireReportDetails();
+            this.getEvaluationList();*/
           } else {
             alert("登录失效")
           }
@@ -478,19 +476,21 @@
       },
       // 打开modal
       openModal(item) {
-        this.replyContent = '';
+        //this.replyContent = '';
         if (sessionStorage.getItem("loginInfo")) {
-          this.dialogFormVisible = true;
-          this.evaluationId = item._id
+          this.getEvaluationId(item._id);
+          this.$router.push("/sellerReply");
+          //this.dialogFormVisible = true;
+          //this.evaluationId = item._id
         } else {
           this.open()
         }
       },
       // 关闭modal
-      closeModal() {
+      /*closeModal() {
         this.dialogFormVisible = false;
         this.replyContent = ''
-      },
+      },*/
       // 卖家回复
       replySubmit() {
         if (sessionStorage.getItem("loginInfo")) {
@@ -666,6 +666,9 @@
       },
       getBuy(val) {
         this.$store.commit("changeBuy", val);
+      },
+      getEvaluationId(val) {
+        this.$store.commit("changeEvaluationId", val);
       },
     },
   }
