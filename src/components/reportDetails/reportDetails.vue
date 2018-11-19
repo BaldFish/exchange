@@ -154,7 +154,7 @@
                         <span></span>
                         <span class="num">{{thumbsUpNum}}</span>
                       </div>-->
-                      <div class="reply" @click="openModal(item)" v-if="item.can_reply == 1">
+                      <div class="reply" @click="openModal(item)" v-if="/*item.can_reply == */1">
                         <img src="./images/reply.png" alt="">
                         <!--<span class="num">1</span>-->
                       </div>
@@ -233,7 +233,7 @@
           </el-pagination>
         </div>
         
-        <el-dialog title="卖家回复" :visible.sync="dialogFormVisible">
+        <!--<el-dialog title="卖家回复" :visible.sync="dialogFormVisible">
           <el-form>
             <el-input type="textarea" v-model="replyContent"></el-input>
           </el-form>
@@ -241,7 +241,7 @@
             <el-button @click="closeModal">取 消</el-button>
             <el-button type="primary" @click="replySubmit">确 定</el-button>
           </div>
-        </el-dialog>
+        </el-dialog>-->
       
       </div>
     
@@ -478,19 +478,21 @@
       },
       // 打开modal
       openModal(item) {
-        this.replyContent = '';
+        //this.replyContent = '';
         if (sessionStorage.getItem("loginInfo")) {
-          this.dialogFormVisible = true;
-          this.evaluationId = item._id
+          this.getEvaluationId(item._id);
+          this.$router.push("/sellerReply");
+          //this.dialogFormVisible = true;
+          //this.evaluationId = item._id
         } else {
           this.open()
         }
       },
       // 关闭modal
-      closeModal() {
+      /*closeModal() {
         this.dialogFormVisible = false;
         this.replyContent = ''
-      },
+      },*/
       // 卖家回复
       replySubmit() {
         if (sessionStorage.getItem("loginInfo")) {
@@ -666,6 +668,9 @@
       },
       getBuy(val) {
         this.$store.commit("changeBuy", val);
+      },
+      getEvaluationId(val){
+        this.$store.commit("changeEvaluationId", val);
       },
     },
   }

@@ -328,12 +328,12 @@
         });
       },
       login() {
-        /*let redirectURL = window.location.href;
-        let url=`?redirectURL=${redirectURL}`;
-        window.location.href=`http://localhost:5003/login${url}`;*/
         let redirectURL = window.location.href;
         let url=`?redirectURL=${redirectURL}`;
-        window.location.href=`${loginPlatform}/login${url}`;
+        window.location.href=`http://localhost:5003/login${url}`;
+        /*let redirectURL = window.location.href;
+        let url=`?redirectURL=${redirectURL}`;
+        window.location.href=`${loginPlatform}/login${url}`;*/
       },
       register() {
         /*let redirectURL = "http://localhost:5000";
@@ -388,10 +388,10 @@
         }).then(res => {
           sessionStorage.removeItem('loginInfo');
           sessionStorage.removeItem('userInfo');
-          /*document.cookie = `token=;expires=${new Date(0)}`;
-          document.cookie = `user_id=;expires=${new Date(0)}`;*/
-          document.cookie = `token=;expires=${new Date(0)};domain=.datajs.com.cn`;
-          document.cookie = `user_id=;expires=${new Date(0)};domain=.datajs.com.cn`;
+          document.cookie = `token=;expires=${new Date(0)}`;
+          document.cookie = `user_id=;expires=${new Date(0)}`;
+          /*document.cookie = `token=;expires=${new Date(0)};domain=.datajs.com.cn`;
+          document.cookie = `user_id=;expires=${new Date(0)};domain=.datajs.com.cn`;*/
           this.switchover = false;
           location.reload()
         }).catch(error => {

@@ -38,6 +38,7 @@ const store = new Vuex.Store({
     buyInfoObj: {},
     searchValue: "",
     searchInput: "",
+    evaluationId:"",
   },
   mutations: {
     changeReportDetails(state, params) {
@@ -85,6 +86,10 @@ const store = new Vuex.Store({
     changeBuy(state, params) {
       state.buyInfoObj = params;
       window.sessionStorage.setItem("buyInfoObj", JSON.stringify(state.buyInfoObj));
+    },
+    changeEvaluationId(state, params) {
+      state.evaluationId = params;
+      window.sessionStorage.setItem("evaluationId", JSON.stringify(state.evaluationId));
     },
   }
 });

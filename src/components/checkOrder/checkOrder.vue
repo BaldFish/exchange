@@ -230,6 +230,7 @@
       acquireIntegralInfo() {
         if (this.walletAddress) {
           //防止长时间未点击确认支付或在其它浏览器支付完成，支付前获取订单最新支付状态
+          var tempWindow=window.open("_blank")
           axios({
             method: "GET",
             url: `${baseURL}/v1/order/detail/${this.orderNum}`,
@@ -241,6 +242,7 @@
               return
             } else if (res.data.orderStatus === 1) {
               //如果支付状态是未支付，根据支付方式请求支付信息
+              
               axios({
                 method: "POST",
                 url: `${baseURL}/v1/order/pay/${this.orderNum}`,
@@ -250,7 +252,8 @@
               }).then((res) => {
                 if (_.includes(["10", "20", "30"], this.value)) {
                   this.paymentInfo = res.data.data;
-                  window.open(this.paymentInfo.image_url, "_blank")
+                  tempWindow.location.href=this.paymentInfo.image_url
+                  //window.open(this.paymentInfo.image_url, "_blank")
                 } else if (this.value === "T1") {
                   this.paymentInfo = res.data;
                 }
