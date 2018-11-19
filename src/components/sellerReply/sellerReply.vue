@@ -31,9 +31,12 @@
         </li>
       </ul>
       <div class="reply_title">发表回复</div>
-      <div class="reply_content">
-        <textarea placeholder="立即评价晒单吧" name="" minlength="5" maxlength="300" v-model="content"></textarea>
-        <p class="reply-tips">请填写回复内容，长度在5-300位字符之间</p>
+      <div class="reply_content_wrap">
+        <div class="reply_content">
+          <textarea placeholder="立即评价晒单吧" name="" minlength="5" maxlength="300" v-model="content" v-validate="'required|code'" name='content'></textarea>
+          <p class="reply-tips">请填写回复内容，长度在5-300位字符之间</p>
+        </div>
+        <span v-show="errors.has('content')" class="error_content">{{errors.first('content')}}</span>
       </div>
       <div class="code_wrap">
         <span>验证码</span>
@@ -45,7 +48,7 @@
         <span v-show="captchaNotice" class="error">{{errorMsg}}</span>
       </div>
       <div class="button_wrap">
-        <span class="button">提交</span>
+        <span class="button" @click="submitReply">提交</span>
       </div>
     </div>
   </div>
@@ -142,22 +145,29 @@
       },
       //提交恢复
       submitReply() {
-        let replyData = {
-          phone: this.phone,
-          user_id: this.userId,
-          id: this.evaluationId,
+        this.$validator.validateAll({
           content: this.content,
-          captcha_id: this.captcha_id,
-          captcha_number: this.captcha_number
-        };
-        axios({
-          method: "post",
-          url: `${baseURL}/v1/asset-comment/reply/insert`,
-          data: querystring.stringify(replyData)
-        }).then(res => {
-          console.log(res)
-        }).catch(error => {
-          console.log(error)
+          captcha_number: this.captcha_number,
+        }).then(result => {
+          if(result){
+            let replyData = {
+              phone: this.phone,
+              user_id: this.userId,
+              id: this.evaluationId,
+              content: this.content,
+              captcha_id: this.captcha_id,
+              captcha_number: this.captcha_number
+            };
+            axios({
+              method: "post",
+              url: `${baseURL}/v1/asset-comment/reply/insert`,
+              data: querystring.stringify(replyData)
+            }).then(res => {
+              this.$router.push("/reportDetails");
+            }).catch(error => {
+              console.log(error.response.data.code);
+            })
+          }
         })
       }
     },
@@ -208,7 +218,6 @@
         background-color #f8f8f8
         margin 0 auto
         li {
-          //background-color bisque
           font-size 0
           padding-top 10px
           .buyer_info {
@@ -255,40 +264,57 @@
         line-height 44px
         margin-top 14px
       }
-      .reply_content {
-        box-sizing border-box
-        padding 10px
-        width 740px
-        background-color: #eef8fc;
-        border: solid 1px #e2f3fd;
-        position relative
-        textarea {
+      .reply_content_wrap{
+        font-size 0
+        .reply_content {
+          display inline-block
           box-sizing border-box
-          outline: none
-          resize: none
-          padding 20px 15px
-          width 720px
-          height 200px
+          padding 9px
+          width 740px
+          height 220px
+          background-color: #eef8fc;
+          border: solid 1px #e2f3fd;
+          position relative
+          font-size 0
+          textarea {
+            display inline-block
+            box-sizing border-box
+            outline: none
+            resize: none
+            padding 20px 15px
+            width 720px
+            height 200px
+            font-size 14px
+            vertical-align middle
+          }
+          textarea:
+          :-webkit-input-placeholder {
+            color: #999999;
+          }
+          textarea:-moz-placeholder {
+            color: #999999;
+          }
+          textarea:
+          :-moz-placeholder {
+            color: #999999;
+          }
+          textarea:-ms-input-placeholder {
+            color: #999999;
+          }
+          p {
+            color: #999999;
+            position absolute
+            right 36px
+            bottom 34px
+            font-size 14px
+          }
+          
         }
-        textarea:
-        :-webkit-input-placeholder {
-          color: #999999;
-        }
-        textarea:-moz-placeholder {
-          color: #999999;
-        }
-        textarea:
-        :-moz-placeholder {
-          color: #999999;
-        }
-        textarea:-ms-input-placeholder {
-          color: #999999;
-        }
-        p {
-          color: #999999;
-          position absolute
-          right 36px
-          bottom 34px
+        .error_content{
+          display inline-block
+          font-size 14px
+          color #d92104
+          margin-left 10px
         }
       }
       .code_wrap {
@@ -326,8 +352,8 @@
           cursor pointer
         }
         .error {
-          margin-left 30px
-          color red
+          margin-left 10px
+          color #d92104
         }
       }
       .button_wrap {
@@ -341,6 +367,7 @@
           color: #ffffff;
           background-color: #d91e01;
           padding 8px 30px
+          cursor pointer
         }
       }
     }

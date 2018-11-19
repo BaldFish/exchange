@@ -154,7 +154,7 @@
                         <span></span>
                         <span class="num">{{thumbsUpNum}}</span>
                       </div>-->
-                      <div class="reply" @click="openModal(item)" v-if="/*item.can_reply == */1">
+                      <div class="reply" @click="openModal(item)" v-if="item.can_reply == 1">
                         <img src="./images/reply.png" alt="">
                         <!--<span class="num">1</span>-->
                       </div>
@@ -310,11 +310,9 @@
             window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
             this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
             this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-            
             this.wallet_address = JSON.parse(sessionStorage.getItem("userInfo")).wallet_address;
-            this.getEvaluationList();
-            
-            this.acquireReportDetails();
+            /*this.acquireReportDetails();
+            this.getEvaluationList();*/
           } else {
             alert("登录失效")
           }
@@ -669,7 +667,7 @@
       getBuy(val) {
         this.$store.commit("changeBuy", val);
       },
-      getEvaluationId(val){
+      getEvaluationId(val) {
         this.$store.commit("changeEvaluationId", val);
       },
     },

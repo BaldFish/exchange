@@ -52,7 +52,7 @@
           <td class="img_lastTd" v-if="item.orderStatus === 2">
             <p>已完成</p>
             <router-link to=""><p v-if="item.apikey != '5a6be74a55aaf50001a5e145' && item.apikey != '5b18a5b9cff7cb000194f1g5' &&
-            item.comment_status == 1 && item.orderStatus == 2" style="color: #c6351e;"
+            item.comment_status == 0 && item.orderStatus == 2" style="color: #c6351e;"
                                   @click="turnEvaluation(item.apikey,item.assetid)">去评价</p></router-link>
             <router-link to=""><p v-if="item.apikey != '5a6be74a55aaf50001a5e145' && item.apikey != '5b18a5b9cff7cb000194f1g5' && item.comment_status == 1 && item.orderStatus == 2">已评价</p></router-link>
           </td>
