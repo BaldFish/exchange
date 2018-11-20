@@ -372,7 +372,7 @@
           }
         }).then((res) => {
           //格式化时间
-          if(res.data.data){
+          if (res.data.data) {
             res.data.data.forEach((val) => {
               val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
               if (val.reply != null) {
@@ -402,14 +402,16 @@
           }
         }).then((res) => {
           //格式化时间
-          res.data.data.forEach((val) => {
-            val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
-            if (val.reply != null) {
-              val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
-            }
-          });
-          this.evaluationList = res.data;
-          this.total = res.data.total_comments
+          if (res.data.data) {
+            res.data.data.forEach((val) => {
+              val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
+              if (val.reply != null) {
+                val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
+              }
+            });
+            this.evaluationList = res.data;
+            this.total = res.data.total_comments
+          }
         }).catch((err) => {
           console.log(err);
         })
@@ -425,14 +427,16 @@
           }
         }).then((res) => {
           //格式化时间
-          res.data.data.forEach((val) => {
-            val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
-            if (val.reply != null) {
-              val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
-            }
-          });
-          this.evaluationList = res.data;
-          this.total = res.data.total_comments
+          if (res.data.data) {
+            res.data.data.forEach((val) => {
+              val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
+              if (val.reply != null) {
+                val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
+              }
+            });
+            this.evaluationList = res.data;
+            this.total = res.data.total_comments
+          }
         }).catch((err) => {
           console.log(err);
         })
@@ -448,14 +452,17 @@
           }
         }).then((res) => {
           //格式化时间
-          res.data.data.forEach((val) => {
-            val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
-            if (val.reply != null) {
-              val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
-            }
-          });
-          this.evaluationList = res.data;
-          this.total = res.data.total_comments
+          if (res.data.data) {
+            res.data.data.forEach((val) => {
+              val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
+              if (val.reply != null) {
+                val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
+              }
+            });
+            this.evaluationList = res.data;
+            this.total = res.data.total_comments;
+          }
+          
         }).catch((err) => {
           console.log(err);
         })
