@@ -273,7 +273,7 @@
         isShowImg: false,
         isThumbsUp: false,
         thumbsUpNum: 100,
-        evaluationList: {},
+        evaluationList: [],
         wallet_address: '',
         evaluationPage_All: 1,
         evaluationPage_Praise: 1,
@@ -386,6 +386,8 @@
             this.praise = res.data.praise;
             this.total_comments = res.data.total_comments;
             this.total = res.data.total_comments
+          }else{
+            this.evaluationList=[]
           }
         }).catch((err) => {
           console.log(err);
@@ -411,6 +413,8 @@
             });
             this.evaluationList = res.data;
             this.total = res.data.total_comments
+          }else{
+            this.evaluationList=[]
           }
         }).catch((err) => {
           console.log(err);
@@ -436,6 +440,8 @@
             });
             this.evaluationList = res.data;
             this.total = res.data.total_comments
+          }else{
+            this.evaluationList=[]
           }
         }).catch((err) => {
           console.log(err);
@@ -461,8 +467,9 @@
             });
             this.evaluationList = res.data;
             this.total = res.data.total_comments;
+          }else{
+            this.evaluationList=[]
           }
-          
         }).catch((err) => {
           console.log(err);
         })
