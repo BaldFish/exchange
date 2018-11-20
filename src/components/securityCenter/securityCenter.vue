@@ -7,16 +7,22 @@
     <div class="nav_content_table">
       <table>
         <tbody>
-        <!--<tr>
+        <tr v-if="userInfo.pass_status===2">
           <td><img src="./images/adopt.png" alt=""></td>
           <td>登录密码</td>
           <td>互联网账号存在被盗风险，建议您定期更改密码以保护账户安全</td>
           <td @click="openModalPwd">修改</td>
-        </tr>-->
+        </tr>
+        <tr v-if="userInfo.pass_status===1">
+          <td><img src="./images/not.png" alt=""></td>
+          <td>登录密码</td>
+          <td>您还未设置登录密码，建议您设置登录密码以保护账户安全</td>
+          <td @click="setPassword" class="red_set">设置</td>
+        </tr>
         <tr>
           <td><img src="./images/adopt.png" alt=""></td>
           <td>手机验证</td>
-          <td>您验证的手机： {{phone}}    若已丢失或停用，请立即更换，避免账户被盗</td>
+          <td>您验证的手机： {{userInfo.phone}}    若已丢失或停用，请立即更换，避免账户被盗</td>
           <td @click="openPhoneModal">修改</td>
         </tr>
         <tr>
@@ -59,7 +65,7 @@
         <div slot="footer" class="dialog-footer">
           <button @click="submitPwd">确认</button>
           <button class="forget_btn" @click="modifyPassword = false">
-            <router-link to="/forgetPassword">忘记密码</router-link>
+            <a href="javascript:void(0)" @click="setPassword">忘记密码</a>
           </button>
         </div>
       </el-dialog>
@@ -295,6 +301,14 @@
     },
     mounted: function () {},
     methods: {
+      setPassword() {
+        let redirectURL = window.location.href;
+        let url=`?redirectURL=${redirectURL}`;
+        window.location.href=`http://localhost:5003/setPassword${url}`;
+        /*let redirectURL = window.location.href;
+        let url=`?redirectURL=${redirectURL}`;
+        window.location.href=`${loginPlatform}/setPassword${url}`;*/
+      },
       //清除modal旧数据
       openModalPwd() {
         this.modifyPassword = true;
