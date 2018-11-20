@@ -372,19 +372,21 @@
           }
         }).then((res) => {
           //格式化时间
-          res.data.data.forEach((val) => {
-            val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
-            if (val.reply != null) {
-              val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
-            }
-          });
-          this.evaluationList = res.data;
-          this.assessment = res.data.assessment;
-          this.bad_comment = res.data.bad_comment;
-          this.credit = res.data.credit;
-          this.praise = res.data.praise;
-          this.total_comments = res.data.total_comments;
-          this.total = res.data.total_comments
+          if(res.data.data){
+            res.data.data.forEach((val) => {
+              val.created_at = utils.formatDate(new Date(val.created_at), "yyyy-MM-dd hh:mm:ss");
+              if (val.reply != null) {
+                val.reply[0].created_at = utils.formatDate(new Date(val.reply[0].created_at), "yyyy-MM-dd hh:mm:ss");
+              }
+            });
+            this.evaluationList = res.data;
+            this.assessment = res.data.assessment;
+            this.bad_comment = res.data.bad_comment;
+            this.credit = res.data.credit;
+            this.praise = res.data.praise;
+            this.total_comments = res.data.total_comments;
+            this.total = res.data.total_comments
+          }
         }).catch((err) => {
           console.log(err);
         })
