@@ -16,7 +16,7 @@
         </div>
         
         <div class="no_login" v-if="!isLogin">
-          <a href="javascript:void(0)" @click="login">请登录</a>
+          <a href="javascript:void(0)" @click="login">登录/注册</a>
           <!--<a href="javascript:void(0)" @click="register">免费注册</a>-->
         </div>
         <div class="login" v-if="isLogin" @mouseleave.stop="leaveUl">
@@ -328,12 +328,12 @@
         });
       },
       login() {
-        /*let redirectURL = window.location.href;
-        let url=`?redirectURL=${redirectURL}`;
-        window.location.href=`http://localhost:5003/login${url}`;*/
         let redirectURL = window.location.href;
         let url=`?redirectURL=${redirectURL}`;
-        window.location.href=`${loginPlatform}/login${url}`;
+        window.location.href=`http://localhost:5003/login${url}`;
+        /*let redirectURL = window.location.href;
+        let url=`?redirectURL=${redirectURL}`;
+        window.location.href=`${loginPlatform}/login${url}`;*/
       },
       register() {
         /*let redirectURL = "http://localhost:5000";
