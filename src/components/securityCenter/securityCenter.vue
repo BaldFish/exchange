@@ -302,12 +302,12 @@
     mounted: function () {},
     methods: {
       setPassword() {
-        let redirectURL = window.location.href;
-        let url=`?redirectURL=${redirectURL}`;
-        window.location.href=`http://localhost:5003/setPassword${url}`;
         /*let redirectURL = window.location.href;
         let url=`?redirectURL=${redirectURL}`;
-        window.location.href=`${loginPlatform}/setPassword${url}`;*/
+        window.location.href=`http://localhost:5003/setPassword${url}`;*/
+        let redirectURL = window.location.href;
+        let url=`?redirectURL=${redirectURL}`;
+        window.location.href=`${loginPlatform}/setPassword${url}`;
       },
       //清除modal旧数据
       openModalPwd() {

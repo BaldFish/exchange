@@ -328,12 +328,12 @@
         });
       },
       login() {
-        let redirectURL = window.location.href;
-        let url=`?redirectURL=${redirectURL}`;
-        window.location.href=`http://localhost:5003/login${url}`;
         /*let redirectURL = window.location.href;
         let url=`?redirectURL=${redirectURL}`;
-        window.location.href=`${loginPlatform}/login${url}`;*/
+        window.location.href=`http://localhost:5003/login${url}`;*/
+        let redirectURL = window.location.href;
+        let url=`?redirectURL=${redirectURL}`;
+        window.location.href=`${loginPlatform}/login${url}`;
       },
       register() {
         /*let redirectURL = "http://localhost:5000";
