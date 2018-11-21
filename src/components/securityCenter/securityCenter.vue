@@ -163,7 +163,7 @@
 
 <script>
   import axios from "axios";
-  import {baseURL} from '@/common/js/public.js';
+  import {baseURL,loginPlatform} from '@/common/js/public.js';
   import utils from "@/common/js/utils.js";
   
   const querystring = require('querystring');
