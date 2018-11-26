@@ -117,14 +117,20 @@
           <ul class="code">
             <li>
               <a href="javascript:void(0)">
-                <img class="ft_code" src="./common/images/weixin.png" alt="weixin">
-                <p>微信号</p>
+                <img class="ft_code" src="./common/images/Android.png" alt="Android">
+                <p>Android版人人道</p>
               </a>
             </li>
             <li>
               <a href="javascript:void(0)">
-                <img class="ft_code" src="./common/images/Android.png" alt="Android">
-                <p>Android钱包</p>
+                <img class="ft_code" src="./common/images/weixin.png" alt="weixin">
+                <p>咨询客服微信号</p>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0)">
+                <img class="ft_code" src="./common/images/gongzhonghao.png" alt="weixin">
+                <p>人人道公众号</p>
               </a>
             </li>
           </ul>
@@ -690,6 +696,7 @@
             display inline-block
             font-size 14px
             text-align center
+            margin-right 10px
             a {
               color #ffffff
               p {
@@ -699,8 +706,8 @@
               }
             }
           }
-          li:first-child{
-            margin-right 36px
+          li:nth-child(2){
+            margin-right 20px
           }
         }
       }
