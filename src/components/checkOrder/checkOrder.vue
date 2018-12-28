@@ -58,10 +58,10 @@
               <input class="pay_radio" type="radio" name="pay" value="T1" v-model="value">
               <span class="pay_radioInput"></span>元积分
             </label>
-            <!--<label class="pay_label">
+            <label class="pay_label">
               <input class="pay_radio" type="radio" name="pay" value="20" v-model="value">
               <span class="pay_radioInput"></span>支付宝
-            </label>-->
+            </label>
           </span>
         </div>
         <p>可使用元积分，进行等价交易。</p>
