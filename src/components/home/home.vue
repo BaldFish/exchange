@@ -192,19 +192,22 @@
       //this.acquireReportList();
       //this.acquireCaseList();
       //this.acquireFacilityList();
-      //获取banner图
-      axios({
-        method: 'get',
-        url: `${baseURL}/v1/broadcast/s?type_id=5b572fa8a4cc0d6ea8ba5484`
-      }).then(res => {
-        this.bannerList = res.data;
-      }).catch(error => {
-        console.log(error)
-      });
+      //this.getBannerList();
     },
     watch: {},
     computed: {},
     methods: {
+      //获取轮播图
+      getBannerList(){
+        axios({
+          method: 'get',
+          url: `${baseURL}/v1/broadcast/s?type_id=5b572fa8a4cc0d6ea8ba5484`
+        }).then(res => {
+          this.bannerList = res.data;
+        }).catch(error => {
+          console.log(error)
+        });
+      },
       acquireList() {
         axios({
           method: "GET",
