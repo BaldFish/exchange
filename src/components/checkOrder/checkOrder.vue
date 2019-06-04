@@ -46,22 +46,22 @@
         <div class="payment">
           <span>选择支付方式：&nbsp;&nbsp;</span>
           <span class="pay">
-            <label class="pay_label">
+            <!--<label class="pay_label">
               <input class="pay_radio" type="radio" name="pay" value="30" v-model="value">
               <span class="pay_radioInput"></span>银联
             </label>
             <label class="pay_label">
               <input class="pay_radio" type="radio" name="pay" value="10" v-model="value">
               <span class="pay_radioInput"></span>微信
-            </label>
+            </label>-->
             <label class="pay_label">
               <input class="pay_radio" type="radio" name="pay" value="T1" v-model="value">
               <span class="pay_radioInput"></span>元积分
             </label>
-            <label class="pay_label">
+            <!--<label class="pay_label">
               <input class="pay_radio" type="radio" name="pay" value="20" v-model="value">
               <span class="pay_radioInput"></span>支付宝
-            </label>
+            </label>-->
           </span>
         </div>
         <p>可使用元积分，进行等价交易。</p>
@@ -127,9 +127,9 @@
   import {baseURL,loginPlatform} from '@/common/js/public.js';
   import {BigNumber} from 'bignumber.js';
   import utils from "@/common/js/utils.js";
-  
+
   const querystring = require('querystring');
-  
+
   export default {
     name: "checkOrder",
     components: {},
@@ -241,7 +241,7 @@
               return
             } else if (res.data.orderStatus === 1) {
               //如果支付状态是未支付，根据支付方式请求支付信息
-              
+
               axios({
                 method: "POST",
                 url: `${baseURL}/v1/order/pay/${this.orderNum}`,
@@ -410,7 +410,7 @@
     width: 1080px;
     float: right;
   }
-  
+
   .nav_content_title {
     width: 1078px;
     height: 50px;
@@ -420,57 +420,57 @@
     font-size: 18px;
     color: #222222;
   }
-  
+
   .nav_content_title span {
     padding-left: 20px;
   }
-  
+
   .nav_content_table {
     margin-top: 12px;
     width: 1078px;
     background-color: #ffffff;
     border: solid 1px #bfbfbf;
   }
-  
+
   .nav_content_table thead th {
     font-size: 16px;
     color: #222222;
   }
-  
+
   .nav_content_table tbody td {
     font-size: 14px;
     color: #666666;
   }
-  
+
   .nav_content_table tbody tr {
     border-bottom: 1px solid #d2d2d2;
     text-align: center;
     height: 90px;
   }
-  
+
   .nav_content_table tbody tr td {
     vertical-align: middle;
   }
-  
+
   .nav_content_table tbody tr:last-child {
     border-bottom: none;
   }
-  
+
   .no_img_thead {
     height: 50px;
     line-height: 50px;
   }
-  
+
   .no_img_thead th:nth-child(1) {
     width: 480px;
     text-align: left;
     padding-left: 46px;
   }
-  
+
   .no_img_thead th {
     width: 154px;
   }
-  
+
   .th_classify th {
     width: 1080px;
     height: 40px;
@@ -479,13 +479,13 @@
     line-height: 40px;
     padding-left: 46px;
   }
-  
+
   .no_img_tbody td:nth-child(1) {
     text-align: left;
     padding-left: 46px;
     line-height: 20px;
   }
-  
+
   .quick_buy_td button {
     width: 64px;
     height: 28px;
@@ -498,28 +498,28 @@
     color: #c6351e;
     margin: 0 30px;
   }
-  
+
   .img_thead {
     height: 50px;
     line-height: 50px;
   }
-  
+
   .img_thead th:first-child {
     padding-left: 46px;
     text-align: left;
     width: 470px;
   }
-  
+
   .img_thead th {
     width: 150px;
   }
-  
+
   .img_tbody td:nth-child(1) {
     padding-left: 46px;
     text-align: left;
     cursor: pointer;
   }
-  
+
   .img_tbody td:nth-child(1) img {
     width: 54px;
     height: 54px;
@@ -528,7 +528,7 @@
     vertical-align: middle;
     margin-right: 46px;
   }
-  
+
   .order_amount {
     text-align: right;
     font-size: 18px;
@@ -536,7 +536,7 @@
     margin-top: 20px;
     margin-bottom: 60px;
   }
-  
+
   .order_amount span {
     color: #c6351e;
   }
