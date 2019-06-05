@@ -13,7 +13,7 @@
           <span class="s_text">收藏夹</span>
           <span class="s_num">{{favoriteCount}}</span>
         </div>
-        
+
         <div class="no_login" v-if="!isLogin">
           <a href="javascript:void(0)" @click="login">登录/注册</a>
         </div>
@@ -146,7 +146,7 @@
       }
     },
     beforeMount() {
-      let token = utils.getCookie("token");
+      let token = utils.getCookie("token") || this.getQuery("uutoken");
       if (token) {
         axios({
           method: "GET",
@@ -187,7 +187,7 @@
       }
     },
     beforeUpdate() {
-      let token = utils.getCookie("token");
+      let token = utils.getCookie("token") || this.getQuery("uutoken");
       if (token) {
         axios({
           method: "GET",
@@ -245,6 +245,16 @@
       },
     },
     methods: {
+      //获取URL参数
+      getQuery(name){
+        let reg=new RegExp('(^|&)'+name+'=([^&]*)(&|$)');
+        let r=window.location.search.substr(1).match(reg);
+        if(r!=null){
+          return unescape(r[2]);
+        } else{
+          return null
+        }
+      },
       advise(){
         this.name="";
         this.phone="";
@@ -400,7 +410,7 @@
     display: flex;
     flex-direction: column;
   }
-  
+
   .head-wrap {
     width: 100%;
     min-width 1212px
@@ -556,7 +566,7 @@
       }
     }
   }
-  
+
   .main_wrap {
     flex: 1;
     box-sizing: border-box;
@@ -565,7 +575,7 @@
     min-width 1212px
     background-color #f3f3f3
   }
-  
+
   .footer-wrap {
     width 100%
     min-width 1212px
