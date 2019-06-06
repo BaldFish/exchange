@@ -146,37 +146,58 @@
       }
     },
     beforeMount() {
-      let token = utils.getCookie("token") || this.getQuery("uutoken");
-      if (token) {
+      if (this.getQuery("uutoken")){
+        //验证 UUToken 有效性接口
+        let username = this.getQuery("username");
+        let token = this.getQuery("uutoken");
         axios({
           method: "GET",
-          url: `${baseURL}/v1/sessions/check`,
+          url: `${baseURL}/v1/saas/uutoken?phone=${encodeURIComponent(username)}&uutoken=${token}`,
           headers: {
             "Access-Token": `${token}`,
           }
         }).then((res) => {
-          if (res.data.user_id) {
-            window.sessionStorage.setItem("userInfo", JSON.stringify(res.data));
-            let loginInfo = {};
-            loginInfo.token = token;
-            loginInfo.user_id = res.data.user_id;
-            window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
-            this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-            this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-            this.userName = JSON.parse(sessionStorage.getItem("userInfo")).phone;
-            this.isLogin = true;
-            this.acquireFavoriteCount();
+          if (res.data.code == 200) {
+            this.autoLogin(token)
           } else {
-            this.isLogin = false;
-            sessionStorage.removeItem('loginInfo');
-            sessionStorage.removeItem('userInfo');
+            console.log("UUToken无效")
           }
         }).catch((err) => {
           console.log(err);
         })
       } else {
-        sessionStorage.removeItem('loginInfo');
-        sessionStorage.removeItem('userInfo');
+        let token = utils.getCookie("token");
+        if (token) {
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/sessions/check`,
+            headers: {
+              "Access-Token": `${token}`,
+            }
+          }).then((res) => {
+            if (res.data.user_id) {
+              window.sessionStorage.setItem("userInfo", JSON.stringify(res.data));
+              let loginInfo = {};
+              loginInfo.token = token;
+              loginInfo.user_id = res.data.user_id;
+              window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+              this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+              this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
+              this.userName = JSON.parse(sessionStorage.getItem("userInfo")).phone;
+              this.isLogin = true;
+              this.acquireFavoriteCount();
+            } else {
+              this.isLogin = false;
+              sessionStorage.removeItem('loginInfo');
+              sessionStorage.removeItem('userInfo');
+            }
+          }).catch((err) => {
+            console.log(err);
+          })
+        } else {
+          sessionStorage.removeItem('loginInfo');
+          sessionStorage.removeItem('userInfo');
+        }
       }
     },
     mounted() {
@@ -187,38 +208,59 @@
       }
     },
     beforeUpdate() {
-      let token = utils.getCookie("token") || this.getQuery("uutoken");
-      if (token) {
+      if (this.getQuery("uutoken")){
+        //验证 UUToken 有效性接口
+        let username = this.getQuery("username");
+        let token = this.getQuery("uutoken");
         axios({
           method: "GET",
-          url: `${baseURL}/v1/sessions/check`,
+          url: `${baseURL}/v1/saas/uutoken?phone=${encodeURIComponent(username)}&uutoken=${token}`,
           headers: {
             "Access-Token": `${token}`,
           }
         }).then((res) => {
-          if (res.data.user_id) {
-            window.sessionStorage.setItem("userInfo", JSON.stringify(res.data));
-            let loginInfo = {};
-            loginInfo.token = token;
-            loginInfo.user_id = res.data.user_id;
-            window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
-            this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
-            this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
-            this.userName = JSON.parse(sessionStorage.getItem("userInfo")).phone;
-            this.isLogin = true;
-            this.acquireFavoriteCount();
+          if (res.data.code == 200) {
+            this.autoLogin(token)
           } else {
-            this.isLogin = false;
-            sessionStorage.removeItem('loginInfo');
-            sessionStorage.removeItem('userInfo');
-            //this.dropOut()
+            console.log("UUToken无效")
           }
         }).catch((err) => {
           console.log(err);
         })
       } else {
-        sessionStorage.removeItem('loginInfo');
-        sessionStorage.removeItem('userInfo');
+        let token = utils.getCookie("token");
+        if (token) {
+          axios({
+            method: "GET",
+            url: `${baseURL}/v1/sessions/check`,
+            headers: {
+              "Access-Token": `${token}`,
+            }
+          }).then((res) => {
+            if (res.data.user_id) {
+              window.sessionStorage.setItem("userInfo", JSON.stringify(res.data));
+              let loginInfo = {};
+              loginInfo.token = token;
+              loginInfo.user_id = res.data.user_id;
+              window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+              this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+              this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
+              this.userName = JSON.parse(sessionStorage.getItem("userInfo")).phone;
+              this.isLogin = true;
+              this.acquireFavoriteCount();
+            } else {
+              this.isLogin = false;
+              sessionStorage.removeItem('loginInfo');
+              sessionStorage.removeItem('userInfo');
+              //this.dropOut()
+            }
+          }).catch((err) => {
+            console.log(err);
+          })
+        } else {
+          sessionStorage.removeItem('loginInfo');
+          sessionStorage.removeItem('userInfo');
+        }
       }
     },
     computed: {
@@ -254,6 +296,51 @@
         } else{
           return null
         }
+      },
+      //计算设备ID
+      deviceId() {
+        let s = [];
+        let hexDigits = "0123456789abcdef";
+        for (let i = 0; i < 36; i++) {
+          s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+        }
+        s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+        s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+        s[8] = s[13] = s[18] = s[23] = "-";
+        let deviceId = s.join("");
+        return deviceId;
+      },
+      //SaaS平台过来自动登录
+      autoLogin(token){
+        let loginFormData = {
+          uutoken: token,//uutoken
+          device_id: this.deviceId(),//设备唯一识别码，可以用UUID生成
+          platform: 1,//1-web,2-安卓,3-iOS,4-大数据 5-公众号
+        };
+        axios({
+          method: "POST",
+          url: `${baseURL}/v1/sessions/phone/auto-login`,
+          data: querystring.stringify(loginFormData)
+        }).then((res) => {
+          if (res.data.user_id) {
+            window.sessionStorage.setItem("userInfo", JSON.stringify(res.data));
+            let loginInfo = {};
+            loginInfo.token = token;
+            loginInfo.user_id = res.data.user_id;
+            window.sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+            this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
+            this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
+            this.userName = JSON.parse(sessionStorage.getItem("userInfo")).phone.substring(3).replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+            this.isLogin = true;
+            this.acquireFavoriteCount();
+          } else {
+            this.isLogin = false;
+            sessionStorage.removeItem('loginInfo');
+            sessionStorage.removeItem('userInfo');
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       },
       advise(){
         this.name="";
