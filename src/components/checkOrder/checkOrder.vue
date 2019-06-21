@@ -34,17 +34,19 @@
     <div class="check_container" v-if="next===1">
       <div class="check_info">
         <h2>确认订单</h2>
-        <div class="check_title_info">
+        <!--<div class="check_title_info">
           <p v-if="walletAddress===''">未创建钱包
             <a href="javascript:void(0)" class="to_bind" @click="login">去创建 ></a>
           </p>
           <p v-if="walletAddress!==''">钱包地址：{{walletAddress}}</p>
           <p>元积分：{{balance}}</p>
-        </div>
+        </div>-->
       </div>
       <div class="check_code">
         <div class="payment">
-          <span>选择支付方式：&nbsp;&nbsp;</span>
+          <span class="nrbc-amount">NRBC账号：{{nrbcAmount}}</span>
+          <br>
+          <span>支付方式：&nbsp;&nbsp;</span>
           <span class="pay">
             <!--<label class="pay_label">
               <input class="pay_radio" type="radio" name="pay" value="30" v-model="value">
@@ -53,20 +55,24 @@
             <label class="pay_label">
               <input class="pay_radio" type="radio" name="pay" value="10" v-model="value">
               <span class="pay_radioInput"></span>微信
-            </label>-->
+            </label>
             <label class="pay_label">
               <input class="pay_radio" type="radio" name="pay" value="T1" v-model="value">
               <span class="pay_radioInput"></span>元积分
             </label>
-            <!--<label class="pay_label">
+            <label class="pay_label">
               <input class="pay_radio" type="radio" name="pay" value="20" v-model="value">
               <span class="pay_radioInput"></span>支付宝
             </label>-->
+            <label class="pay_label">
+              <input class="pay_radio" type="radio" name="pay" value="40" v-model="value">
+              <span class="pay_radioInput"></span>NRBC账号
+            </label>
           </span>
         </div>
-        <p>可使用元积分，进行等价交易。</p>
-        <p class="tip">提示：可用其它钱包地址支付</p>
-        <button @click="acquireIntegralInfo">确认支付</button>
+        <!--<p>可使用元积分，进行等价交易。</p>
+        <p class="tip">提示：可用其它钱包地址支付</p>-->
+        <button @click="toPay">确认支付</button>
       </div>
     </div>
     <div class="check_container" v-if="next===2">
@@ -119,6 +125,18 @@
         </div>
       </div>
     </div>
+    <div class="check_container" v-if="next===4">
+      <div class="check_info">
+        <h2>确认订单</h2>
+      </div>
+      <div class="check_code">
+        <div class="check_success">
+          <img src="./images/payment.png" alt="">
+          <p>支付成功！</p>
+          <router-link to="/personalAssets" class="to_see">查看资产</router-link>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -148,7 +166,8 @@
         next: 1,
         timer: "",
         phone: "",
-        value: "T1",
+        value: "40",
+        nrbcAmount: 0
       }
     },
     beforeMount() {
@@ -170,7 +189,9 @@
             this.userId = JSON.parse(sessionStorage.getItem("loginInfo")).user_id;
             this.token = JSON.parse(sessionStorage.getItem("loginInfo")).token;
             this.walletAddress=JSON.parse(sessionStorage.getItem("userInfo")).wallet_address;
-            this.acquireBalance();
+            //this.acquireBalance();
+            //获取NRBC余额
+            this.acquireNRBC();
           } else {
             alert("登录失效")
           }
@@ -225,6 +246,40 @@
         }).catch((err) => {
           console.log(err);
         });
+      },
+      //NRBC支付
+      toPay(){
+        if (this.nrbcAmount < this.total){
+          this.$confirm('账户余额不足', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+            center: true,
+            showCancelButton:false
+          }).then(() => {
+          }).catch(() => {
+          });
+        } else {
+          axios({
+            method: "POST",
+            url: `${baseURL}/v1/order/pay/${this.orderNum}`,
+            data: querystring.stringify({
+              pay_method: this.value
+            })
+          }).then((res) => {
+            this.next = 4
+          }).catch((err) => {
+            this.$confirm('支付失败', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning',
+              center: true,
+              showCancelButton:false
+            }).then(() => {
+            }).catch(() => {
+            });
+          });
+        }
       },
       //订单确认支付
       acquireIntegralInfo() {
@@ -319,6 +374,43 @@
           console.log(err);
         });
       },*/
+      //获取NRBC余额
+      acquireNRBC() {
+        //获取元积分余额
+        axios({
+          method:"GET",
+          url:`${baseURL}/v1/token/nrbc/balance?user_id=${this.userId}`,
+          headers: {
+            "X-Access-Token": this.token,
+          }
+        }).then((res)=>{
+          this.nrbcAmount = res.data.result
+        }).catch((err)=>{
+          console.log(err)
+        });
+        //获取Gas余额
+        /*axios({
+          method: "POST",
+          url: `${baseURL}/`,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: {
+            "jsonrpc": "2.0",
+            "method": "eth_getBalance",
+            "params": [this.walletAddress, "latest"],
+            "id": 1
+          },
+        }).then((res) => {
+          if (res.data.error) {
+            this.balance = 0
+          } else {
+            this.balance = new BigNumber(Number(res.data.result)).dividedBy(1e+18).toFormat(2);
+          }
+        }).catch((err) => {
+          console.log(err);
+        });*/
+      },
       //获取钱包地址余额
       acquireBalance() {
         //获取元积分余额
@@ -575,6 +667,12 @@
         margin-top 10px
         margin-bottom 38px
         color: #333333;
+        .nrbc-amount{
+          width:216px
+          text-align left
+          margin-bottom 20px
+          display inline-block
+        }
         .pay {
           .pay_label {
             margin-right 26px
