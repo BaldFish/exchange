@@ -1,13 +1,13 @@
 <template>
   <div class="nav_content">
-    <div class="assets_summary">
+    <!--<div class="assets_summary">
       <p>{{phone}}</p>
       <p v-if="walletAddress===''">未创建钱包
         <a href="javascript:void(0)" class="to_bind" @click="login">去创建 ></a>
       </p>
       <p v-if="walletAddress!==''">钱包地址：{{walletAddress}}</p>
       <p>元积分：{{balance}}</p>
-    </div>
+    </div>-->
     <div class="nav_content_title">
       <span>已购资产</span>
     </div>
@@ -129,7 +129,7 @@
   import {baseURL,loginPlatform} from '@/common/js/public.js';
   import {BigNumber} from 'bignumber.js';
   import utils from "@/common/js/utils.js";
-  
+
   export default {
     name: "personalAssets",
     components: {},
@@ -399,7 +399,7 @@
     width: 1078px;
     float: right;
   }
-  
+
   .nav_content_title {
     width: 1078px;
     height: 50px;
@@ -409,7 +409,7 @@
     font-size: 18px;
     color: #222222;
   }
-  
+
   .assets_summary {
     width: 1080px;
     height: 100px;
@@ -418,57 +418,57 @@
     color: #666666;
     margin-bottom: 24px;
   }
-  
+
   .assets_summary p {
     font-size: 14px;
     color: #666666;
     margin-left: 20px;
   }
-  
+
   .assets_summary p:first-child {
     font-size: 18px;
     color: #222222;
     padding: 16px 0;
   }
-  
+
   .assets_summary p:nth-child(2) {
     margin-bottom: 10px;
   }
-  
+
   .to_bind {
     font-size: 14px;
     color: #c6351e;
     margin-left: 10px;
   }
-  
+
   .nav_content_title span {
     padding-left: 20px;
   }
-  
+
   .nav_content_table {
     margin-top: 12px;
     width: 1078px;
     background-color: #ffffff;
     border: solid 1px #bfbfbf;
   }
-  
+
   .content_thead {
     font-size: 16px;
     color: #222222;
     height: 50px;
     line-height: 50px;
   }
-  
+
   .content_thead th {
     width: 110px;
   }
-  
+
   .content_thead th:first-child {
     text-align: left;
     padding-left: 46px;
     width: 640px;
   }
-  
+
   .classify td {
     background-color: #f6f7fa;
     text-align: left;
@@ -477,11 +477,11 @@
     font-size: 16px;
     color: #222222;
   }
-  
+
   .content_tbody {
     border-bottom: 1px solid #d2d2d2;
   }
-  
+
   .content_tbody td {
     font-size: 14px;
     color: #666666;
@@ -489,7 +489,7 @@
     height: 90px;
     vertical-align: middle;
   }
-  
+
   .content_tbody td span {
     box-sizing: border-box;
     display: inline-block;
@@ -499,7 +499,7 @@
     border: solid 1px #bfbfbf;
     margin-right: 40px;
   }
-  
+
   .content_tbody td span img {
     vertical-align: middle;
     position: relative;
@@ -508,21 +508,21 @@
     max-width: 52px;
     max-height: 52px;
   }
-  
+
   .content_tbody td:first-child {
     text-align: left;
     padding-left: 46px;
     cursor: pointer;
   }
-  
+
   tbody tr:first-child {
     border-top: 1px solid #d2d2d2;
   }
-  
+
   tbody tr:last-child {
     border-bottom: none;
   }
-  
+
   /* .quick_buy_td button {
      box-sizing: border-box;
      width: 80px;
@@ -551,20 +551,20 @@
     font-size: 14px;
     color: #c6351e;
   }
-  
+
   .quick_buy_td a:active {
     background-color: #c6351e;
     color: #ffffff;
-    
+
   }
-  
+
   .quick_buy_td .time, .quick_buy_td .download {
     display: none;
     width: 100px;
     height: 60px;
     margin: 0 auto;
   }
-  
+
   .quick_buy_td .time span, .quick_buy_td .download span {
     display: block;
     border: none;
@@ -573,7 +573,7 @@
     line-height: 30px;
     margin: 0 auto;
   }
-  
+
   .quick_buy_td .download span:first-child {
     border: 1px solid #c6351e;
     background-color: #ffffff;
@@ -581,12 +581,12 @@
     cursor: pointer;
     color: #c6351e;
   }
-  
+
   .quick_buy_td .download span:first-child:active {
     background-color: #c6351e;
     color: #ffffff;
   }
-  
+
   .no_assets_content {
     margin-top: 12px;
     width: 1078px;
@@ -595,11 +595,11 @@
     border: solid 1px #bfbfbf;
     margin-bottom: 40px;
   }
-  
+
   .no_assets_box img {
     float: left;
   }
-  
+
   .no_assets_box {
     width: 186px;
     height: 70px;
@@ -607,7 +607,7 @@
     position: relative;
     top: 236px;
   }
-  
+
   .no_assets_box p {
     font-size: 18px;
     color: #222222;
@@ -615,7 +615,7 @@
     padding: 14px 0;
     padding-top: 8px;
   }
-  
+
   .to_buy {
     font-size: 18px;
     color: #c6351e;

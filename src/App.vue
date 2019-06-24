@@ -208,7 +208,7 @@
     },
     mounted() {
       if(this.pathname==="/developer"){
-        this.toggleIndex=2
+        this.toggleIndex=3
       }else{
         this.toggleIndex=1
       }
@@ -288,7 +288,7 @@
     watch: {
       $route(to,from) {
         if (to.path === "/developer") {
-          this.toggleIndex = 2
+          this.toggleIndex = 3
         } else {
           this.toggleIndex = 1
         }
@@ -334,6 +334,10 @@
           data: querystring.stringify(loginFormData)
         }).then((res) => {
           if (res.data.user_id) {
+            document.cookie = `token=${res.data.token}`;
+            document.cookie = `user_id=${res.data.user_id}`;
+            /*document.cookie = `token=${res.data.token};domain=.datajs.com.cn`;
+            document.cookie = `user_id=${res.data.user_id};domain=.datajs.com.cn`;*/
             window.sessionStorage.setItem("userInfo", JSON.stringify(res.data));
             let loginInfo = {};
             loginInfo.token = token;
